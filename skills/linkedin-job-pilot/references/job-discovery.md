@@ -4,7 +4,7 @@ Read this file for discovery, browsing, scanning, or shortlisting when no exact 
 
 Discovery is non-engagement work. LinkedIn may record opened cards as viewed and use that activity for recommendations. Discovery authorizes only the bounded local Markdown and CSV writes defined in the main skill. It does not authorize saving, dismissing, applying, signaling interest, contacting anyone, changing alerts, or opening named people profiles.
 
-Maintain a private structured ledger of job IDs, occurrence positions, facts, dispositions, and the resume cursor. For large runs, create an owner-only scratch directory under /private/tmp and store only job facts. Keep it until local writes and readbacks are verified. Delete it after success or when the user ends the run. If a restart is required, report its exact path as the private resume handle and verify it before resuming.
+Maintain a private structured ledger of job IDs, occurrence positions, facts, dispositions, and the resume cursor. For large runs, the main skill explicitly authorizes an owner-only scratch directory under /private/tmp containing job facts only. This is temporary, not durable storage. Keep it until local writes and readbacks are verified, then delete it. If a restart is required, report its exact path as the private resume handle and verify it before resuming.
 
 Discovery includes incremental CSV tracking, company Markdown, and final classification for every stable unique job. Do not cap research or tracking at a top-ten shortlist.
 
@@ -47,8 +47,8 @@ The primary agent uses the authenticated UI and one result tab. Enumerate cards 
 
 For each stable job:
 
-1. Canonicalize its LinkedIn URL.
-2. Parse tracker.csv and find that URL.
+1. Extract the numeric job ID and canonicalize the URL to https://www.linkedin.com/jobs/view/<job-id>/.
+2. Parse tracker.csv, normalize every existing LinkedIn URL by numeric job ID, stop on normalized collisions, and reuse the unique matching row even when its legacy URL text differs.
 3. Upsert a new row with blank Research File, Status = Researching, and blank Last Applied.
 4. Preserve existing status, path, and application history for an existing row.
 5. Atomically write and reparse the CSV.

@@ -41,7 +41,7 @@ Use exactly these six columns and this order:
 | Company | Employer name |
 | Role | Exact role title |
 | LinkedIn URL | Canonical LinkedIn job URL and normal row identity |
-| Research File | POSIX path relative to jobs/tracker.csv, such as applications/acme.md |
+| Research File | POSIX path relative to <workspace-root>/jobs, the directory containing tracker.csv, such as applications/acme.md |
 | Status | Fit label plus optional lifecycle |
 | Last Applied | Confirmed application date in YYYY-MM-DD; otherwise blank |
 
@@ -58,20 +58,23 @@ Keep detailed requirements, compensation, interviews, classification rationale, 
 Before the first job:
 
 1. Resolve and verify tracker.csv.
-2. Parse the complete CSV with an RFC-4180-aware parser.
-3. Confirm the exact six-column header.
-4. Confirm the jobs directory is writable and not outside the workspace.
+2. If it is missing, atomically create it with the exact header and no data rows, then reparse it.
+3. Parse the complete CSV with an RFC-4180-aware parser.
+4. Confirm the exact six-column header.
+5. Confirm the jobs directory is writable and not outside the workspace.
 
 For each stable selected job:
 
-1. Strip tracking parameters from the LinkedIn URL.
-2. Search parsed rows for that exact canonical URL.
-3. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, and blank Last Applied.
-4. For an existing row, preserve Research File, Status, Last Applied, and user-authored values unless verified evidence supports a specific update.
-5. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
-6. Serialize the full CSV to a temporary sibling file.
-7. Atomically rename it over tracker.csv.
-8. Reparse and verify the exact row before selecting the next job.
+1. Extract the numeric job ID and canonicalize the URL to https://www.linkedin.com/jobs/view/<job-id>/, regardless of localized host, slug, query, or fragment.
+2. Extract numeric job IDs from every existing nonblank LinkedIn URL and compare normalized IDs, not raw URL strings.
+3. If multiple existing rows normalize to the same job ID, stop and reconcile them before any new write.
+4. Reuse the one matching row regardless of legacy host, slug, query, fragment, or missing trailing slash. After confirming there is no collision, normalize that row's URL to the canonical form during the bounded update.
+5. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, and blank Last Applied.
+6. For an existing row, preserve Research File, Status, Last Applied, and user-authored values unless verified evidence supports a specific update.
+7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
+8. Serialize the full CSV to a temporary sibling file.
+9. Atomically rename it over tracker.csv.
+10. Reparse and verify the exact row before selecting the next job.
 
 Never split or join CSV by commas. Stop on parse errors or duplicate canonical LinkedIn URLs.
 
@@ -98,7 +101,9 @@ Before creating:
 1. Check existing tracker rows for the normalized company.
 2. Resolve their Research File paths inside jobs/applications.
 3. Verify title, company website, and role identities.
-4. Reuse the verified file.
+4. Before reuse, verify that the derived target path belongs to the same company using the Markdown title, company website, and existing tracker paths.
+5. If the path exists for another company or two distinct names normalize to the same path, stop for resolution; never overwrite.
+6. Reuse the verified file.
 
 If multiple plausible files exist, use the one already referenced by the exact row. If no row resolves the ambiguity, stop for user direction. Never silently merge files or create another.
 

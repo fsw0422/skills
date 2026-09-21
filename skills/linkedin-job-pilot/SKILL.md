@@ -25,7 +25,7 @@ The exact tracker columns are:
 
 Company, Role, LinkedIn URL, Research File, Status, Last Applied
 
-Store Research File as a POSIX path relative to jobs/tracker.csv, for example applications/acme.md.
+Store Research File as a POSIX path relative to <workspace-root>/jobs, the directory containing tracker.csv. Example: applications/acme.md.
 
 ## Default explicit invocation
 
@@ -52,7 +52,8 @@ Research, comparison, local Markdown authoring, and bounded tracker updates may 
 5. Posting an approved question to r/cscareerquestionsEU.
 6. Changing the tracker schema or research template.
 7. Moving, renaming, deleting, merging, or overwriting local research files outside the bounded rules below.
-8. Writing outside <workspace-root>/jobs.
+8. Writing outside <workspace-root>/jobs, except owner-only temporary scratch ledgers described in references/job-discovery.md.
+9. Changing the user-level Codex configuration, including discovery concurrency.
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
 
@@ -78,7 +79,7 @@ For every CSV or Markdown change:
 5. Re-read and verify the exact row or role section.
 6. Stop on parse errors, ambiguous company identity, multiple plausible research files, or path escape.
 
-Use canonical LinkedIn URL as tracker row identity and role-section identity. Never split or join CSV on commas; use an RFC-4180-aware parser and UTF-8. Use YYYY-MM-DD for newly recorded dates.
+Use https://www.linkedin.com/jobs/view/<job-id>/ as the canonical row identity and role-section identity. Normalize localized hosts, slugged paths, query parameters, and fragments to this numeric-ID form. Never split or join CSV on commas; use an RFC-4180-aware parser and UTF-8. Use YYYY-MM-DD for newly recorded dates.
 
 ## Workflow
 
