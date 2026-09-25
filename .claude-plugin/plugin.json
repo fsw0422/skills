@@ -1,0 +1,8 @@
+{
+  "name": "skills",
+  "description": "Personal agent skills for Claude Code and Codex",
+  "author": {
+    "name": "fsw0422"
+  },
+  "repository": "https://github.com/fsw0422/skills"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "fsw0422",
+  "description": "fsw0422's personal agent skills",
+  "owner": {
+    "name": "fsw0422"
+  },
+  "plugins": [
+    {
+      "name": "skills",
+      "source": "./",
+      "description": "Personal agent skills for Claude Code and Codex"
+    }
+  ]
+}
