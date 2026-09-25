@@ -1,24 +1,66 @@
-# Codex skills
+# Agent skills
 
-Personal Codex skills maintained as ordinary Git source.
+Personal agent skills maintained as ordinary Git source, packaged as a single plugin (`skills`) in the `fsw0422` marketplace. Claude Code and Codex both install it from `.claude-plugin/`.
 
 ## Install
 
-Clone the repository and run the installer:
+Claude Code:
 
 ```sh
-gh repo clone fsw0422/skills ~/projects/skills
-~/projects/skills/install.sh
+claude plugin marketplace add fsw0422/skills
+claude plugin install skills@fsw0422 --scope user
 ```
 
-The installer creates symlinks from `~/.agents/skills/<name>` to each skill under this repository's `skills/` directory. It refuses to overwrite existing installations or unrelated symlinks.
+Codex (installs are always per user):
+
+```sh
+codex plugin marketplace add fsw0422/skills
+codex plugin add skills@fsw0422
+```
+
+If `codex` is not on your `PATH`, the ChatGPT desktop app bundles it at `/Applications/ChatGPT.app/Contents/Resources/codex`.
+
+Skills are namespaced by the plugin, e.g. `skills:linkedin-job-pilot`.
+
+If you previously ran the old `install.sh`, remove its symlinks so the skill does not load twice:
+
+```sh
+rm ~/.agents/skills/linkedin-job-pilot
+```
 
 ## Update
 
+Every pushed commit is a new plugin version; there is no `version` field to bump.
+
+Claude Code (restart afterwards):
+
 ```sh
-git -C ~/projects/skills pull --ff-only
+claude plugin marketplace update fsw0422
+claude plugin update skills@fsw0422
 ```
 
-Because installed skills are symlinks, pulled changes become active without reinstalling. Codex normally detects changes automatically; restart Codex if an update does not appear.
+Or enable auto-update for the `fsw0422` marketplace in `/plugin`.
 
-Edit either through the repository path or its installed symlink, then commit and push normally.
+Codex:
+
+```sh
+codex plugin marketplace upgrade fsw0422
+```
+
+## Add a skill
+
+Create `skills/<name>/SKILL.md`. Both tools discover every skill under `skills/`, so the manifests do not change. Optional Codex UI metadata goes in `skills/<name>/agents/openai.yaml`.
+
+## Develop
+
+Load the working copy for one Claude Code session without publishing:
+
+```sh
+claude --plugin-dir ~/projects/skills
+```
+
+Validate the manifests before pushing:
+
+```sh
+claude plugin validate ~/projects/skills
+```
