@@ -49,7 +49,7 @@ codex plugin marketplace upgrade fsw0422
 
 ## Add a skill
 
-Create `skills/<name>/SKILL.md`. Both tools discover every skill under `skills/`, so the manifests do not change. Optional Codex UI metadata goes in `skills/<name>/agents/openai.yaml`.
+Create `<name>/SKILL.md` at the repository root and add `"./<name>"` to the `skills` list in `.claude-plugin/plugin.json`. Both tools load only the listed directories. Optional Codex UI metadata goes in `<name>/agents/openai.yaml`.
 
 ## Develop
 

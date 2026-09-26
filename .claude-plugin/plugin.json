@@ -4,5 +4,8 @@
   "author": {
     "name": "fsw0422"
   },
-  "repository": "https://github.com/fsw0422/skills"
+  "repository": "https://github.com/fsw0422/skills",
+  "skills": [
+    "./linkedin-job-pilot"
+  ]
 }
