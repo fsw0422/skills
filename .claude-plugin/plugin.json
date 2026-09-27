@@ -6,6 +6,7 @@
   },
   "repository": "https://github.com/fsw0422/skills",
   "skills": [
-    "./linkedin-job-pilot"
+    "./linkedin-job-pilot",
+    "./write-as-me"
   ]
 }
