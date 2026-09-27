@@ -42,3 +42,4 @@ Give rough frequencies where possible (e.g. "~70% of statements have no final pe
 1. Fill `style-guide.md` and `examples.md` from `profile-template.md`, with 10-15 examples covering different situations and registers.
 2. Show the user a short summary (key rules, register table, 2-3 examples) and apply their corrections before relying on the profile.
 3. Record the sample size and date range at the top of `style-guide.md`.
+4. Offer to keep the profile in a private Git repository cloned at the profile directory, so it syncs across machines. Only ever create it as private.

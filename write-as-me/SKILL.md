@@ -16,9 +16,11 @@ Location: `$WRITE_AS_ME_DIR` if set, otherwise `~/.config/write-as-me/`.
 
 Read both before the first draft in a session. Profile rules override the defaults below. The hard rules always apply.
 
+If the profile directory is a Git repository, run `git pull --ff-only` there before reading it, so updates made on other machines are picked up. If the pull fails (offline, diverged), say so and use the local copy.
+
 The profile describes a real person and often their workplace. Never copy its content into this repository, a commit, a PR, an issue, or anywhere public.
 
-No profile yet: offer to build one with `references/building-a-profile.md`, then save it using `references/profile-template.md`.
+No profile yet: if the user keeps it in a private Git repository, clone that into the profile directory. Otherwise offer to build one with `references/building-a-profile.md`, then save it using `references/profile-template.md`.
 
 ## Hard rules (always)
 
@@ -58,6 +60,8 @@ No profile yet: offer to build one with `references/building-a-profile.md`, then
 ## Feedback loop
 
 When the user edits a draft, rejects a phrase, or says they wouldn't write it that way, update the profile files (adjust a rule, add to the avoid list, or add the corrected message to `examples.md`) and tell them what changed. Edit only the profile directory: never the installed plugin files, which are replaced on update, and never this repository.
+
+If the profile directory is a Git repository, commit each update right away with a short message saying what changed (e.g. `Avoid "circle back"`), then push it. Before the first push in a session, confirm the remote is private (e.g. `gh repo view --json visibility`). If it's public or can't be confirmed, keep the commit local, don't push, and tell the user. Report a failed push.
 
 Keep the profile free of third parties' names, customer details, and secrets.
 
