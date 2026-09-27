@@ -106,7 +106,7 @@ Do not:
 - Use Top Choice or interest signals.
 - Send messages or requests.
 - Open named profiles.
-- Change tracker schema, template, or files outside the bounded jobs paths.
+- Change tracker schema, template, or files outside the bounded <home-directory>/jobhunt paths.
 
 ## Stopping conditions
 

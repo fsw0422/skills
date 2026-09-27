@@ -1,6 +1,6 @@
 # Company research Markdown template
 
-Use this structure for every company research file in <workspace-root>/jobs/applications.
+Use this structure for every company research file in <home-directory>/jobhunt/applications.
 
 Create one file per normalized company when identity is unambiguous. Use a safe lowercase filename, for example acme.md. Preserve existing user-authored content and add one role section per canonical LinkedIn URL.
 

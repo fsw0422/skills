@@ -7,25 +7,25 @@ description: Discover, curate, research, and track LinkedIn roles, then prepare,
 
 Run an evidence-based job search while leaving every consequential choice with the user.
 
-Use the authenticated browser for LinkedIn, employer application sites, and the approved Reddit fallback. Store all durable research and tracking data inside the current workspace. Never fall back to a previous workspace, a home-directory cache, or a cloud file.
+Use the authenticated browser for LinkedIn, employer application sites, and the approved Reddit fallback. Store all durable research and tracking data under the active user's home directory in `jobhunt`. Never fall back to a workspace-local copy, another home directory, a cache, or a cloud file.
 
 ## Canonical local resources
 
 At the start of each run:
 
-1. Resolve the workspace root once with pwd -P.
-2. Use <workspace-root>/jobs as the only durable job-data root.
-3. Use <workspace-root>/jobs/applications for company research Markdown.
-4. Use <workspace-root>/jobs/tracker.csv for the tracker.
+1. Resolve the active user's home directory once without deriving it from the current workspace.
+2. Use <home-directory>/jobhunt as the only durable job-data root.
+3. Use <home-directory>/jobhunt/applications for company research Markdown.
+4. Use <home-directory>/jobhunt/tracker.csv for the tracker.
 5. Use references/company-research-template.md as the research template.
 
-Create the jobs and jobs/applications directories when missing. Reject symlinks or resolved paths that escape the workspace root. The tracker is a file, not a directory.
+Create `jobhunt` and `jobhunt/applications` when missing. Reject symlinks or resolved paths that escape the active user's home directory. The tracker is a file, not a directory.
 
 The exact tracker columns are:
 
 Company, Role, LinkedIn URL, Research File, Status, Last Applied
 
-Store Research File as a POSIX path relative to <workspace-root>/jobs, the directory containing tracker.csv. Example: applications/acme.md.
+Store Research File as a POSIX path relative to <home-directory>/jobhunt, the directory containing tracker.csv. Example: applications/acme.md.
 
 ## Default explicit invocation
 
@@ -52,7 +52,7 @@ Research, comparison, local Markdown authoring, and bounded tracker updates may 
 5. Posting an approved question to r/cscareerquestionsEU.
 6. Changing the tracker schema or research template.
 7. Moving, renaming, deleting, merging, or overwriting local research files outside the bounded rules below.
-8. Writing outside <workspace-root>/jobs, except owner-only temporary scratch ledgers described in references/job-discovery.md.
+8. Writing outside <home-directory>/jobhunt, except owner-only temporary scratch ledgers described in references/job-discovery.md.
 9. Changing the user-level Codex configuration, including discovery concurrency.
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
@@ -61,10 +61,10 @@ Never infer work authorization, sponsorship, relocation, compensation expectatio
 
 ## Bounded local-write authorization
 
-Explicitly invoking discovery or manual-role research authorizes these bounded workspace-local writes for that run:
+Explicitly invoking discovery or manual-role research authorizes these bounded home-local writes for that run:
 
-- Create or update jobs/tracker.csv without changing its six-column schema.
-- Create or update jobs/applications/<company-file>.md from the canonical Markdown template.
+- Create or update <home-directory>/jobhunt/tracker.csv without changing its six-column schema.
+- Create or update <home-directory>/jobhunt/applications/<company-file>.md from the canonical Markdown template.
 - Replace Research File values with verified relative Markdown paths.
 - Update Status after research and Last Applied only after the separate post-submit approval.
 
@@ -85,7 +85,7 @@ Use https://www.linkedin.com/jobs/view/<job-id>/ as the canonical row identity a
 
 ~~~mermaid
 flowchart TD
-    A[Readable PDF] --> B[Resolve workspace jobs paths]
+    A[Readable PDF] --> B[Resolve home jobhunt paths]
     B --> C[Discover LinkedIn roles]
     C --> D[Upsert tracker.csv as Researching]
     D --> E[Run one research agent per job]
@@ -151,7 +151,7 @@ After reliable submission confirmation and explicit approval for the local updat
 Report:
 
 - PDF filename and hash used for fit.
-- Workspace root and exact jobs paths.
+- Resolved home directory and exact jobhunt paths.
 - Search criteria, pages inspected, counts, duplicates, and stop reason.
 - Final totals for A — Great Fit, B — Normal Fit, Investigate, and Skip.
 - Research Markdown paths and exact tracker rows.
