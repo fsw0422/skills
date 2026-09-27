@@ -21,8 +21,6 @@ At the start of each run:
 
 Create `jobhunt` and `jobhunt/applications` when missing. Reject symlinks or resolved paths that escape the active user's home directory. The tracker is a file, not a directory.
 
-`jobhunt` is a Git repository and the canonical history of the job search, the same way the resume repository is for resume content. At the start of each run, verify that its Git top level is <home-directory>/jobhunt, that `origin` is set, and that the remote is private (use `gh repo view --json visibility` when the GitHub CLI is available). Record the branch, commit SHA, upstream, and dirty state. If `jobhunt` is not a Git repository, has no `origin`, or its remote is public, stop and ask; never initialize, re-point, or publish it on your own. Report uncommitted changes that predate the run and leave them untouched.
-
 The exact tracker columns are:
 
 Company, Role, LinkedIn URL, Research File, Status, Last Applied
@@ -56,7 +54,6 @@ Research, comparison, local Markdown authoring, and bounded tracker updates may 
 7. Moving, renaming, deleting, merging, or overwriting local research files outside the bounded rules below.
 8. Writing outside <home-directory>/jobhunt, except owner-only temporary scratch ledgers described in references/job-discovery.md.
 9. Changing the user-level Codex configuration, including discovery concurrency.
-10. Committing or pushing <home-directory>/jobhunt changes.
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
 
@@ -111,9 +108,6 @@ flowchart TD
     S -- Yes --> T[Submit and verify]
     T --> U{Tracking update approved?}
     U -- Yes --> V[Update tracker.csv]
-    Q --> W{Approve jobhunt commit or push?}
-    V --> W
-    W -- Yes --> X[Commit or push exactly as approved]
 ~~~
 
 ## Route the work
@@ -152,16 +146,6 @@ Use visible Premium information as research and prioritization evidence only. Do
 
 After reliable submission confirmation and explicit approval for the local update, read references/tracking.md. Update the existing CSV row, preserve the fit label, append the lifecycle, and set Last Applied to the confirmed date. Never mark Applied from a click or assumption.
 
-### Commit the output
-
-At the end of every run that changed `jobhunt`, and after any approved tracking update:
-
-1. Show the changed files with a one-line summary each.
-2. Propose one commit message that describes the run, for example `Research 12 roles from the Berlin backend search` or `Record application to <Company> <Role>`.
-3. Ask for approval to commit, and whether to push to `origin` as well.
-4. Commit or push exactly as approved. Stage only `tracker.csv` and `applications/`; never the PDF resume, scratch ledgers, or anything outside `jobhunt`.
-5. Verify the new commit SHA and, after a push, that the branch matches its upstream.
-
 ## Completion standard
 
 Report:
@@ -174,6 +158,5 @@ Report:
 - Partial write or verification failures.
 - Eligible application queue.
 - Exact outcome of any approved application action.
-- jobhunt Git state: branch, commit SHA, upstream, dirty state, and separate commit and push status.
 
 Never mark an application submitted without reliable confirmation.
