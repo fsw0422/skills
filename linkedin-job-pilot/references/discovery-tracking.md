@@ -4,13 +4,13 @@ Read this file before the first discovery-row upsert, after each job's research 
 
 ## Canonical local paths
 
-Resolve the workspace root once with pwd -P.
+Resolve the active user's home directory once without deriving it from the current workspace.
 
-- Tracker: <workspace-root>/jobs/tracker.csv
-- Research directory: <workspace-root>/jobs/applications
+- Tracker: <home-directory>/jobhunt/tracker.csv
+- Research directory: <home-directory>/jobhunt/applications
 - Template: references/company-research-template.md
 
-Create jobs and jobs/applications when missing. Reject symlinks or resolved paths that escape the workspace root. Do not search another workspace or use a cloud fallback.
+Create `jobhunt` and `jobhunt/applications` when missing. Reject symlinks or resolved paths that escape the active user's home directory. Do not search a workspace-local copy, another home directory, or a cloud fallback.
 
 Research Markdown holds detailed evidence and fit rationale. The CSV is the minimal index and application-status view.
 
@@ -30,7 +30,7 @@ flowchart LR
     J --> K[Build application queue]
 ~~~
 
-The initial CSV row, bounded research-file write, Research File update, and final Status update are authorized discovery writes. Schema changes, template changes, file moves/renames/deletions, writes outside jobs, and post-submit updates require the applicable approval.
+The initial CSV row, bounded research-file write, Research File update, and final Status update are authorized discovery writes. Schema changes, template changes, file moves/renames/deletions, writes outside `jobhunt`, and post-submit updates require the applicable approval.
 
 ## Exact CSV schema
 
@@ -41,7 +41,7 @@ Use exactly these six columns and this order:
 | Company | Employer name |
 | Role | Exact role title |
 | LinkedIn URL | Canonical LinkedIn job URL and normal row identity |
-| Research File | POSIX path relative to <workspace-root>/jobs, the directory containing tracker.csv, such as applications/acme.md |
+| Research File | POSIX path relative to <home-directory>/jobhunt, the directory containing tracker.csv, such as applications/acme.md |
 | Status | Fit label plus optional lifecycle |
 | Last Applied | Confirmed application date in YYYY-MM-DD; otherwise blank |
 
@@ -61,7 +61,7 @@ Before the first job:
 2. If it is missing, atomically create it with the exact header and no data rows, then reparse it.
 3. Parse the complete CSV with an RFC-4180-aware parser.
 4. Confirm the exact six-column header.
-5. Confirm the jobs directory is writable and not outside the workspace.
+5. Confirm the `jobhunt` directory is writable and remains inside the active user's home directory.
 
 For each stable selected job:
 
@@ -99,7 +99,7 @@ Use a safe lowercase filename derived from the normalized company name. Convert 
 Before creating:
 
 1. Check existing tracker rows for the normalized company.
-2. Resolve their Research File paths inside jobs/applications.
+2. Resolve their Research File paths inside <home-directory>/jobhunt/applications.
 3. Verify title, company website, and role identities.
 4. Before reuse, verify that the derived target path belongs to the same company using the Markdown title, company website, and existing tracker paths.
 5. If the path exists for another company or two distinct names normalize to the same path, stop for resolution; never overwrite.
