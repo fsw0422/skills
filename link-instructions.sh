@@ -3,14 +3,20 @@
 set -eu
 
 repo_root="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)"
-source="${repo_root}/AGENTS.md"
+instructions="${repo_root}/AGENTS.md"
+# Not settings.json: Claude Code reads that name at a plugin root as the plugin's own settings.
+settings="${repo_root}/claude-settings.json"
+claude_dir="${CLAUDE_CONFIG_DIR:-${HOME}/.claude}"
 codex_target="${CODEX_HOME:-${HOME}/.codex}/AGENTS.md"
-claude_target="${CLAUDE_CONFIG_DIR:-${HOME}/.claude}/CLAUDE.md"
+claude_target="${claude_dir}/CLAUDE.md"
+settings_target="${claude_dir}/settings.json"
 
-test -f "${source}" || {
-	printf 'Missing instructions file: %s\n' "${source}" >&2
-	exit 1
-}
+for source in "${instructions}" "${settings}"; do
+	test -f "${source}" || {
+		printf 'Missing source file: %s\n' "${source}" >&2
+		exit 1
+	}
+done
 
 # A linked worktree is deleted on cleanup, which would leave dangling links.
 [ ! -f "${repo_root}/.git" ] || {
@@ -19,7 +25,8 @@ test -f "${source}" || {
 }
 
 check() {
-	target="$1"
+	source="$1"
+	target="$2"
 	if [ -L "${target}" ]; then
 		current="$(readlink "${target}")"
 		[ "${current}" = "${source}" ] || {
@@ -35,7 +42,8 @@ check() {
 }
 
 link() {
-	target="$1"
+	source="$1"
+	target="$2"
 	if [ -L "${target}" ]; then
 		printf 'Already linked: %s -> %s\n' "${target}" "${source}"
 		return
@@ -49,7 +57,9 @@ link() {
 	printf 'Linked: %s -> %s\n' "${target}" "${source}"
 }
 
-check "${codex_target}"
-check "${claude_target}"
-link "${codex_target}"
-link "${claude_target}"
+check "${instructions}" "${codex_target}"
+check "${instructions}" "${claude_target}"
+check "${settings}" "${settings_target}"
+link "${instructions}" "${codex_target}"
+link "${instructions}" "${claude_target}"
+link "${settings}" "${settings_target}"
