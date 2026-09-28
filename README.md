@@ -28,6 +28,16 @@ If you previously ran the old `install.sh`, remove its symlinks so the skill doe
 rm ~/.agents/skills/linkedin-job-pilot
 ```
 
+## Global instructions
+
+`instructions/AGENTS.md` holds the user-level instructions both tools load in every session. It is not part of the plugin. Link it once, from the main checkout:
+
+```sh
+~/projects/skills/link-instructions.sh
+```
+
+This symlinks `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md` to the file, moving any existing file to `<name>.bak` first. `CODEX_HOME` and `CLAUDE_CONFIG_DIR` override the target directories. Edits apply to the next session in both tools once they reach the main checkout; there is nothing to reinstall.
+
 ## Update
 
 Every pushed commit is a new plugin version; there is no `version` field to bump.
