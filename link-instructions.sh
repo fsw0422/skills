@@ -3,7 +3,7 @@
 set -eu
 
 repo_root="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)"
-source="${repo_root}/instructions/AGENTS.md"
+source="${repo_root}/AGENTS.md"
 codex_target="${CODEX_HOME:-${HOME}/.codex}/AGENTS.md"
 claude_target="${CLAUDE_CONFIG_DIR:-${HOME}/.claude}/CLAUDE.md"
 

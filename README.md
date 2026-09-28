@@ -30,7 +30,7 @@ rm ~/.agents/skills/linkedin-job-pilot
 
 ## Global instructions
 
-`instructions/AGENTS.md` holds the user-level instructions both tools load in every session. It is not part of the plugin. Link it once, from the main checkout:
+`AGENTS.md` holds the user-level instructions both tools load in every session. It is not part of the plugin. Link it once, from the main checkout:
 
 ```sh
 ~/projects/skills/link-instructions.sh
