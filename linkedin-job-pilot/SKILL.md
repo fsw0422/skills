@@ -1,6 +1,6 @@
 ---
 name: linkedin-job-pilot
-description: Discover, curate, research, and track LinkedIn roles, then prepare, submit, and update applications using a user-provided PDF resume, local Markdown research files, a local CSV tracker, and explicit approval gates. Use when the user asks to browse or shortlist jobs, provide a company or role manually, evaluate a role, apply through LinkedIn or an employer site, or track applications. Require a readable PDF resume before doing any work; resume creation and revision belong to resume-pilot.
+description: Discover, curate, research, and track LinkedIn roles, then prepare, submit, and update applications, including approved cover letter PDFs, using a user-provided PDF resume, local Markdown research files, a local CSV tracker, and explicit approval gates. Use when the user asks to browse or shortlist jobs, provide a company or role manually, evaluate a role, apply through LinkedIn or an employer site, write a cover letter, or track applications. Require a readable PDF resume before doing any work; resume creation and revision belong to resume-pilot.
 ---
 
 # LinkedIn Job Pilot
@@ -46,13 +46,13 @@ Treat the PDF as immutable input. This skill may read it for fit assessment, dra
 Research, comparison, local Markdown authoring, and bounded tracker updates may proceed without approval. Stop and obtain explicit approval immediately before:
 
 1. Opening an application workflow that may save an application or expose applicant data.
-2. Attaching the provided PDF to an application.
+2. Attaching the provided PDF or an approved cover letter PDF to an application.
 3. Submitting an application or sending any application-related message.
 4. Activating Top Choice, I’m interested, or another recruiter-visible signal.
 5. Posting an approved question to r/cscareerquestionsEU.
 6. Changing the tracker schema or research template.
 7. Moving, renaming, deleting, merging, or overwriting local research files outside the bounded rules below.
-8. Writing outside <home-directory>/jobhunt, except owner-only temporary scratch ledgers described in references/job-discovery.md.
+8. Writing outside <home-directory>/jobhunt, except owner-only temporary scratch ledgers described in references/job-discovery.md and the temporary folder that scripts/render-cover-letter.py creates and deletes.
 9. Changing the user-level Codex configuration, including discovery concurrency.
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
@@ -67,6 +67,8 @@ Explicitly invoking discovery or manual-role research authorizes these bounded h
 - Create or update <home-directory>/jobhunt/applications/<company-file>.md from the canonical Markdown template.
 - Replace Research File values with verified relative Markdown paths.
 - Update Status after research and Last Applied only after the separate post-submit approval.
+
+After the user approves a cover letter's exact text, the run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with that letter.txt and its PDF, as described in references/cover-letter.md.
 
 The primary agent is the sole writer. Subagents return structured research only.
 
@@ -138,7 +140,7 @@ A role must remain open and must not have Last Applied within the previous 30 ca
 
 ### Applications and Premium
 
-Before opening an application flow, read references/application-gates.md. Prepare the exact decision packet and preserve every approval gate.
+Before opening an application flow, read references/application-gates.md. Prepare the exact decision packet and preserve every approval gate. When a form asks for a cover letter, also read references/cover-letter.md.
 
 Use visible Premium information as research and prioritization evidence only. Do not claim it guarantees ranking or response. Do not use bots, unofficial APIs, scrapers, mass invitations, or automated engagement.
 
@@ -158,5 +160,6 @@ Report:
 - Partial write or verification failures.
 - Eligible application queue.
 - Exact outcome of any approved application action.
+- Cover letter text and PDF paths for any application that used one.
 
 Never mark an application submitted without reliable confirmation.

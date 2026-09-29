@@ -91,15 +91,13 @@ B — Concise
 Reply: A, B, or revise: <instruction>
 ```
 
-For a cover letter, normally offer:
+For a cover letter, read [cover-letter.md](cover-letter.md). It sets the style, the options, and how to make the PDF for an upload field.
 
-1. A tailored role-specific letter as the recommended option.
-2. A shorter direct version when the company or form favors brevity.
-3. `Do not include` only when the letter is optional.
-
-Keep every draft truthful and evidence-backed. Prefer concrete matching experience, why the role and company are relevant, and a short close. Do not invent enthusiasm, metrics, responsibilities, relationships, or company knowledge.
+Keep every draft truthful and evidence-backed. Prefer concrete matching experience, why the role and company are relevant, and a short close. Do not invent metrics, responsibilities, relationships, or company knowledge. Outside the cover letter, do not invent enthusiasm; the cover letter's excited tone is the user's chosen style.
 
 If several fields are visible, the user may select them individually or approve `all recommended choices`. This selects draft content only; it does not authorize submission. Do not type or upload the selected content until the applicable entry or upload action is approved. Include all selected content again in the final submission packet.
+
+Every required field needs an answer the user chose or confirmed before the final packet. Never submit while a required field lacks one.
 
 For sensitive or factual fields listed below, do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page reveals another substantive field, pause and repeat this process before continuing.
 
@@ -141,7 +139,7 @@ Do not start or change a subscription, trial, plan, or paid feature unless the u
 
 Immediately before an irreversible action, show the exact final packet:
 
-- Repeat every final field, file, answer, recipient, and message.
+- Repeat every final field, file, answer, recipient, and message, including the cover letter text and its PDF filename, page count, and SHA-256.
 - Repeat the exact contingent tracker.csv update, including canonical LinkedIn URL, target row, `Status`, and `Last Applied`.
 - State that those tracking writes happen only after reliable submission confirmation.
 
