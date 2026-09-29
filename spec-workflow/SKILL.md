@@ -85,6 +85,8 @@ workspace/
 
 Existing prefixes such as `001-initial` stay in the name. New roots need no category tag or number. A code-only change needs no empty spec branch; record why other repositories are unaffected.
 
+On change branches, commit subjects start with the full branch name, then a short description, for example `001-initial-class-recovery: Save recovery draft`. Do not use the repository or worktree folder name as the subject prefix. For a squash into a parent change branch, use that parent branch name. For a merge into `main`, use a plain descriptive subject without a branch or repository prefix.
+
 Record exact repository paths, branches, parent branches, and parent commit IDs (SHAs). Names help navigation, but never determine merge or rebase targets by splitting a name.
 
 Priority changes and new parent commits do not change names. If the actual parent changes, rename the family across its repositories before further review or merge. Follow [Git operations](references/git-operations.md#prepare-or-branch), including VS Code workspace updates.
