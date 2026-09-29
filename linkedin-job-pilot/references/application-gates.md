@@ -25,9 +25,7 @@ stateDiagram-v2
     AwaitingFinalApproval --> Submitted: User approves exact submission
     Submitted --> Confirmed: Confirmation page or ID exists
     Submitted --> Unconfirmed: No reliable confirmation
-    Confirmed --> TrackingDecision
-    TrackingDecision --> ApplicationRecorded: Tracking approved
-    TrackingDecision --> [*]: Tracking not approved
+    Confirmed --> ApplicationRecorded: Automatic standing tracker authorization
     ApplicationRecorded --> [*]
     Unconfirmed --> AwaitingFinalApproval: Safe retry requires approval
 ```
@@ -69,7 +67,9 @@ After entry approval, inspect the entire form and prepare answers without submit
 
 These are user-confirmed facts and preferences. Apply them only when a field has the same meaning and scope. They reduce repeated questions but never replace the named-role approval to enter a form, transmit personal data, upload files, or submit.
 
-- For Germany-based roles, answer `Yes` when asked whether the user is authorized to work in Germany on an ongoing basis. Answer `No` when asked whether employer sponsorship is needed now or in the future. Ask for other countries or materially different wording.
+- For Germany-based roles, the user holds a permanent residence permit (`Niederlassungserlaubnis`) and does not need employer sponsorship now or in the future. Select that exact permit when offered; for simpler questions, answer `Yes` to ongoing German work authorization and `No` to sponsorship. Ask for other countries or materially different wording.
+- The notice period is three months and may be negotiable with the current employer. Select `3 or more months` when the form uses ranges. For free text, use `3 months, potentially negotiable with my current employer` unless the user gives a role-specific answer.
+- For Germany-based roles asking for desired annual compensation, use a minimum of `€100,000` gross. Enter `€100,000+ annual gross` for an open text range and `€100,000` when the form requires one fixed number. Ask when the role uses another currency or distinguishes base salary from total compensation.
 - Derive the phone number, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the entry and final submission packets.
 - Answer hybrid-policy questions `Yes`. This does not establish willingness to relocate, accept a fully onsite role, or meet a specific non-hybrid commute requirement.
 - To answer whether the user previously worked for or applied to the employer, compare the verified resume's employer history with the target company and its officially verified parent, affiliate, and former names. Answer `Yes` or `No` when the evidence is unambiguous; ask when company identity or ownership leaves a real ambiguity.
@@ -161,19 +161,21 @@ Immediately before an irreversible action, show the exact final packet:
 
 - Repeat every final field, file, answer, recipient, and message, including the cover letter text and its PDF filename, page count, and SHA-256.
 - Repeat the exact contingent tracker.csv update, including canonical LinkedIn URL, target row, `Status`, and `Last Applied`.
-- State that those tracking writes happen only after reliable submission confirmation.
+- State that the scoped `Applied` and `Last Applied` tracking writes happen automatically, under standing authorization, only after reliable submission confirmation.
 
 ```mermaid
 sequenceDiagram
     actor U as User
     participant A as Agent
     participant S as LinkedIn or employer site
+    participant C as tracker.csv
     A-->>U: Final fields, files, answers, messages, and contingent tracking writes
     Note over A,U: HARD STOP
     U->>A: Explicitly approve named actions
     A->>S: Submit the approved application first
     S-->>A: Confirmation page, receipt, or application ID
     alt Submission confirmed
+        A->>C: Atomically update Applied status and confirmed date
         A->>S: Send approved dependent outreach
         S-->>A: Sent state or thread URL
     else Submission unconfirmed

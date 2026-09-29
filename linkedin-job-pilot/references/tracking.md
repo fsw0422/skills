@@ -1,6 +1,6 @@
 # Post-application tracker updates
 
-Read this file only after submission is reliably confirmed and the exact local update was approved.
+Read this file only after submission is reliably confirmed. The user has provided standing authorization for the scoped update defined below, so do not ask for a separate tracker approval.
 
 Identify the existing tracker.csv row by canonical LinkedIn URL. Update that row; never create a second row for the same vacancy. Research Markdown remains a research record rather than an application timeline.
 
@@ -11,7 +11,7 @@ sequenceDiagram
     participant A as Agent
     participant C as tracker.csv
     A->>C: Parse and find canonical LinkedIn URL
-    A->>A: Reconfirm approved Status and date
+    A->>A: Derive scoped Applied status and confirmed date
     A->>C: Atomically update Status and Last Applied
     C-->>A: Reparse exact row
     A->>A: Verify against submission evidence
@@ -23,6 +23,15 @@ Use only a confirmation page, receipt, or application ID:
 
 - Status: preserve the fit label and append or replace the middle-dot lifecycle with Applied.
 - Last Applied: confirmed date in YYYY-MM-DD.
+
+## Standing authorization
+
+After reliable submission confirmation, automatically update the existing canonical row without asking again. The standing authorization is limited to:
+
+- preserving the existing fit label and setting its lifecycle to `Applied`;
+- setting `Last Applied` to the confirmed submission date.
+
+It does not authorize creating another row, changing the schema, editing company or role identity, recording an unconfirmed attempt, or changing later lifecycle stages.
 
 Do not overwrite Company, Role, LinkedIn URL, or Research File during an ordinary post-submit update.
 
