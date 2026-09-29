@@ -65,6 +65,26 @@ Ask permission to enter that exact application workflow. Do not click `Apply`, `
 
 After entry approval, inspect the entire form and prepare answers without submitting. Reuse verified user data only when its source and currentness are known. Show every exact submitted value in the final packet. Ask for anything sensitive or uncertain.
 
+### User application defaults
+
+These are user-confirmed facts and preferences. Apply them only when a field has the same meaning and scope. They reduce repeated questions but never replace the named-role approval to enter a form, transmit personal data, upload files, or submit.
+
+- For Germany-based roles, answer `Yes` when asked whether the user is authorized to work in Germany on an ongoing basis. Answer `No` when asked whether employer sponsorship is needed now or in the future. Ask for other countries or materially different wording.
+- Derive the phone number, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the entry and final submission packets.
+- Answer hybrid-policy questions `Yes`. This does not establish willingness to relocate, accept a fully onsite role, or meet a specific non-hybrid commute requirement.
+- To answer whether the user previously worked for or applied to the employer, compare the verified resume's employer history with the target company and its officially verified parent, affiliate, and former names. Answer `Yes` or `No` when the evidence is unambiguous; ask when company identity or ownership leaves a real ambiguity.
+- The employer's default AI-assisted review is acceptable. Do not request a human-only opt-out unless the user asks.
+- Agree to a data-processing consent only when it is required to consider the current application. Keep every optional consent unchecked, including future-opportunity retention, talent pools, marketing, notifications, and similar unrelated processing.
+
+### Resume-first autofill order
+
+After the user approves the exact uploads and the form exposes the matching controls:
+
+1. Upload the verified resume first and wait for the form's parser or autofill to finish.
+2. Upload the exact approved cover letter next when the form accepts one. If no approved letter exists, follow [cover-letter.md](cover-letter.md) before uploading anything.
+3. Inspect every populated field and reconcile it against the verified resume and the user defaults above. Never trust parsed names, phone formatting, dates, locations, employers, or answers without checking them.
+4. Present all final values and files again at the final submission gate.
+
 ### Handle employer-site additional inputs
 
 When LinkedIn redirects to an employer career site, or an employer site asks for input beyond verified contact details and the selected resume, pause before entering it. This includes cover letters, motivation statements, experience summaries, role-specific questions, portfolio or writing-sample requests, additional documents, and optional free-text fields.
@@ -99,9 +119,9 @@ If several fields are visible, the user may select them individually or approve 
 
 Every required field needs an answer the user chose or confirmed before the final packet. Never submit while a required field lacks one.
 
-For sensitive or factual fields listed below, do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page reveals another substantive field, pause and repeat this process before continuing.
+For sensitive or factual fields listed below, first use an exact matching user application default above. Otherwise do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page reveals another substantive field, pause and repeat this process before continuing.
 
-Do not infer:
+Outside those scoped defaults, do not infer:
 
 - Work authorization or sponsorship needs.
 - Salary expectations or current compensation.

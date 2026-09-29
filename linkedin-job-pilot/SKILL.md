@@ -7,7 +7,11 @@ description: Discover, curate, research, and track LinkedIn roles, then prepare,
 
 Run an evidence-based job search while leaving every consequential choice with the user.
 
-Use the authenticated browser for LinkedIn, employer application sites, and the approved Reddit fallback. Store all durable research and tracking data under the active user's home directory in `jobhunt`. Never fall back to a workspace-local copy, another home directory, a cache, or a cloud file.
+Use the AI Desktop built-in browser for LinkedIn, employer application sites, and the approved Reddit fallback whenever it is installed. Use a third-party browser only when the built-in browser is unavailable or the site cannot complete the workflow there; explain the fallback before continuing.
+
+When a site needs credentials, make the built-in browser visible and hand control to the user so they can sign in securely. Never ask the user to paste a password, passkey, one-time code, or verification code into chat, and never read one from email or another app. Resume only after the user confirms that sign-in or verification is complete.
+
+Store all durable research and tracking data under the active user's home directory in `jobhunt`. Never fall back to a workspace-local copy, another home directory, a cache, or a cloud file.
 
 ## Canonical local resources
 
@@ -29,7 +33,7 @@ Store Research File as a POSIX path relative to <home-directory>/jobhunt, the di
 
 ## Default explicit invocation
 
-When the user explicitly invokes this skill, first apply the mandatory PDF gate. Once a PDF is verified, an invocation with no additional scope, or only Start discovery, begins from the already-open LinkedIn Jobs tab using its current search, collection, location, and filters.
+When the user explicitly invokes this skill, first apply the mandatory PDF gate. Once a PDF is verified, an invocation with no additional scope, or only Start discovery, begins from the already-open LinkedIn Jobs tab in the built-in browser using its current search, collection, location, and filters. If no such tab exists, open LinkedIn Jobs in the built-in browser and use a secure browser handoff for sign-in when needed.
 
 Run the complete workflow: capacity preflight, ten-page discovery horizon, immediate CSV tracking, one research agent per stable job, company-role expansion, automatic Markdown research-file population, final four-label fit classification, and application queue preparation. Ask only for a genuinely missing material search criterion or an ambiguous choice between multiple open LinkedIn collections.
 
@@ -39,7 +43,7 @@ Before opening LinkedIn, reading the tracker, researching a company, evaluating 
 
 Verify that the file exists, is a PDF, opens successfully, and contains usable extractable text. Record its absolute path, visible filename, SHA-256 hash, page count, and modification time. If it is unreadable, image-only, ambiguous, or replaced during the run, stop and ask for a valid PDF again.
 
-Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after approval. It must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload it to LinkedIn preferences. Resume work belongs to resume-pilot.
+Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after approval. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. Extraction is not authorization to transmit them: show the values in the application packet and preserve the entry and upload approvals below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
 
 ## Non-negotiable approvals
 
@@ -57,7 +61,7 @@ Research, comparison, local Markdown authoring, and bounded tracker updates may 
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
 
-Never infer work authorization, sponsorship, relocation, compensation expectations, notice period, demographic answers, disability, veteran status, criminal history, or other sensitive application data.
+Use the scoped, user-confirmed application defaults in references/application-gates.md when a field matches them exactly. Otherwise never infer work authorization, sponsorship, relocation, compensation expectations, notice period, demographic answers, disability, veteran status, criminal history, or other sensitive application data.
 
 ## Bounded local-write authorization
 
