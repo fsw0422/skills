@@ -70,7 +70,7 @@ Explicitly invoking discovery or manual-role research authorizes these bounded h
 - Create or update <home-directory>/jobhunt/tracker.csv without changing its six-column schema.
 - Create or update <home-directory>/jobhunt/applications/<company-file>.md from the canonical Markdown template.
 - Replace Research File values with verified relative Markdown paths.
-- Update Status after research and Last Applied only after the separate post-submit approval.
+- After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label, set the lifecycle to `Applied`, and record `Last Applied`. This standing authorization covers only those two fields for the confirmed application; all other tracker changes keep their normal authorization requirements.
 
 After the user approves a cover letter's exact text, the run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with that letter.txt and its PDF, as described in references/cover-letter.md.
 
@@ -112,8 +112,9 @@ flowchart TD
     P -- Yes --> R[Inspect form and prepare final packet]
     R --> S{User approves exact submission?}
     S -- Yes --> T[Submit and verify]
-    T --> U{Tracking update approved?}
-    U -- Yes --> V[Update tracker.csv]
+    T --> U{Submission reliably confirmed?}
+    U -- Yes --> V[Update tracker.csv automatically]
+    U -- No --> W[Report unconfirmed outcome]
 ~~~
 
 ## Route the work
@@ -150,7 +151,7 @@ Use visible Premium information as research and prioritization evidence only. Do
 
 ### Post-application tracking
 
-After reliable submission confirmation and explicit approval for the local update, read references/tracking.md. Update the existing CSV row, preserve the fit label, append the lifecycle, and set Last Applied to the confirmed date. Never mark Applied from a click or assumption.
+After reliable submission confirmation, read references/tracking.md and apply the user's standing authorization without asking again. Update the existing CSV row, preserve the fit label, set the lifecycle to `Applied`, and set Last Applied to the confirmed date. Never mark Applied from a click or assumption, and never extend this standing authorization to another lifecycle, field, row, or schema change.
 
 ## Completion standard
 
