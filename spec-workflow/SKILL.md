@@ -85,7 +85,7 @@ workspace/
 
 Existing prefixes such as `001-initial` stay in the name. New roots need no category tag or number. A code-only change needs no empty spec branch; record why other repositories are unaffected.
 
-On change branches, commit subjects start with the full branch name, then a short description, for example `001-initial-class-recovery: Save recovery draft`. Do not use the repository or worktree folder name as the subject prefix. For a squash into a parent change branch, use that parent branch name. For a merge into `main`, use a plain descriptive subject without a branch or repository prefix.
+On change branches, commit subjects start with the full change branch name, then a short description, for example `001-initial-class-recovery: Save recovery draft`. Do not use the repository or worktree folder name as the subject prefix. When squashing a child into a parent change branch, keep the child's full change name in the squash subject, even though the commit lands on the parent. Commits made directly on the parent use the parent branch name. For a merge into `main`, use a plain descriptive subject without a branch or repository prefix.
 
 Record exact repository paths, branches, parent branches, and parent commit IDs (SHAs). Names help navigation, but never determine merge or rebase targets by splitting a name.
 
