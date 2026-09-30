@@ -48,10 +48,13 @@ Open and inspect the named application form without asking for a separate approv
 
 ## Prepare the decision packet
 
+Use the current research Markdown already referenced by the tracker row as the default source for the Gate 1 packet. When that file contains usable company and role research, do not repeat a full research pass. Refresh only a missing, stale, contradictory, or decision-critical fact needed for the current application, then update the research file through the normal bounded-write workflow.
+
 Before Gate 1, show:
 
 - Company, role, location, job URL, job ID, posting date, and application channel.
-- Concise company research with sources, salary evidence, interview expectations, and risk flags.
+- Company snapshot from the tracker-linked research file: a concise summary of what the company does, its website, and reported revenue. If revenue is not public or no reliable figure exists, state that explicitly instead of estimating it. Include brief funding or financial-health context when available.
+- Concise role and company research with sources, salary evidence, interview expectations, and risk flags.
 - Fit assessment: `A — Great Fit`, `B — Normal Fit`, `Investigate`, or `Skip`, with evidence-backed rationale, strongest evidence, gaps, hard constraints, and a recommendation.
 - Exact provided PDF filename, absolute path, SHA-256 hash, page count, and modification time.
 - Read-only role-alignment summary based only on the provided PDF: central qualifications evidenced, unsupported gaps, and any parsing problem that could affect this application. Do not propose or make resume changes.
