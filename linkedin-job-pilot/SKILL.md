@@ -1,6 +1,6 @@
 ---
 name: linkedin-job-pilot
-description: Discover, curate, research, and track LinkedIn roles, then prepare, submit, and update applications, including approved cover letter PDFs, using a user-provided PDF resume, local Markdown research files, a local CSV tracker, and explicit approval gates. Use when the user asks to browse or shortlist jobs, provide a company or role manually, evaluate a role, apply through LinkedIn or an employer site, write a cover letter, or track applications. Require a readable PDF resume before doing any work; resume creation and revision belong to resume-pilot.
+description: Discover, curate, research, and track LinkedIn roles, then prepare, submit, and update applications, including approved cover letter PDFs, using a user-provided PDF resume, local Markdown research files, a local CSV tracker, and a two-gate application flow. Use when the user asks to browse or shortlist jobs, provide a company or role manually, evaluate a role, apply through LinkedIn or an employer site, write a cover letter, or track applications. Require a readable PDF resume before doing any work; resume creation and revision belong to resume-pilot.
 ---
 
 # LinkedIn Job Pilot
@@ -43,21 +43,26 @@ Before opening LinkedIn, reading the tracker, researching a company, evaluating 
 
 Verify that the file exists, is a PDF, opens successfully, and contains usable extractable text. Record its absolute path, visible filename, SHA-256 hash, page count, and modification time. If it is unreadable, image-only, ambiguous, or replaced during the run, stop and ask for a valid PDF again.
 
-Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after approval. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. Extraction is not authorization to transmit them: show the values in the application packet and preserve the entry and upload approvals below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
+Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after approval. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. Extraction is not authorization to transmit them: show the values in the application packet and preserve the bundled content-and-transmission approval below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
 
 ## Non-negotiable approvals
 
-Research, comparison, local Markdown authoring, and bounded tracker updates may proceed without approval. Stop and obtain explicit approval immediately before:
+Research, comparison, local Markdown authoring, bounded tracker updates, and read-only application-form inspection may proceed without approval. For an ordinary named application, use exactly two approval gates:
 
-1. Opening an application workflow that may save an application or expose applicant data.
-2. Attaching the provided PDF or an approved cover letter PDF to an application.
-3. Submitting an application or sending any application-related message.
-4. Activating Top Choice, I’m interested, or another recruiter-visible signal.
-5. Posting an approved question to r/cscareerquestionsEU.
-6. Changing the tracker schema or research template.
-7. Moving, renaming, deleting, merging, or overwriting local research files outside the bounded rules below.
-8. Writing outside <home-directory>/jobhunt, except owner-only temporary scratch ledgers described in references/job-discovery.md and the temporary folder that scripts/render-cover-letter.py creates and deletes.
-9. Changing the user-level Codex configuration, including discovery concurrency.
+1. **Content and transmission:** after inspecting the form, show one complete packet and obtain one bundled approval for the exact answers, the full cover letter text, personal data entry, and named file uploads. The same reply may select recommended answers and approve entering and uploading them.
+2. **Final submission:** after verifying the populated form, obtain explicit approval immediately before clicking the final submit control.
+
+Do not ask for approval merely to open, navigate to, or inspect an application form when that action is read-only and shares no applicant data. If opening or advancing the form would itself save an application, transmit applicant data, or trigger a recruiter-visible action, include that action in the first gate.
+
+Outside those two ordinary application gates, stop and obtain explicit approval immediately before:
+
+1. Sending any application-related message.
+2. Activating Top Choice, I’m interested, or another recruiter-visible signal.
+3. Posting an approved question to r/cscareerquestionsEU.
+4. Changing the tracker schema or research template.
+5. Moving, renaming, deleting, merging, or overwriting local research files outside the bounded rules below.
+6. Writing outside <home-directory>/jobhunt, except owner-only temporary scratch ledgers described in references/job-discovery.md and the temporary folder that scripts/render-cover-letter.py creates and deletes.
+7. Changing the user-level Codex configuration, including discovery concurrency.
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
 
@@ -107,14 +112,18 @@ flowchart TD
     M -- Yes --> N[Post only to r/cscareerquestionsEU]
     M -- No --> O[Keep documented gap]
     K -- No --> O
-    O --> P{User approves named application workflow?}
-    P -- No --> Q[Stop or move to next role]
-    P -- Yes --> R[Inspect form and prepare final packet]
-    R --> S{User approves exact submission?}
-    S -- Yes --> T[Submit and verify]
-    T --> U{Submission reliably confirmed?}
-    U -- Yes --> V[Update tracker.csv automatically]
-    U -- No --> W[Report unconfirmed outcome]
+    O --> P[Inspect application form read-only]
+    P --> Q[Prepare full letter, answers, data, and file packet]
+    Q --> R{Gate 1: User approves exact content and transmission?}
+    R -- No --> S[Stop, revise, or move to next role]
+    R -- Yes --> T[Enter data and upload named files]
+    T --> U[Verify populated form]
+    U --> V{Gate 2: User approves final submission?}
+    V -- No --> S
+    V -- Yes --> W[Submit and verify]
+    W --> X{Submission reliably confirmed?}
+    X -- Yes --> Y[Update tracker.csv automatically]
+    X -- No --> Z[Report unconfirmed outcome]
 ~~~
 
 ## Route the work

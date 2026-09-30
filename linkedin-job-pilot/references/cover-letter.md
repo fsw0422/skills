@@ -2,24 +2,25 @@
 
 Read this file when an application form asks for a cover letter, either as a file upload or as a text box.
 
-The cover letter speaks for the user. Draft it, get the exact text approved, and only then save it, turn it into a PDF, or put it in the form.
+The cover letter speaks for the user. Always draft the full version, include its exact text in the bundled Gate 1 packet, and only after approval save it, turn it into a PDF, or put it in the form.
 
 ## Flow
 
 ~~~mermaid
 flowchart TD
     A[Form asks for a cover letter] --> B[Draft from the resume, job post, and research]
-    B --> C[Show options A, B, and Do not include when optional]
-    C --> D{User picks or revises}
+    B --> C[Show the exact full letter in Gate 1 packet]
+    C --> D{User approves content and entry or upload?}
     D -- Revise --> B
-    D -- Picks a letter --> E{Upload field or text box?}
-    E -- Text box --> H[Add the exact text to the final packet]
-    E -- Upload field --> F[Save the text and render a one-page PDF]
-    F --> G[Verify the PDF]
-    G --> H
-    H --> I{User approves the upload and the final submission?}
-    I -- Yes --> J[Add the letter to the application]
-    I -- No --> B
+    D -- Yes --> E{Upload field or text box?}
+    E -- Text box --> H[Enter exact approved text]
+    E -- Upload field --> F[Save text and render one-page PDF]
+    F --> G[Verify PDF]
+    G --> H[Upload exact approved PDF]
+    H --> I[Include letter and file details in Gate 2 packet]
+    I --> J{User approves final submission?}
+    J -- Yes --> K[Submit application]
+    J -- No --> L[Stop or revise]
 ~~~
 
 ## Style
@@ -52,19 +53,15 @@ The excited tone is the user's chosen style. The facts inside the letter must st
 - Leave out salary, visa or work authorization, notice period, and other sensitive facts unless the user supplies them for this letter.
 - Point out any sentence the user must confirm.
 
-## Options
+## Full-letter default
 
-Offer, using the choice pattern in application-gates.md:
+Always use the full 150-to-250-word letter described above whenever an application requests or accepts a cover letter. Do not offer A/B length choices or a routine `Do not include` option. Show one optimized full draft and allow the user to approve it or request edits.
 
-- **A — Full letter (Recommended):** the style above.
-- **B — Shorter:** the same style in about 100 words, for forms or companies that favor brevity.
-- **Do not include:** only when the field is optional.
-
-The user may pick one or reply with changes. Picking a letter approves its text only. It does not approve uploading or submitting.
+If a hard character or file limit cannot accept the full version, produce the longest compliant version that preserves the same structure and substance, explain the limit, and include that exact text in Gate 1. The user may approve the exact letter and its listed entry or upload in the same reply. This does not approve final submission.
 
 ## Save and render
 
-After the user approves the exact text, save it in `<home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/`:
+After the user approves the exact text and listed entry or upload in Gate 1, save it in `<home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/`:
 
 - `letter.txt` holds the exact approved text. Write it through a temporary sibling file and an atomic rename.
 - The PDF is named `<First>-<Last>-Cover-Letter-<Company>.pdf`, because recruiters see this name. Take the name from the resume and replace spaces and unsafe characters with hyphens. Create it only when the form wants a file.
@@ -99,6 +96,6 @@ Keep cover letters out of the company research Markdown. It is a research record
 
 ## Upload
 
-Attach the PDF, or type the text, only after the user approves that exact upload or entry, the same way as attaching the resume. Show the letter text, PDF filename, page count, and SHA-256 again in the final packet. If anything changes after approval, ask again.
+Attach the PDF, or type the text, only after the user approves that exact upload or entry in Gate 1, the same way as attaching the resume. Show the letter text, PDF filename, page count, and SHA-256 again in the Gate 2 packet. If anything changes after Gate 1, ask again before transmitting the changed content.
 
 Never upload the cover letter in place of the resume, and never add it to LinkedIn `My qualifications`.
