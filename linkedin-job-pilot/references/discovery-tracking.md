@@ -125,18 +125,30 @@ Do not store credentials, demographic answers, confidential work-system text, or
 
 ## Manual intake
 
+When the user hand-picks companies or roles, use each company's official careers page as the source of truth for discovery and research. Do not discover roles through LinkedIn search.
+
 ~~~mermaid
 flowchart TD
-    A[User supplies input] --> B{Exact LinkedIn role URL?}
-    B -- Yes --> C[Deduplicate, track, research, classify]
-    B -- Company and role --> D[Find exact current LinkedIn post]
-    D -- Found --> C
-    D -- Not found --> E[Record unresolved lead in company Markdown]
-    B -- Company only --> F[Research company and current roles]
-    F --> G[Update company Markdown and track resolved roles]
+    A[User hand-picks companies or roles] --> B[Open each company's official careers page]
+    B --> C[List open roles matching the user's criteria]
+    C --> D[Verify each official posting and research from it]
+    D --> E[Write company Markdown with every researched role]
+    E --> F{Exact LinkedIn post exists?}
+    F -- Yes --> G[Track with canonical LinkedIn URL]
+    F -- No --> H[Preview rows with official posting URL]
+    H --> I{User approves?}
+    I -- Yes --> J[Track with official posting URL]
+    I -- No --> K[Keep role in Markdown only]
 ~~~
 
-A company-only watchlist row or any normal row without an exact LinkedIn URL requires an explicit preview and approval.
+1. For each supplied company, open its official careers page and follow it to the job board it uses, such as Greenhouse, Ashby, Lever, Workday, SmartRecruiters, Personio, or a company-run site. Public read-only job-board feeds of that official board are allowed. Confirm the board belongs to the same company; similar slugs can belong to unrelated employers.
+2. List every open role that matches the user's stated criteria. For a supplied role, find that exact posting on the careers page. Record excluded roles briefly in the company Markdown.
+3. Research each role from its official posting first: requirements, location, work mode, compensation, and posting date. Then follow company-research.md for the rest.
+4. Use LinkedIn only for a targeted lookup of the exact posting to get its canonical URL. A lookup is not discovery: never add roles found only on LinkedIn.
+5. When the same official posting appears on LinkedIn several times, for example once per country, track one canonical URL and list the other copies in the role section.
+6. When no LinkedIn post exists, write `LinkedIn: Not found on LinkedIn as of <date> (official careers posting only)` in the role section.
+
+A company-only watchlist row or any normal row without an exact LinkedIn URL requires an explicit preview and approval. After approval, put the official posting URL in the LinkedIn URL column. Such rows cannot be deduplicated by LinkedIn job ID; compare official URLs instead, and reconcile manually if the role later appears on LinkedIn.
 
 ## Thirty-day eligibility
 

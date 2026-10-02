@@ -138,7 +138,7 @@ Before discovery, read references/subagent-orchestration.md, references/job-disc
 
 Inspect every unique visible job through page 10, or stop earlier when LinkedIn genuinely ends. Select cards sequentially in the primary agent. Immediately upsert each stable canonical URL in tracker.csv as Researching. Complete and verify the current page’s research files and final statuses before advancing.
 
-Do not cap tracking at a top-ten shortlist. A manually supplied role or company uses the same identity, research, persistence, and approval rules.
+Do not cap tracking at a top-ten shortlist. A manually supplied role or company uses the same identity, research, persistence, and approval rules. For hand-picked companies or roles, discover and research openings on each company's official careers page, not through LinkedIn search; see Manual intake in references/discovery-tracking.md.
 
 ### Research
 
