@@ -73,6 +73,8 @@ For every unique job record:
 - Visible Premium signals.
 - Fit rationale, strongest evidence, largest gap, confidence, and final label.
 
+Card and detail-panel facts are listing data. The research agent replaces them with facts from the exact official posting on the careers page, keeps LinkedIn values only where the official posting is silent, and labels them; see company-research.md.
+
 Use only the PDF accepted by the mandatory gate for personal fit. Do not substitute the LinkedIn profile or another resume. Premium is a tie-breaker, never proof of qualification.
 
 ## Fit labels
