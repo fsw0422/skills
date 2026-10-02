@@ -55,7 +55,7 @@ In the application packet, show:
 - Company snapshot from the tracker-linked research file: a concise summary of what the company does, its website, and reported revenue. If revenue is not public or no reliable figure exists, state that explicitly instead of estimating it. Include brief funding or financial-health context when available.
 - Concise role and company research with sources, salary evidence, interview expectations, and risk flags.
 - Fit assessment: `A — Great Fit`, `B — Normal Fit`, `Investigate`, or `Skip`, with evidence-backed rationale, strongest evidence, gaps, hard constraints, and a recommendation.
-- Exact provided PDF filename, absolute path, SHA-256 hash, page count, and modification time.
+- Exact provided PDF filename, absolute path, SHA-256 hash, and page count from the session's resume check.
 - Read-only role-alignment summary based only on the provided PDF: central qualifications evidenced, unsupported gaps, and any parsing problem that could affect this application. Do not propose or make resume changes.
 - Every form field with the exact value to enter, and every file to upload.
 - The full cover letter text with its PDF path, filename, page count, and SHA-256 when the form asks for or accepts one, prepared as described in [cover-letter.md](cover-letter.md).
@@ -79,6 +79,8 @@ These are user-confirmed facts and preferences. Apply them only when a field has
 - The notice period is three months and may be negotiable with the current employer. Select `3 or more months` when the form uses ranges. For free text, use `3 months, potentially negotiable with my current employer` unless the user gives a role-specific answer.
 - For Germany-based roles asking for desired annual compensation, use a minimum of `€100,000` gross. Enter `€100,000+ annual gross` for an open text range. When a required field asks for one exact number, enter `€110,000`, or `110000` in a numeric-only field. Ask when the role uses another currency or distinguishes base salary from total compensation.
 - Derive the phone number, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the application packet.
+- The phone number is supplied by the user once per session when the resume has none. Ask the first time a form or cover letter needs it, reuse it for every application in that session, and show it in each packet.
+- The user lives in Berlin, Germany. Answer `Yes` to "Are you willing to relocate to Berlin?" and similar questions about working from or moving to Berlin, and give `Berlin, Germany` as current location. Ask for relocation to any other city or country.
 - Answer hybrid-policy questions `Yes`. This does not establish willingness to relocate, accept a fully onsite role, or meet a specific non-hybrid commute requirement.
 - To answer whether the user previously worked for or applied to the employer, compare the verified resume's employer history with the target company and its officially verified parent, affiliate, and former names. Answer `Yes` or `No` when the evidence is unambiguous; ask when company identity or ownership leaves a real ambiguity.
 - The employer's default AI-assisted review is acceptable. Do not request a human-only opt-out unless the user asks.
@@ -133,7 +135,7 @@ Outside those scoped defaults, do not infer:
 
 - Work authorization or sponsorship needs.
 - Salary expectations or current compensation.
-- Willingness to relocate or commute.
+- Willingness to relocate or commute, except the Berlin default above.
 - Notice period or availability.
 - Demographic, disability, veteran, or criminal-history answers.
 - Consent to future opportunities, marketing, automated screening, or talent pools.

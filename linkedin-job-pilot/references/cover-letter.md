@@ -69,7 +69,7 @@ Render the PDF with:
 python3 scripts/render-cover-letter.py \
   --letter <folder>/letter.txt \
   --name "<name from the resume>" \
-  --contact "<email · phone · city from the resume>" \
+  --contact "<email · phone · city from the resume; phone from the session if the resume has none>" \
   --title "<Name> – Cover Letter – <Company>" \
   --date "<today, such as 29 September 2026>" \
   --paper a4 \
