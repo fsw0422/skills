@@ -42,7 +42,7 @@ sequenceDiagram
     participant M as Research Markdown
     participant R as Job agents
     P->>L: Inspect cards sequentially
-    P->>C: Atomically upsert Researching rows
+    P->>C: Add Researching rows with the Edit tool
     P->>R: Dispatch company owners
     R-->>P: Company dossiers and sibling identities
     P->>M: Create or update owner research files

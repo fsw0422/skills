@@ -3,12 +3,20 @@
 
 Usage:
   render-cover-letter.py --letter letter.txt --name "Full Name" --contact "email · phone · city" \
-      --out path/to/Cover-Letter.pdf [--title TEXT] [--date TEXT] [--paper a4|letter] [--chrome PATH]
+      --out path/to/Cover-Letter.pdf [--title TEXT] [--date TEXT] [--paper a4|letter] [--chrome PATH] \
+      [--preview path/to/preview.png] [--verify-only]
 
 The letter file holds the exact drafted text. Blank lines separate paragraphs.
-Writes the PDF atomically. Exits 1 if rendering fails and 2 if the PDF is not exactly one page.
+Writes the PDF atomically, then verifies it and prints one line:
+  <pdf path> pages=1 sha256=<hex> text_match=yes header_match=yes
+Exits 1 if rendering fails, 2 if the PDF is not exactly one page, and 3 if the
+PDF text does not match the letter or the header. --verify-only skips rendering
+and verifies an existing PDF. --preview writes a PNG of the page (needs pdftoppm).
 """
+from __future__ import annotations
+
 import argparse
+import hashlib
 import html
 import os
 import pathlib
@@ -56,6 +64,37 @@ def count_pages(pdf: pathlib.Path) -> int:
     return len(re.findall(rb"/Type\s*/Page(?!s)", pdf.read_bytes()))
 
 
+def normalize(text: str) -> str:
+    text = text.replace("\u2019", "'").replace("\u2018", "'").replace("\u201c", '"').replace("\u201d", '"')
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def pdf_text(pdf: pathlib.Path) -> str | None:
+    if not shutil.which("pdftotext"):
+        return None
+    return subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True, text=True).stdout
+
+
+def verify(pdf: pathlib.Path, letter: str, name: str, contact: str, preview: str | None) -> int:
+    pages = count_pages(pdf)
+    digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+    extracted = pdf_text(pdf)
+    if extracted is None:
+        text_ok = header_ok = "unknown"
+    else:
+        got, want = normalize(extracted), normalize(letter)
+        # Line wrapping can split a hyphenated word ("data-" / "residency"); pdftotext then drops the hyphen.
+        text_ok = "yes" if want in got or want.replace("-", "") in got.replace("-", "") else "no"
+        header_ok = "yes" if got.startswith(normalize(f"{name} {contact}")) else "no"
+    if preview and shutil.which("pdftoppm"):
+        target = pathlib.Path(preview).expanduser().resolve()
+        subprocess.run(["pdftoppm", "-png", "-r", "60", "-singlefile", str(pdf), str(target.with_suffix(""))], check=False)
+    print(f"{pdf} pages={pages} sha256={digest} text_match={text_ok} header_match={header_ok}")
+    if pages != 1:
+        return 2
+    return 3 if "no" in (text_ok, header_ok) else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--letter", required=True, help="Text file with the exact drafted letter.")
@@ -66,9 +105,14 @@ def main() -> int:
     parser.add_argument("--date", default="", help="Optional date line.")
     parser.add_argument("--paper", choices=["a4", "letter"], default="a4")
     parser.add_argument("--chrome", default=os.environ.get("CHROME_PATH") or CHROME_MAC)
+    parser.add_argument("--preview", help="Optional PNG preview path.")
+    parser.add_argument("--verify-only", action="store_true", help="Verify an existing PDF without rendering.")
     args = parser.parse_args()
 
     out = pathlib.Path(args.out).expanduser().resolve()
+    letter = pathlib.Path(args.letter).expanduser().read_text(encoding="utf-8")
+    if args.verify_only:
+        return verify(out, letter, args.name, args.contact, args.preview)
     staged = out.with_name(out.name + ".tmp")
     page_html = PAGE.format(
         title=html.escape(args.title),
@@ -76,7 +120,7 @@ def main() -> int:
         name=html.escape(args.name),
         contact=html.escape(args.contact),
         date=f'<p class="date">{html.escape(args.date)}</p>' if args.date else "",
-        body=to_paragraphs(pathlib.Path(args.letter).expanduser().read_text(encoding="utf-8")),
+        body=to_paragraphs(letter),
     )
 
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="cover-letter-"))
@@ -110,8 +154,7 @@ def main() -> int:
             return 2
 
         os.replace(staged, out)
-        print(f"{out} pages=1")
-        return 0
+        return verify(out, letter, args.name, args.contact, args.preview)
     finally:
         staged.unlink(missing_ok=True)
         shutil.rmtree(tmp, ignore_errors=True)
