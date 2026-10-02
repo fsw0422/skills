@@ -64,15 +64,15 @@ Give each job agent:
 
 Each agent returns:
 
-- Stable identity and official posting state.
-- Role requirements, duties, work mode, salary, and interview evidence.
+- Stable identity, the exact official posting URL, and its open or closed state.
+- Role requirements, duties, work mode, salary, and interview evidence, taken from the official posting first, with LinkedIn-only facts labeled.
 - Required company facts with dated source links and confidence.
 - Fit label, rationale, strongest evidence, largest gap, unknowns, lifecycle, and recommendation.
-- Fitting sibling roles only when it is the expansion owner.
+- Fitting sibling roles only when it is the expansion owner, found on the company's official careers page, each with its official posting URL.
 
 Agent boundaries:
 
-- Official sources first, then reputable reporting.
+- The official careers-page posting is the source of truth for role facts; see company-research.md. Then official company sources, then reputable reporting.
 - Targeted read-only Reddit, Blind, and Glassdoor checks when material.
 - No LinkedIn control, application action, saving, dismissal, interest signal, profile visit, contact, or Reddit post.
 - No local durable writes. Only the primary agent may write tracker.csv or research Markdown.
@@ -85,7 +85,7 @@ Maintain normalized company identities for the run. On each page:
 
 1. Dispatch the first job for each new company as expansion owner.
 2. Wait and merge company dossiers and sibling identities.
-3. Resolve and deduplicate each sibling's canonical LinkedIn URL.
+3. For each sibling found on the official careers page, look up its exact LinkedIn post to get the canonical URL, and deduplicate. A sibling with no LinkedIn post follows Manual intake in discovery-tracking.md.
 4. Parse tracker.csv and upsert only new or unclassified sibling rows.
 5. Verify each row and relative Research File path.
 6. Dispatch one agent for every remaining original and tracked sibling job.

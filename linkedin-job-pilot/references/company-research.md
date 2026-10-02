@@ -8,7 +8,7 @@ Use company-research-template.md for every company Markdown file.
 
 ~~~mermaid
 flowchart TD
-    A[Job posting] --> B[Official company sources]
+    A[Exact official posting on the careers page] --> B[Official company sources]
     B --> C{Enough material evidence?}
     C -- No --> D[Use filings, reporting, LinkedIn, Levels, Reddit, Blind, Glassdoor]
     C -- Yes --> E[Reconcile dates and contradictions]
@@ -24,7 +24,28 @@ flowchart TD
     L --> J
 ~~~
 
-Start with the job URL, role, location, posting date, and user constraints. Verify the opening on the employer's official careers site.
+Start with the job URL, role, location, posting date, and user constraints, then find the exact official posting.
+
+## Careers page is the source of truth
+
+The employer's official careers page, or the job board it uses (Greenhouse, Ashby, Lever, Workday, and similar), is the source of truth for every role. This includes roles found on LinkedIn and sibling roles found during company expansion. LinkedIn is a bulletin board for finding listings and a fallback for missing details.
+
+~~~mermaid
+flowchart LR
+    A[LinkedIn card or user input] --> B[Find exact official posting]
+    B -- Found --> C[Take role facts from the official posting]
+    C --> D{Fact missing there?}
+    D -- Yes --> E[Fill from LinkedIn, labeled as LinkedIn-only]
+    D -- No --> F[Use official value]
+    B -- Not found --> G[Use LinkedIn text, mark the role as not verified on the careers page]
+~~~
+
+1. Find the exact posting for the role on the official careers page. A generic careers or search page is not enough. Confirm the board belongs to the same employer.
+2. Take requirements, duties, level, location, work mode, compensation, language, authorization, and posting dates from the official posting.
+3. Use LinkedIn text only for facts the official posting does not state, such as applicant counts, repost state, or Premium signals, or a detail the employer omitted. Label each such fact `(LinkedIn only)`.
+4. When the official posting and LinkedIn disagree, the official posting wins. Note the difference in the role section.
+5. If the posting is closed on the careers page but still listed on LinkedIn, treat the role as closed.
+6. If no official posting can be found, research from LinkedIn, write `Official posting: Not found on the careers page as of <date>` in the role section, and lower confidence.
 
 The diagram is a priority order, not a requirement to search every site. Stop adding sources when material questions are answered. Respect access controls and report unavailable evidence.
 
@@ -54,9 +75,9 @@ Complete the full material checklist for likely Great Fit and Normal Fit roles. 
 
 Use this reliability order:
 
-1. Audited filings, official job descriptions, investor relations, and direct company publications.
+1. Audited filings, the official job posting on the careers page, investor relations, and direct company publications.
 2. Reputable reporting and attributed databases.
-3. LinkedIn company and workforce signals.
+3. LinkedIn company and workforce signals, and LinkedIn job text as a labeled fallback for facts missing from the official posting.
 4. Levels.fyi and recent role- or location-relevant Glassdoor, Blind, and Reddit anecdotes.
 
 Give material facts a link and publication or access date. Label estimates. Separate base pay from total compensation. When sources disagree, show both and explain the likely reason.

@@ -26,7 +26,7 @@ Overall company assessment: [Promising / Mixed / Avoid]
 ## 2. Role: [Exact role title]
 
 LinkedIn: [canonical LinkedIn URL]  
-Official posting: [company careers URL]  
+Official posting: [exact posting URL on the company careers page or its job board; source of truth for role facts]  
 Location/work mode: [location — remote/hybrid/onsite]  
 Last verified: [YYYY-MM-DD]  
 Fit classification: [A — Great Fit / B — Normal Fit / Investigate / Skip]  
