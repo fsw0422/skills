@@ -1,6 +1,6 @@
 ---
 name: linkedin-job-pilot
-description: Discover, curate, research, and track LinkedIn roles, then prepare, submit, and update applications, including approved cover letter PDFs, using a user-provided PDF resume, local Markdown research files, a local CSV tracker, and a two-gate application flow. Use when the user asks to browse or shortlist jobs, provide a company or role manually, evaluate a role, apply through LinkedIn or an employer site, write a cover letter, or track applications. Require a readable PDF resume before doing any work; resume creation and revision belong to resume-pilot.
+description: Discover, curate, research, and track LinkedIn roles, then prepare, submit, and update applications, including cover letter PDFs, using a user-provided PDF resume, local Markdown research files, a local CSV tracker, and a single submit-approval application flow. Use when the user asks to browse or shortlist jobs, provide a company or role manually, evaluate a role, apply through LinkedIn or an employer site, write a cover letter, or track applications. Require a readable PDF resume before doing any work; resume creation and revision belong to resume-pilot.
 ---
 
 # LinkedIn Job Pilot
@@ -43,18 +43,19 @@ Before opening LinkedIn, reading the tracker, researching a company, evaluating 
 
 Verify that the file exists, is a PDF, opens successfully, and contains usable extractable text. Record its absolute path, visible filename, SHA-256 hash, page count, and modification time. If it is unreadable, image-only, ambiguous, or replaced during the run, stop and ask for a valid PDF again.
 
-Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after approval. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. Extraction is not authorization to transmit them: show the values in the application packet and preserve the bundled content-and-transmission approval below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
+Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after the user approves submission. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. Extraction is not authorization to transmit them: show the values in the application packet and transmit them only after the submit approval below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
 
 ## Non-negotiable approvals
 
-Research, comparison, local Markdown authoring, bounded tracker updates, and read-only application-form inspection may proceed without approval. For an ordinary named application, use exactly two approval gates:
+Research, comparison, local Markdown authoring, cover letter drafting and PDF rendering, bounded tracker updates, and read-only application-form inspection may proceed without approval. For an ordinary named application, use exactly one approval gate:
 
-1. **Content and transmission:** after inspecting the form, show one complete packet and obtain one bundled approval for the exact answers, the full cover letter text, personal data entry, and named file uploads. The same reply may select recommended answers and approve entering and uploading them.
-2. **Final submission:** after verifying the populated form, obtain explicit approval immediately before clicking the final submit control.
+1. **Submit approval:** after inspecting the form, present one complete application packet with every drafted answer, the full cover letter text and its PDF, every personal-data value, and every named file upload. When the user replies `submit` for that named role, enter everything in the browser, upload the files, verify the populated form against the packet, and click the final submit control without asking again.
 
-Do not ask for approval merely to open, navigate to, or inspect an application form when that action is read-only and shares no applicant data. If opening or advancing the form would itself save an application, transmit applicant data, or trigger a recruiter-visible action, include that action in the first gate.
+Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. Present only those items; the user's next `submit` covers them.
 
-Outside those two ordinary application gates, stop and obtain explicit approval immediately before:
+Do not ask for approval merely to open, navigate to, or inspect an application form when that action is read-only and shares no applicant data. If opening or advancing the form would itself save an application, transmit applicant data, or trigger a recruiter-visible action, do it only after the user says `submit`.
+
+Outside the ordinary submit approval, stop and obtain explicit approval immediately before:
 
 1. Sending any application-related message.
 2. Activating Top Choice, I’m interested, or another recruiter-visible signal.
@@ -77,7 +78,9 @@ Explicitly invoking discovery or manual-role research authorizes these bounded h
 - Replace Research File values with verified relative Markdown paths.
 - After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label, set the lifecycle to `Applied`, and record `Last Applied`. This standing authorization covers only those two fields for the confirmed application; all other tracker changes keep their normal authorization requirements.
 
-After the user approves a cover letter's exact text, the run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with that letter.txt and its PDF, as described in references/cover-letter.md.
+The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
+
+When Playwright is the browser in use, its automatically generated output files, such as page snapshots, console logs, and screenshots, may be written inside <home-directory>/jobhunt without approval, by default in <home-directory>/jobhunt/.playwright-mcp/. They are temporary browser artifacts, not research or tracking records. This exception applies only to Playwright and never covers other browsers or locations. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
 
 The primary agent is the sole writer. Subagents return structured research only.
 
@@ -113,13 +116,14 @@ flowchart TD
     M -- No --> O[Keep documented gap]
     K -- No --> O
     O --> P[Inspect application form read-only]
-    P --> Q[Prepare full letter, answers, data, and file packet]
-    Q --> R{Gate 1: User approves exact content and transmission?}
-    R -- No --> S[Stop, revise, or move to next role]
-    R -- Yes --> T[Enter data and upload named files]
-    T --> U[Verify populated form]
-    U --> V{Gate 2: User approves final submission?}
-    V -- No --> S
+    P --> Q[Draft answers and render cover letter PDF]
+    Q --> R[Present full application packet]
+    R --> S{User says submit?}
+    S -- No --> T[Revise, stop, or move to next role]
+    T --> R
+    S -- Yes --> U[Enter data, upload files, verify form]
+    U --> V{Form matches packet?}
+    V -- No --> R
     V -- Yes --> W[Submit and verify]
     W --> X{Submission reliably confirmed?}
     X -- Yes --> Y[Update tracker.csv automatically]
@@ -154,7 +158,7 @@ A role must remain open and must not have Last Applied within the previous 30 ca
 
 ### Applications and Premium
 
-Before opening an application flow, read references/application-gates.md. Prepare the exact decision packet and preserve every approval gate. When a form asks for a cover letter, also read references/cover-letter.md.
+Before opening an application flow, read references/application-gates.md. Prepare the full application packet and preserve the submit approval. When a form asks for or accepts a cover letter, also read references/cover-letter.md.
 
 Use visible Premium information as research and prioritization evidence only. Do not claim it guarantees ranking or response. Do not use bots, unofficial APIs, scrapers, mass invitations, or automated engagement.
 

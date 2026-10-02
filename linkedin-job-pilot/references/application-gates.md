@@ -1,4 +1,4 @@
-# Application preparation and approval gates
+# Application preparation and submit approval
 
 Read this file before inspecting an application flow or sending an application-related message.
 
@@ -15,19 +15,18 @@ stateDiagram-v2
     EligibilityCheck --> ReapplyReview: Exact job applied more than 30 days ago
     EligibilityCheck --> FormInspection: Never applied and otherwise eligible
     FormInspection --> AdditionalInputReview: Employer site requests extra input
-    FormInspection --> PacketUpdated: No extra input
-    AdditionalInputReview --> PacketUpdated: User chooses exact answers
-    PacketUpdated --> AwaitingTransmissionApproval
-    AwaitingTransmissionApproval --> Deferred: User declines or requests changes
-    AwaitingTransmissionApproval --> FormPopulated: User approves exact content, data entry, and uploads
-    FormPopulated --> AwaitingFinalApproval: Agent verifies populated form
-    AwaitingFinalApproval --> Deferred: User declines or requests changes
-    AwaitingFinalApproval --> Submitted: User approves exact submission
+    FormInspection --> PacketReady: No extra input
+    AdditionalInputReview --> PacketReady: Drafts and choices prepared
+    PacketReady --> AwaitingSubmitApproval: Full packet presented
+    AwaitingSubmitApproval --> Deferred: User declines or requests changes
+    AwaitingSubmitApproval --> FormPopulated: User says submit
+    FormPopulated --> AwaitingSubmitApproval: Form differs from packet or new required input appears
+    FormPopulated --> Submitted: Populated form matches the packet
     Submitted --> Confirmed: Confirmation page or ID exists
     Submitted --> Unconfirmed: No reliable confirmation
     Confirmed --> ApplicationRecorded: Automatic standing tracker authorization
     ApplicationRecorded --> [*]
-    Unconfirmed --> AwaitingFinalApproval: Safe retry requires approval
+    Unconfirmed --> AwaitingSubmitApproval: Safe retry requires approval
 ```
 
 ## Confirm eligibility first
@@ -44,13 +43,13 @@ If a redirect opens a different role, stop and research and track the new identi
 
 ## Inspect the form read-only
 
-Open and inspect the named application form without asking for a separate approval when doing so is read-only and shares no applicant data. Inspect every visible step when possible. Do not click a control that itself saves an application, transmits applicant data, or creates a recruiter-visible signal; include that action in Gate 1 instead.
+Open and inspect the named application form without asking for a separate approval when doing so is read-only and shares no applicant data. Inspect every visible step when possible. Do not click a control that itself saves an application, transmits applicant data, or creates a recruiter-visible signal; do it only after the user says `submit`.
 
-## Prepare the decision packet
+## Prepare the application packet
 
-Use the current research Markdown already referenced by the tracker row as the default source for the Gate 1 packet. When that file contains usable company and role research, do not repeat a full research pass. Refresh only a missing, stale, contradictory, or decision-critical fact needed for the current application, then update the research file through the normal bounded-write workflow.
+Use the current research Markdown already referenced by the tracker row as the default source for the application packet. When that file contains usable company and role research, do not repeat a full research pass. Refresh only a missing, stale, contradictory, or decision-critical fact needed for the current application, then update the research file through the normal bounded-write workflow.
 
-Before Gate 1, show:
+In the application packet, show:
 
 - Company, role, location, job URL, job ID, posting date, and application channel.
 - Company snapshot from the tracker-linked research file: a concise summary of what the company does, its website, and reported revenue. If revenue is not public or no reliable figure exists, state that explicitly instead of estimating it. Include brief funding or financial-health context when available.
@@ -58,26 +57,27 @@ Before Gate 1, show:
 - Fit assessment: `A — Great Fit`, `B — Normal Fit`, `Investigate`, or `Skip`, with evidence-backed rationale, strongest evidence, gaps, hard constraints, and a recommendation.
 - Exact provided PDF filename, absolute path, SHA-256 hash, page count, and modification time.
 - Read-only role-alignment summary based only on the provided PDF: central qualifications evidenced, unsupported gaps, and any parsing problem that could affect this application. Do not propose or make resume changes.
-- Proposed cover letter or note.
+- Every form field with the exact value to enter, and every file to upload.
+- The full cover letter text with its PDF path, filename, page count, and SHA-256 when the form asks for or accepts one, prepared as described in [cover-letter.md](cover-letter.md).
 - Proposed LinkedIn Premium actions, why they help, and any credit or quota they consume.
 - Active account, relevant visibility mode, and exact execution order.
 - Post-submit tracking preview: canonical LinkedIn URL, target CSV row, the exact fit-preserving `Status` such as `A — Great Fit · Applied`, and `Last Applied`. Use `${submitted_at}` only until the site confirms the real date.
 - Known questions that require user input.
 
-Ask once for a bundled approval covering the exact selected content, personal-data entry, and named uploads. The user may choose recommended drafts and approve entering and uploading them in the same reply. This approval does not authorize final submission.
+End the packet with one request: reply `submit` to enter everything shown and submit it, or request edits. The user may answer open questions, pick alternative drafts, or make edits in the same reply as `submit`; apply them exactly and submit. If an edit would change something the packet did not show, present that change first.
 
 ## Inspect and draft
 
-After read-only form inspection, prepare all answers without entering or submitting them. Reuse verified user data only when its source and currentness are known. Show every exact submitted value in the Gate 1 packet and again in the final submission packet. Ask only for sensitive or uncertain facts that are not covered by the defaults below.
+After read-only form inspection, prepare all answers without entering or submitting them. Reuse verified user data only when its source and currentness are known. Show every exact submitted value in the application packet. Ask only for sensitive or uncertain facts that are not covered by the defaults below.
 
 ### User application defaults
 
-These are user-confirmed facts and preferences. Apply them only when a field has the same meaning and scope. They reduce repeated questions but never replace Gate 1 for named-role content and transmission or Gate 2 for final submission.
+These are user-confirmed facts and preferences. Apply them only when a field has the same meaning and scope. They reduce repeated questions but never replace the submit approval for a named role.
 
 - For Germany-based roles, the user holds a permanent residence permit (`Niederlassungserlaubnis`) and does not need employer sponsorship now or in the future. Select that exact permit when offered; for simpler questions, answer `Yes` to ongoing German work authorization and `No` to sponsorship. Ask for other countries or materially different wording.
 - The notice period is three months and may be negotiable with the current employer. Select `3 or more months` when the form uses ranges. For free text, use `3 months, potentially negotiable with my current employer` unless the user gives a role-specific answer.
-- For Germany-based roles asking for desired annual compensation, use a minimum of `€100,000` gross. Enter `€100,000+ annual gross` for an open text range and `€100,000` when the form requires one fixed number. Ask when the role uses another currency or distinguishes base salary from total compensation.
-- Derive the phone number, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the entry and final submission packets.
+- For Germany-based roles asking for desired annual compensation, use a minimum of `€100,000` gross. Enter `€100,000+ annual gross` for an open text range. When a required field asks for one exact number, enter `€110,000`, or `110000` in a numeric-only field. Ask when the role uses another currency or distinguishes base salary from total compensation.
+- Derive the phone number, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the application packet.
 - Answer hybrid-policy questions `Yes`. This does not establish willingness to relocate, accept a fully onsite role, or meet a specific non-hybrid commute requirement.
 - To answer whether the user previously worked for or applied to the employer, compare the verified resume's employer history with the target company and its officially verified parent, affiliate, and former names. Answer `Yes` or `No` when the evidence is unambiguous; ask when company identity or ownership leaves a real ambiguity.
 - The employer's default AI-assisted review is acceptable. Do not request a human-only opt-out unless the user asks.
@@ -85,12 +85,12 @@ These are user-confirmed facts and preferences. Apply them only when a field has
 
 ### Resume-first autofill order
 
-After the user approves the exact uploads and the form exposes the matching controls:
+After the user says `submit` and the form exposes the matching controls:
 
 1. Upload the verified resume first and wait for the form's parser or autofill to finish.
-2. Upload the exact approved cover letter next when the form accepts one. If no approved letter exists, follow [cover-letter.md](cover-letter.md) before uploading anything.
-3. Inspect every populated field and reconcile it against the verified resume and the user defaults above. Never trust parsed names, phone formatting, dates, locations, employers, or answers without checking them.
-4. Present all final values and files again at the final submission gate.
+2. Upload the cover letter PDF shown in the packet next when the form accepts one.
+3. Inspect every populated field and reconcile it against the packet, the verified resume, and the user defaults above. Never trust parsed names, phone formatting, dates, locations, employers, or answers without checking them.
+4. Enter every remaining packet value, then follow the submit steps below.
 
 ### Handle employer-site additional inputs
 
@@ -115,16 +115,16 @@ A — Tailored and specific (Recommended)
 B — Concise
 <exact draft>
 
-Reply: A, B, or revise: <instruction>
+Default on submit: A. Reply B or revise: <instruction> to change it.
 ```
 
 For a cover letter, read [cover-letter.md](cover-letter.md). It sets the full-letter default, style, and PDF workflow.
 
 Keep every draft truthful and evidence-backed. Prefer concrete matching experience, why the role and company are relevant, and a short close. Do not invent metrics, responsibilities, relationships, or company knowledge. Outside the cover letter, do not invent enthusiasm; the cover letter's excited tone is the user's chosen style.
 
-If several fields are visible, the Gate 1 reply may select them individually or approve `all recommended choices` while also authorizing the listed data entry and uploads. This authorizes only the enumerated content and transmission, not final submission. Include all selected content again in the final submission packet.
+The `submit` reply may pick alternatives for individual fields; otherwise use the recommended choice for every field. It authorizes entering the listed content, uploading the listed files, and clicking submit for that named role only.
 
-Every required field needs an answer the user chose or confirmed before the final packet. Never submit while a required field lacks one.
+Every required field needs an answer from the user, a matching default, or the verified resume before submission. Never submit while a required field lacks one.
 
 For sensitive or factual fields listed below, first use an exact matching user application default above. Otherwise do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page reveals another substantive field, pause and repeat this process before continuing.
 
@@ -158,17 +158,24 @@ Draft messages that are short, specific, truthful, and easy to answer. Do not co
 
 Any profile change, Open Profile setting change, company-interest signal, follow, connection request, InMail, referral request, or Top Choice selection is an external action. Show it and get approval first.
 
-Do not add, replace, or delete resumes under LinkedIn `My qualifications`. That is resume management and belongs to `$resume-pilot`; application approval covers only attaching the already provided PDF to the named application when that upload is explicitly included.
+Do not add, replace, or delete resumes under LinkedIn `My qualifications`. That is resume management and belongs to `$resume-pilot`; the submit approval covers only attaching the already provided PDF to the named application when the packet lists that upload.
 
 Do not start or change a subscription, trial, plan, or paid feature unless the user separately requests and approves it. Course enrollment, file upload, audio or video recording, and persistent interview-practice history also require approval before creation. If the user requests a recruiter specifically, do not silently substitute a manager or another recipient.
 
-## Final submission gate
+## Submit approval
 
-Immediately before an irreversible action, show the exact final packet:
+The application packet is the only routine approval request. Before asking, make sure it shows:
 
-- Repeat every final field, file, answer, recipient, and message, including the cover letter text and its PDF filename, page count, and SHA-256.
-- Repeat the exact contingent tracker.csv update, including canonical LinkedIn URL, target row, `Status`, and `Last Applied`.
-- State that the scoped `Applied` and `Last Applied` tracking writes happen automatically, under standing authorization, only after reliable submission confirmation.
+- Every field, file, answer, recipient, and message, including the cover letter text and its PDF filename, page count, and SHA-256.
+- The exact contingent tracker.csv update, including canonical LinkedIn URL, target row, `Status`, and `Last Applied`.
+- That the scoped `Applied` and `Last Applied` tracking writes happen automatically, under standing authorization, only after reliable submission confirmation.
+
+When the user says `submit`:
+
+1. Enter the data and upload the files in the resume-first order above.
+2. Re-read every populated field and attached file.
+3. If everything matches the packet, click the final submit control right away.
+4. If anything differs and cannot be corrected to the packet value, a required field is still empty, or a later step reveals new personal data, files, or substantive content, stop before submitting. Show only those items and wait for `submit` again.
 
 ```mermaid
 sequenceDiagram
@@ -176,9 +183,10 @@ sequenceDiagram
     participant A as Agent
     participant S as LinkedIn or employer site
     participant C as tracker.csv
-    A-->>U: Final fields, files, answers, messages, and contingent tracking writes
+    A-->>U: Application packet with fields, files, answers, letter, and contingent tracking writes
     Note over A,U: HARD STOP
-    U->>A: Explicitly approve named actions
+    U->>A: submit
+    A->>S: Enter data, upload files, and verify against the packet
     A->>S: Submit the approved application first
     S-->>A: Confirmation page, receipt, or application ID
     alt Submission confirmed
@@ -191,11 +199,11 @@ sequenceDiagram
     A-->>U: Report exact outcome
 ```
 
-The approval request should be answerable with a clear yes or requested edits. A bundled approval is valid only when it enumerates every role and external action.
+The packet should be answerable with `submit` or requested edits. A `submit` reply covers only the named role and the packet shown for it; approval for another role never carries over.
 
-Do not insert another routine approval between Gate 1 and Gate 2. Ask for a supplemental Gate 1 approval only if a later form step reveals new personal data, a new file, or substantive content that was not included in the approved packet.
+Do not insert any other routine approval between the packet and submission. Ask again only for the exceptions in step 4 above.
 
-If any final content differs from the approved packet, stop and ask again. Do not interpret silence, earlier interest, or a previous application approval as consent. Do not send an “I applied” message until submission is confirmed. If outreach delivery is ambiguous, report it and never retry without renewed approval.
+If any final content differs from the presented packet, stop and ask again. Do not interpret silence, earlier interest, or a previous application approval as consent. Do not send an “I applied” message until submission is confirmed. If outreach delivery is ambiguous, report it and never retry without renewed approval.
 
 ## Verify outcome
 
