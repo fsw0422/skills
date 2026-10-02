@@ -60,7 +60,7 @@ If a hard character or file limit cannot accept the full version, produce the lo
 
 Save the drafted letter without asking for approval in `<home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/`:
 
-- `letter.txt` holds the exact drafted text. Write it through a temporary sibling file and an atomic rename.
+- `letter.txt` holds the exact drafted text. Write it with the Write tool and re-read it with the Read tool.
 - The PDF is named `<First>-<Last>-Cover-Letter-<Company>.pdf`, because recruiters see this name. Take the name from the resume and replace spaces and unsafe characters with hyphens. Create it only when the form wants a file.
 
 Render the PDF with:
@@ -73,21 +73,28 @@ python3 scripts/render-cover-letter.py \
   --title "<Name> – Cover Letter – <Company>" \
   --date "<today, such as 29 September 2026>" \
   --paper a4 \
-  --out "<folder>/<PDF name>"
+  --out "<folder>/<PDF name>" \
+  --preview "<folder>/preview.png"
 ```
 
-Use `--paper letter` for postings in the US or Canada. The header uses the name and contact line exactly as they appear on the resume; show them with the letter in the application packet. If the script is unavailable, use another tool that produces the same one-page PDF, and apply the same checks.
+Use `--paper letter` for postings in the US or Canada. The header uses the name and contact line exactly as they appear on the resume; show them with the letter in the application packet. If the script is unavailable, stop and tell the user; do not improvise another renderer.
 
 If the script reports that the letter does not fit on one page, shorten it and render again. If the user asks for edits, update `letter.txt`, render again, and show the new version. Never keep a PDF that differs from `letter.txt`.
 
 ## Verify
 
+The script verifies every PDF it renders and prints one line:
+
+```text
+<pdf path> pages=1 sha256=<hex> text_match=yes header_match=yes
+```
+
 Before presenting the application packet:
 
-1. Confirm the PDF opens and has exactly one page.
-2. Extract its text, for example with `pdftotext`, and confirm it matches `letter.txt`, the header, and the sign-off.
-3. Record the path, filename, page count, and SHA-256 hash.
-4. When possible, look at an image of the page to catch layout problems.
+1. Accept the PDF only when the script exits 0 and prints `pages=1`, `text_match=yes`, and `header_match=yes`. Exit 2 means more than one page: shorten the letter. Exit 3 means the text or header does not match: fix `letter.txt` or the arguments and render again.
+2. Record the path, filename, page count, and SHA-256 from that line.
+3. Look at the `--preview` PNG with the Read tool to catch layout problems.
+4. To re-check an existing PDF without rendering, run the same command with `--verify-only`.
 
 Keep cover letters out of the company research Markdown. It is a research record, not an application timeline.
 

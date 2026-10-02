@@ -51,7 +51,7 @@ For each stable job:
 2. Parse tracker.csv, normalize every existing LinkedIn URL by numeric job ID, stop on normalized collisions, and reuse the unique matching row even when its legacy URL text differs.
 3. Upsert a new row with blank Research File, Status = Researching, and blank Last Applied.
 4. Preserve existing status, path, and application history for an existing row.
-5. Atomically write and reparse the CSV.
+5. Write the row with the Edit tool and re-read it with the Read tool.
 6. Stop on a conflicting Applied badge or unverified application history.
 7. Finalize fit only after the assigned research completes and its Markdown role section is verified.
 
