@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Render an approved cover letter to a one-page PDF with headless Google Chrome.
+"""Render a drafted cover letter to a one-page PDF with headless Google Chrome.
 
 Usage:
   render-cover-letter.py --letter letter.txt --name "Full Name" --contact "email · phone · city" \
       --out path/to/Cover-Letter.pdf [--title TEXT] [--date TEXT] [--paper a4|letter] [--chrome PATH]
 
-The letter file holds the exact approved text. Blank lines separate paragraphs.
+The letter file holds the exact drafted text. Blank lines separate paragraphs.
 Writes the PDF atomically. Exits 1 if rendering fails and 2 if the PDF is not exactly one page.
 """
 import argparse
@@ -58,7 +58,7 @@ def count_pages(pdf: pathlib.Path) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--letter", required=True, help="Text file with the exact approved letter.")
+    parser.add_argument("--letter", required=True, help="Text file with the exact drafted letter.")
     parser.add_argument("--name", required=True, help="Applicant name, as it appears on the resume.")
     parser.add_argument("--contact", required=True, help="One contact line taken from the resume.")
     parser.add_argument("--out", required=True, help="Target PDF path.")
