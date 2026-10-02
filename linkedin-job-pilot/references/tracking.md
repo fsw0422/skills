@@ -12,8 +12,8 @@ sequenceDiagram
     participant C as tracker.csv
     A->>C: Parse and find canonical LinkedIn URL
     A->>A: Derive scoped Applied status and confirmed date
-    A->>C: Atomically update Status and Last Applied
-    C-->>A: Reparse exact row
+    A->>C: Edit the row's Status and Last Applied
+    C-->>A: Re-read exact row
     A->>A: Verify against submission evidence
 ~~~
 
@@ -35,7 +35,7 @@ It does not authorize creating another row, changing the schema, editing company
 
 Do not overwrite Company, Role, LinkedIn URL, or Research File during an ordinary post-submit update.
 
-Write a temporary sibling CSV, atomically rename it over tracker.csv, then reparse and verify the exact row. If submission is ambiguous, do not update Last Applied or claim Applied. Never retry or mark the role applied without renewed approval.
+Read tracker.csv with the Read tool, replace only that row's line with the Edit tool, then re-read and verify the exact row and that nothing else changed. If submission is ambiguous, do not update Last Applied or claim Applied. Never retry or mark the role applied without renewed approval.
 
 ## Later stages
 

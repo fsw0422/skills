@@ -7,7 +7,7 @@ description: Discover, curate, research, and track LinkedIn roles, then prepare,
 
 Run an evidence-based job search while leaving every consequential choice with the user.
 
-Use the AI Desktop built-in browser for LinkedIn, employer application sites, and the approved Reddit fallback whenever it is installed. Use a third-party browser only when the built-in browser is unavailable or the site cannot complete the workflow there; explain the fallback before continuing.
+Use the app's built-in browser, such as the browser in Claude Code Desktop or the Codex app, for LinkedIn, careers pages, employer application sites, and the approved Reddit fallback. Use Playwright only as a fallback in a CLI environment where no built-in browser exists, or when the site cannot complete the workflow in the built-in browser; explain the fallback before continuing.
 
 When a site needs credentials, make the built-in browser visible and hand control to the user so they can sign in securely. Never ask the user to paste a password, passkey, one-time code, or verification code into chat, and never read one from email or another app. Resume only after the user confirms that sign-in or verification is complete.
 
@@ -51,7 +51,7 @@ Research, comparison, local Markdown authoring, cover letter drafting and PDF re
 
 1. **Submit approval:** after inspecting the form, present one complete application packet with every drafted answer, the full cover letter text and its PDF, every personal-data value, and every named file upload. When the user replies `submit` for that named role, enter everything in the browser, upload the files, verify the populated form against the packet, and click the final submit control without asking again.
 
-Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. Present only those items; the user's next `submit` covers them.
+Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. A newly revealed field whose answer exactly matches a scoped user default in references/application-gates.md or a value from the verified resume is not new: fill it, list it in the outcome report, and continue without asking. Present only the remaining items; the user's next `submit` covers them.
 
 Do not ask for approval merely to open, navigate to, or inspect an application form when that action is read-only and shares no applicant data. If opening or advancing the form would itself save an application, transmit applicant data, or trigger a recruiter-visible action, do it only after the user says `submit`.
 
@@ -69,6 +69,22 @@ An approval must identify the company, role, action, materials, recipient, and e
 
 Use the scoped, user-confirmed application defaults in references/application-gates.md when a field matches them exactly. Otherwise never infer work authorization, sponsorship, relocation, compensation expectations, notice period, demographic answers, disability, veteran status, criminal history, or other sensitive application data.
 
+## Tooling: no ad-hoc scripts
+
+Do not write one-off code at any step of this skill: no shell pipelines, inline Python, curl or API calls, or custom browser JavaScript. Use only these tools:
+
+| Need | Use |
+| --- | --- |
+| Open, read, and check any website, including careers pages and job boards | The browser's own tools: navigate, read the page or accessibility snapshot, find text, switch tabs, take a screenshot |
+| Fill and submit forms | The browser's own tools: upload a file, type, fill a field, select an option, click, press a key; then read the form back |
+| Read the resume or another PDF | The Read tool |
+| Record the resume's SHA-256 | `shasum -a 256 <resume.pdf>`, the only allowed hashing command |
+| Change tracker.csv, research Markdown, or `letter.txt` | The Read, Edit, and Write tools |
+| Render and verify a cover letter PDF | `scripts/render-cover-letter.py`, which prints pages, SHA-256, and text and header match |
+| Research the web | Web search and web fetch tools, or subagents that use them |
+
+Never use a browser tool that runs custom JavaScript, such as Playwright's `browser_run_code_unsafe` or `browser_evaluate`. If a step cannot be done with these tools, stop and tell the user what is missing instead of improvising a script.
+
 ## Bounded local-write authorization
 
 Explicitly invoking discovery or manual-role research authorizes these bounded home-local writes for that run:
@@ -80,20 +96,20 @@ Explicitly invoking discovery or manual-role research authorizes these bounded h
 
 The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
-When Playwright is the browser in use, its automatically generated output files, such as page snapshots, console logs, and screenshots, may be written inside <home-directory>/jobhunt without approval, by default in <home-directory>/jobhunt/.playwright-mcp/. They are temporary browser artifacts, not research or tracking records. This exception applies only to Playwright and never covers other browsers or locations. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
+When Playwright is the browser in use as the CLI fallback, its automatically generated output files, such as page snapshots, console logs, and screenshots, may be written inside <home-directory>/jobhunt without approval, by default in <home-directory>/jobhunt/.playwright-mcp/. They are temporary browser artifacts, not research or tracking records. This exception applies only to Playwright and never covers other browsers or locations. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
 
 The primary agent is the sole writer. Subagents return structured research only.
 
 For every CSV or Markdown change:
 
-1. Read and parse the current file.
-2. Preserve row order, user-authored content, and unrelated fields.
-3. Write a temporary sibling file.
-4. Atomically rename it over the target.
-5. Re-read and verify the exact row or role section.
-6. Stop on parse errors, ambiguous company identity, multiple plausible research files, or path escape.
+1. Read the current file with the Read tool.
+2. Change only the target row or section with the Edit tool, replacing one exact, unique line or block; use the Write tool only to create a new file. Never rewrite the whole tracker.
+3. Preserve row order, user-authored content, and unrelated fields.
+4. Keep CSV rows valid RFC-4180 UTF-8: six fields, and quote a field that contains a comma, quote, or line break.
+5. Re-read with the Read tool and verify the exact row or role section, and that nothing else changed.
+6. Stop on a malformed row, ambiguous company identity, multiple plausible research files, or path escape.
 
-Use https://www.linkedin.com/jobs/view/<job-id>/ as the canonical row identity and role-section identity. Normalize localized hosts, slugged paths, query parameters, and fragments to this numeric-ID form. Never split or join CSV on commas; use an RFC-4180-aware parser and UTF-8. Use YYYY-MM-DD for newly recorded dates.
+Use https://www.linkedin.com/jobs/view/<job-id>/ as the canonical row identity and role-section identity. Normalize localized hosts, slugged paths, query parameters, and fragments to this numeric-ID form. Use YYYY-MM-DD for newly recorded dates.
 
 ## Workflow
 

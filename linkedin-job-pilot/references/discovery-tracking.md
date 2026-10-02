@@ -58,10 +58,10 @@ Keep detailed requirements, compensation, interviews, classification rationale, 
 Before the first job:
 
 1. Resolve and verify tracker.csv.
-2. If it is missing, atomically create it with the exact header and no data rows, then reparse it.
-3. Parse the complete CSV with an RFC-4180-aware parser.
+2. If it is missing, create it with the Write tool containing only the exact header line, then re-read it.
+3. Read the complete file with the Read tool.
 4. Confirm the exact six-column header.
-5. Confirm the `jobhunt` directory is writable and remains inside the active user's home directory.
+5. Confirm the `jobhunt` directory remains inside the active user's home directory.
 
 For each stable selected job:
 
@@ -72,11 +72,11 @@ For each stable selected job:
 5. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, and blank Last Applied.
 6. For an existing row, preserve Research File, Status, Last Applied, and user-authored values unless verified evidence supports a specific update.
 7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
-8. Serialize the full CSV to a temporary sibling file.
-9. Atomically rename it over tracker.csv.
-10. Reparse and verify the exact row before selecting the next job.
+8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line after the last row. Never rewrite the whole file.
+9. Keep each row valid RFC-4180 UTF-8: six fields, and quote a field that contains a comma, quote, or line break.
+10. Re-read with the Read tool and verify the exact row, and that nothing else changed, before selecting the next job.
 
-Never split or join CSV by commas. Stop on parse errors or duplicate canonical LinkedIn URLs.
+Stop on a malformed row or duplicate canonical LinkedIn URLs.
 
 After research, use A — Great Fit, B — Normal Fit, Investigate, or Skip. Do not expose C or D. For a previously classified row, update the fit while preserving a verified lifecycle after a middle dot. Use Research blocked only for a new or unclassified row when evidence cannot support a final label.
 
@@ -116,10 +116,9 @@ For every Markdown change:
 1. Read the whole current file.
 2. Locate the company overview and the role by canonical LinkedIn URL.
 3. Preserve unrelated and user-authored content.
-4. Write a temporary sibling file.
-5. Atomically rename it.
-6. Re-read and verify required headings, tables, links, dates, and the exact role section.
-7. Update matching tracker rows with the relative path and verify them.
+4. Change only the target section with the Edit tool, or create a new file with the Write tool.
+5. Re-read with the Read tool and verify required headings, tables, links, dates, and the exact role section.
+6. Update matching tracker rows with the relative path and verify them.
 
 Do not store credentials, demographic answers, confidential work-system text, or unnecessary personal data.
 
@@ -141,7 +140,7 @@ flowchart TD
     I -- No --> K[Keep role in Markdown only]
 ~~~
 
-1. For each supplied company, open its official careers page and follow it to the job board it uses, such as Greenhouse, Ashby, Lever, Workday, SmartRecruiters, Personio, or a company-run site. Public read-only job-board feeds of that official board are allowed. Confirm the board belongs to the same company; similar slugs can belong to unrelated employers.
+1. For each supplied company, open its official careers page and follow it to the job board it uses, such as Greenhouse, Ashby, Lever, Workday, SmartRecruiters, Personio, or a company-run site. Read the listings in the browser; do not call job-board APIs or feeds. Confirm the board belongs to the same company; similar slugs can belong to unrelated employers.
 2. List every open role that matches the user's stated criteria. For a supplied role, find that exact posting on the careers page. Record excluded roles briefly in the company Markdown.
 3. Research each role from its official posting first: requirements, location, work mode, compensation, and posting date. Then follow company-research.md for the rest.
 4. Use LinkedIn only for a targeted lookup of the exact posting to get its canonical URL. A lookup is not discovery: never add roles found only on LinkedIn.
