@@ -13,7 +13,7 @@ Verify the requested diff and its exact base/head/spec inputs. Inspect the whole
 
 For coordinated work, identify the shared branch name, repository members and paths, and review scope: **spec acceptance, one member, coordinated integration, or final release**. A spec review can precede code; it does not approve that implementation. Code-only work needs no invented spec counterpart. A preview may discuss incomplete work without declaring it ready to integrate.
 
-For a hard-sync repair, include its finding and user disposition plus the scoped [breaking-mode permission](../spec-workflow/references/hard-sync.md#breaking-mode), if any. Explain affected APIs, consumers, schema/data expectations, and why migrations are present or omitted. A breaking-change flag is not feature-removal or merge approval.
+For a spec/code sync, include its finding, accepted decision, and selected [compatibility mode](../spec-workflow/references/spec-code-sync.md#compatibility-mode). Explain affected APIs, consumers, schema/data expectations, and why old contracts or migrations are retained or removed. `--not-live` permits replacements within the accepted scope; unrelated feature decisions and merge approval still need their usual review.
 
 Open the matching diff and provide verified source/line links when possible. If the live checkout differs, use the frozen snapshot rather than presenting current lines as the reviewed commit. Do not publish PR comments or create external artifacts merely because this resembles a PR review.
 
@@ -64,7 +64,7 @@ Use the workflow's existing ledger, or conversation state for a standalone read-
 
 | Record | Content |
 | --- | --- |
-| Identity and scope | Shared change name, participants/unaffected evidence, purpose, destinations; hard-sync finding/decision and breaking permission when used |
+| Identity and scope | Shared change name, participants/unaffected evidence, purpose, destinations; spec/code finding, accepted decision, and live or not-live scope |
 | Versions | Per-repository parent/base, child/head, accepted spec SHAs, relevant checks and currentness |
 | Progress | Stable chunk IDs, paths/hunks, discussed/accepted/skipped/needs-change status, current line/chunk, questions and edits |
 | Decision | Spec accepted, changes requested, paused/rejected/deferred, walkthrough complete, or exact integration approved; include explicit waivers |

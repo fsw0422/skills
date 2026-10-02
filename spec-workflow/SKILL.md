@@ -1,6 +1,6 @@
 ---
 name: spec-workflow
-description: "Guide spec changes and matching code across repositories. Use shared branch names, worktrees, guided reviews, squash merges, and recursive rebases. Track priorities and prepare the next worktree. Explicit hard-sync mode checks and repairs spec/code differences. Questions and plans stay read-only."
+description: "Guide spec changes and matching code across repositories with worktrees, guided reviews, squash merges, and recursive rebases. Treat work as live by default; --not-live allows direct replacement of superseded specs and matching code before release. Track priorities and prepare the next worktree. Questions and plans stay read-only."
 ---
 
 # Spec Workflow
@@ -19,6 +19,38 @@ flowchart LR
 This skill chooses what to do next. [Git operations](references/git-operations.md) explains the commands and checks. [Guided Code Review](../guided-code-review/SKILL.md) handles the review conversation.
 
 Read each repository or worktree's `CONTRIBUTING.md`, when present, before working there. Repeat this when switching worktrees.
+
+## Choose the compatibility mode
+
+Use `--not-live` directly on Spec Workflow when the task has no released-client compatibility requirement:
+
+```text
+$spec-workflow <change>
+$spec-workflow --not-live <change>
+```
+
+These are prompt options, not shell commands. Without the flag, treat the task as live even if the project is known to be before its first release.
+
+```mermaid
+flowchart TD
+    Mode{--not-live supplied?} -->|No| Live[Preserve supported clients and retained data]
+    Mode -->|Yes| Replace[Replace superseded specs and contracts directly]
+    Live --> Spec[Agree on the updated spec]
+    Replace --> Spec
+    Spec --> Code[Make affected code match the accepted spec]
+    Code --> Review[Review the complete change]
+```
+
+| Mode | What it means |
+| --- | --- |
+| Default: live | Keep supported API/event formats, data, and client behavior compatible. Keep the contract and decision history needed to explain supported versions. Use transitions, deprecation plans, and upgrade migrations where needed. |
+| `--not-live` | Revise or remove documents and contracts clearly superseded by the accepted change. Update links and retire replaced requirement IDs. Carry that change into models, APIs, storage, callers, and tests. Replace old definitions directly without old-client paths or upgrade migrations unless the user requires them. Keep fresh setup and schema creation reproducible. |
+
+Both modes bring accepted spec changes and affected code into agreement. The flag includes that implementation within the accepted task's scope; it does not start an unrelated whole-project audit. Honor a narrower request such as planning, audit-only, or docs-only work.
+
+Record the chosen mode and scope in the work record and keep them when resuming that task. The next task defaults to live again. `--not-live` is permission to replace clearly superseded definitions, not to decide unrelated feature removals or resolve unclear requirements. It does not authorize deleting retained data, resetting a database, or merging without the normal review and approval.
+
+Read [Spec and code sync](references/spec-code-sync.md) when checking or repairing mismatches, including cleanup caused by a replacement.
 
 ## When to return to specs
 
@@ -176,18 +208,11 @@ Increase model capability or effort if the task grows or checks reveal unresolve
 
 Settle the spec before dependent implementation. Run only independent jobs in parallel.
 
-## Check accumulated differences with hard-sync
+## Check accumulated differences when asked
 
-Run a broad spec/code comparison only when the user explicitly requests `hard-sync`. Read [Hard sync](references/hard-sync.md) for the full rules.
+Normal work updates code affected by the accepted spec change. A whole-project comparison starts only when the user asks for an audit or a broader spec/code sync. Read [Spec and code sync](references/spec-code-sync.md) for the rules.
 
-```text
-$spec-workflow hard-sync
-$spec-workflow hard-sync -b
-```
-
-These are prompt switches, not shell flags. Check both directions: what code lacks a spec, and what specs lack working code. Ask about undocumented features and wholly missing implementations. Repair confirmed wrong or partial implementations through the normal workflow.
-
-`-b` allows scoped breaking changes. It does not approve removing features, deleting data, or merging. Keep the checked scope, decisions, and compatibility requirements in the work record. Ordinary work, questions, and skill edits do not activate hard-sync.
+Check both directions: code without a spec, and specs without working code. Keep coverage, decisions, and the selected compatibility mode in the work record. `--not-live` changes how accepted replacements are delivered; it does not widen the requested scope.
 
 ## Stay within the request
 
