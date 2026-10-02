@@ -51,7 +51,7 @@ Research, comparison, local Markdown authoring, cover letter drafting and PDF re
 
 1. **Submit approval:** after inspecting the form, present one complete application packet with every drafted answer, the full cover letter text and its PDF, every personal-data value, and every named file upload. When the user replies `submit` for that named role, enter everything in the browser, upload the files, verify the populated form against the packet, and click the final submit control without asking again.
 
-Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. Present only those items; the user's next `submit` covers them.
+Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. A newly revealed field whose answer exactly matches a scoped user default in references/application-gates.md or a value from the verified resume is not new: fill it, list it in the outcome report, and continue without asking. Present only the remaining items; the user's next `submit` covers them.
 
 Do not ask for approval merely to open, navigate to, or inspect an application form when that action is read-only and shares no applicant data. If opening or advancing the form would itself save an application, transmit applicant data, or trigger a recruiter-visible action, do it only after the user says `submit`.
 

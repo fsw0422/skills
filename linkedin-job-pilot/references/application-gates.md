@@ -127,7 +127,7 @@ The `submit` reply may pick alternatives for individual fields; otherwise use th
 
 Every required field needs an answer from the user, a matching default, or the verified resume before submission. Never submit while a required field lacks one.
 
-For sensitive or factual fields listed below, first use an exact matching user application default above. Otherwise do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page reveals another substantive field, pause and repeat this process before continuing.
+For sensitive or factual fields listed below, first use an exact matching user application default above. Otherwise do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page or a conditional question reveals another field, fill it without pausing when its answer exactly matches a default above or a verified resume value, for example residence city or the no-sponsorship default; otherwise pause and repeat this process before continuing.
 
 Outside those scoped defaults, do not infer:
 
@@ -176,7 +176,8 @@ When the user says `submit`:
 1. Enter the data and upload the files in the resume-first order above.
 2. Re-read every populated field and attached file.
 3. If everything matches the packet, click the final submit control right away.
-4. If anything differs and cannot be corrected to the packet value, a required field is still empty, or a later step reveals new personal data, files, or substantive content, stop before submitting. Show only those items and wait for `submit` again.
+4. If a later step or conditional question reveals a field whose answer exactly matches a scoped default or a verified resume value, fill it, re-read the form, and continue to submit; report it afterwards.
+5. If anything differs and cannot be corrected to the packet value, a required field is still empty, or a later step reveals new personal data, files, or substantive content that no default or resume value answers, stop before submitting. Show only those items and wait for `submit` again.
 
 ```mermaid
 sequenceDiagram
