@@ -32,6 +32,7 @@ Use the app's built-in browser, such as the browser in Claude Code Desktop or th
 - Open a new tab for every browser task, and keep working in the tabs you opened.
 - Never navigate, reuse, or close a tab you did not open, including the currently focused tab, unless the user explicitly asks you to read or act on it.
 - When the user asks about the focused tab, read it without navigating it away.
+- When a task you opened a tab for completes successfully, for example a confirmed form submission, close that tab. Keep it open when the result is unclear, failed, or still needs the user, and never close a tab you did not open.
 - Only the primary agent controls the browser. Subagents never use browser or Playwright tools; give them web search and web fetch instead.
 
 ## Allowed tools
@@ -70,7 +71,7 @@ Inspect first, then fill, then verify:
 5. **Check dates.** Type the date in the format the field shows, then reopen the picker and confirm that the selected day matches, for example "Monday, February 1st, 2027". Month-first and day-first formats are easy to mix up.
 6. **Check buttons and toggles.** For Yes or No buttons and checkboxes, confirm the pressed or checked state in the snapshot.
 7. **Read back.** Before the final submit, take a fresh snapshot and compare every field, file, and choice with what was approved. Watch for fields that appear only after an earlier answer.
-8. **Submit once and confirm.** Click the final submit control, wait, and look for an explicit success message or confirmation page. If the form reports a missing or invalid field, correct it to the approved value and submit again. If the result is unclear, do not retry; report it to the user.
+8. **Submit once and confirm.** Click the final submit control, wait, and look for an explicit success message or confirmation page. If the form reports a missing or invalid field, correct it to the approved value and submit again. If the result is unclear, do not retry; report it to the user and leave the tab open. Once the success message or confirmation page is confirmed and the calling skill has recorded the outcome, close the tab you opened for the form.
 
 ## Browser output files
 
