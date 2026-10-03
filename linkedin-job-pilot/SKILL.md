@@ -7,11 +7,7 @@ description: Discover, curate, research, and track LinkedIn roles, then prepare,
 
 Run an evidence-based job search while leaving every consequential choice with the user.
 
-Use the app's built-in browser, such as the browser in Claude Code Desktop or the Codex app, for LinkedIn, careers pages, employer application sites, and the approved Reddit fallback. Use Playwright only as a fallback in a CLI environment where no built-in browser exists, or when the site cannot complete the workflow in the built-in browser; explain the fallback before continuing.
-
-Open a new tab for every browser task, and keep working in the tabs you opened. Never navigate, reuse, or close a tab you did not open, including the currently focused tab, unless the user explicitly asks you to read or act on the focused tab. When the user asks about the focused tab, read it without navigating it away. Only the primary agent controls the browser.
-
-When a site needs credentials, make the built-in browser visible and hand control to the user so they can sign in securely. Never ask the user to paste a password, passkey, one-time code, or verification code into chat, and never read one from email or another app. Resume only after the user confirms that sign-in or verification is complete.
+For all browser work on LinkedIn, careers pages, employer application sites, and the approved Reddit fallback, read and follow [../browser-pilot/SKILL.md](../browser-pilot/SKILL.md): browser choice, tabs, allowed tools, page loading, sign-in handoff, and form filling and read-back. This skill's approval and data rules take precedence over it.
 
 Store all durable research and tracking data under the active user's home directory in `jobhunt`. Never fall back to a workspace-local copy, another home directory, a cache, or a cloud file.
 
@@ -77,15 +73,14 @@ Do not write one-off code at any step of this skill: no shell pipelines, inline 
 
 | Need | Use |
 | --- | --- |
-| Open, read, and check any website, including careers pages and job boards | The browser's own tools: navigate, read the page or accessibility snapshot, find text, switch tabs, take a screenshot |
-| Fill and submit forms | The browser's own tools: upload a file, type, fill a field, select an option, click, press a key; then read the form back |
+| Open, read, check, fill, and submit any website, including careers pages, job boards, and application forms | The browser tools allowed by browser-pilot |
 | Read the resume or another PDF | The Read tool |
 | Record the resume's SHA-256 | `shasum -a 256 <resume.pdf>`, the only allowed hashing command |
 | Change tracker.csv, research Markdown, or `letter.txt` | The Read, Edit, and Write tools |
 | Render and verify a cover letter PDF | `scripts/render-cover-letter.py`, which prints pages, SHA-256, and text and header match |
 | Research the web | Web search and web fetch tools, or subagents that use them |
 
-Never use a browser tool that runs custom JavaScript, such as Playwright's `browser_run_code_unsafe` or `browser_evaluate`. If a step cannot be done with these tools, stop and tell the user what is missing instead of improvising a script.
+Never run custom JavaScript in a page; browser-pilot lists the allowed browser tools. If a step cannot be done with these tools, stop and tell the user what is missing instead of improvising a script.
 
 ## Bounded local-write authorization
 
@@ -98,7 +93,7 @@ Explicitly invoking discovery or manual-role research authorizes these bounded h
 
 The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
-When Playwright is the browser in use as the CLI fallback, its automatically generated output files, such as page snapshots, console logs, and screenshots, may be written inside <home-directory>/jobhunt without approval, by default in <home-directory>/jobhunt/.playwright-mcp/. They are temporary browser artifacts, not research or tracking records. This exception applies only to Playwright and never covers other browsers or locations. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
+For browser-pilot's Playwright output rule, this skill's folder is <home-directory>/jobhunt/.playwright-mcp/. Playwright may write its snapshots, console logs, and screenshots there without approval; they are temporary browser artifacts, not research or tracking records. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
 
 The primary agent is the sole writer. Subagents return structured research only.
 

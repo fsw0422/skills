@@ -43,7 +43,7 @@ If a redirect opens a different role, stop and research and track the new identi
 
 ## Inspect the form read-only
 
-Open and inspect the named application form without asking for a separate approval when doing so is read-only and shares no applicant data. Inspect every visible step when possible. Use only the browser's own tools: open the official posting to confirm it is open, then read every field, required marker, option list, and character limit from the page snapshot. Open a dropdown only to read its options. When the user says `submit`, fill the form with the browser's upload, type, fill, select, and click tools, then read it back from the page snapshot before the final submit. Never run custom JavaScript in the page. Do not click a control that itself saves an application, transmits applicant data, or creates a recruiter-visible signal; do it only after the user says `submit`.
+Open and inspect the named application form without asking for a separate approval when doing so is read-only and shares no applicant data. Inspect every visible step when possible. Open the official posting to confirm it is open, then inspect, fill, read back, and submit the form as described in browser-pilot's "Fill forms reliably" section. Do not click a control that itself saves an application, transmits applicant data, or creates a recruiter-visible signal; do it only after the user says `submit`.
 
 ## Prepare the application packet
 
