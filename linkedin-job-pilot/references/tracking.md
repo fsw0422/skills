@@ -33,7 +33,7 @@ After reliable submission confirmation, automatically update the existing canoni
 
 It does not authorize creating another row, changing the schema, editing company or role identity, recording an unconfirmed attempt, or changing later lifecycle stages.
 
-Do not overwrite Company, Role, LinkedIn URL, or Research File during an ordinary post-submit update.
+Do not overwrite Company, Role, LinkedIn URL, Research File, or Notes during an ordinary post-submit update.
 
 Read tracker.csv with the Read tool, replace only that row's line with the Edit tool, then re-read and verify the exact row and that nothing else changed. If submission is ambiguous, do not update Last Applied or claim Applied. Never retry or mark the role applied without renewed approval.
 
