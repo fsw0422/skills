@@ -103,7 +103,7 @@ For every CSV or Markdown change:
 
 1. Read the current file with the Read tool.
 2. Change only the target row or section with the Edit tool, replacing one exact, unique line or block; use the Write tool only to create a new file. Never rewrite the whole tracker.
-3. Preserve row order, user-authored content, and unrelated fields.
+3. Preserve user-authored content and unrelated fields. Keep tracker rows sorted by Company, case-insensitively, by inserting each new or renamed row at its sorted position; see "Row order" in references/discovery-tracking.md.
 4. Keep CSV rows valid RFC-4180 UTF-8: seven fields, and quote a field that contains a comma, quote, or line break.
 5. Re-read with the Read tool and verify the exact row or role section, and that nothing else changed.
 6. Stop on a malformed row, ambiguous company identity, multiple plausible research files, or path escape.
