@@ -6,6 +6,7 @@
   },
   "repository": "https://github.com/fsw0422/skills",
   "skills": [
+    "./browser-pilot",
     "./cleanup",
     "./guided-code-review",
     "./linkedin-job-pilot",
