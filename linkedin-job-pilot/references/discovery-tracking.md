@@ -73,11 +73,34 @@ For each stable selected job:
 5. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, blank Last Applied, and blank Notes.
 6. For an existing row, preserve Research File, Status, Last Applied, Notes, and user-authored values unless verified evidence supports a specific update.
 7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
-8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line after the last row. Never rewrite the whole file.
+8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line at its sorted position as described in "Row order" below. Never rewrite the whole file.
 9. Keep each row valid RFC-4180 UTF-8: seven fields, and quote a field that contains a comma, quote, or line break.
-10. Re-read with the Read tool and verify the exact row, and that nothing else changed, before selecting the next job.
+10. Re-read with the Read tool and verify the exact row, that nothing else changed, and that the rows around it are still in order, before selecting the next job.
 
 Stop on a malformed row or duplicate canonical LinkedIn URLs.
+
+### Row order
+
+Keep data rows sorted by Company, compared case-insensitively, so digits come first and a lowercase name such as "n8n" sorts among the other N companies. Within one company, keep the order in which rows were added; do not sort by role.
+
+~~~mermaid
+flowchart TD
+    A[Add a row] --> B{Company already has rows?}
+    B -- Yes --> C[Replace that company's last row line with it plus the new line]
+    B -- No --> D[Replace the first row whose company sorts after it with the new line plus it]
+    D --> E{No later company?}
+    E -- Yes --> F[Replace the last row line with it plus the new line]
+    G[Company name changes] --> H[Remove the old line, then insert the new line at its sorted position]
+    C --> I[Re-read: row present, neighbors in order]
+    D --> I
+    F --> I
+    H --> I
+~~~
+
+1. **New row, existing company:** replace the company's last existing row line with that same line followed by the new line.
+2. **New row, new company:** replace the first row line whose Company sorts after the new one with the new line followed by that line. If no company sorts after it, replace the last row line with that line followed by the new line. In an empty tracker, add the line after the header.
+3. **Company name change:** remove the old line with one Edit, then insert the updated line at its new sorted position with another.
+4. **Out-of-order file:** if the rows are not sorted, for example after the user edits the file in a spreadsheet, report it and offer a one-time re-sort that keeps every row and field unchanged. Do not re-sort silently.
 
 After research, use A — Great Fit, B — Normal Fit, Investigate, or Skip. Do not expose C or D. For a previously classified row, update the fit while preserving a verified lifecycle after a middle dot. Use Research blocked only for a new or unclassified row when evidence cannot support a final label.
 
