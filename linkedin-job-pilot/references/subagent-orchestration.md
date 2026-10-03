@@ -74,6 +74,7 @@ Agent boundaries:
 
 - The official careers-page posting is the source of truth for role facts; see company-research.md. Then official company sources, then reputable reporting.
 - Targeted read-only Reddit, Blind, and Glassdoor checks when material.
+- No browser use at all: no built-in browser or Playwright tools, and no opening, navigating, or closing tabs. Use web search and web fetch only, so the primary agent's and the user's tabs stay untouched.
 - No LinkedIn control, application action, saving, dismissal, interest signal, profile visit, contact, or Reddit post.
 - No local durable writes. Only the primary agent may write tracker.csv or research Markdown.
 - No inference of authorization, language, relocation, compensation expectations, or other sensitive answers.

@@ -9,6 +9,8 @@ Run an evidence-based job search while leaving every consequential choice with t
 
 Use the app's built-in browser, such as the browser in Claude Code Desktop or the Codex app, for LinkedIn, careers pages, employer application sites, and the approved Reddit fallback. Use Playwright only as a fallback in a CLI environment where no built-in browser exists, or when the site cannot complete the workflow in the built-in browser; explain the fallback before continuing.
 
+Open a new tab for every browser task, and keep working in the tabs you opened. Never navigate, reuse, or close a tab you did not open, including the currently focused tab, unless the user explicitly asks you to read or act on the focused tab. When the user asks about the focused tab, read it without navigating it away. Only the primary agent controls the browser.
+
 When a site needs credentials, make the built-in browser visible and hand control to the user so they can sign in securely. Never ask the user to paste a password, passkey, one-time code, or verification code into chat, and never read one from email or another app. Resume only after the user confirms that sign-in or verification is complete.
 
 Store all durable research and tracking data under the active user's home directory in `jobhunt`. Never fall back to a workspace-local copy, another home directory, a cache, or a cloud file.
