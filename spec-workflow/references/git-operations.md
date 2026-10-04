@@ -25,6 +25,12 @@ If main or another branch used to collect reviewed changes has uncommitted devel
 
 Git checkpoints do not save external databases, devices, or all ignored files. Preserve any specifically needed exceptions without copying credentials, caches, or build outputs wholesale.
 
+### Copy the parent's local environment
+
+After creating a worktree from a parent branch, use that repository's recorded parent worktree path. If its root `.env` exists and the new worktree has no `.env`, copy the file into the new worktree root and preserve its permissions. Skip a missing source and leave an existing destination unchanged, including on retries.
+
+Keep the copied file excluded from Git using the repository's ignore rules or a local Git exclusion. Never print its contents, stage it, or include it in a checkpoint or implementation commit. Record only whether the copy was made or skipped. Other environment files are outside this automatic copy rule.
+
 ### Update VS Code
 
 After creating a worktree, look for an existing `.code-workspace` file in the shared workspace root.

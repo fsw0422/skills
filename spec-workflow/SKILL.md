@@ -123,7 +123,7 @@ Record exact repository paths, branches, parent branches, and parent commit IDs 
 
 Priority changes and new parent commits do not change names. If the actual parent changes, rename the family across its repositories before further review or merge. Follow [Git operations](references/git-operations.md#prepare-or-branch), including VS Code workspace updates.
 
-After creating a worktree, add it to the existing root `.code-workspace` file and sort its folder paths as described in that reference.
+After creating a worktree, copy its parent's `.env` when present, then add the worktree to the existing root `.code-workspace` file and sort its folder paths. Follow the setup steps in that reference.
 
 Keep main and branches used to collect reviewed changes clean outside merge operations. Make spec and code edits in short-lived child worktrees.
 
