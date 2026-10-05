@@ -33,10 +33,10 @@ After reliable submission confirmation, automatically update the existing canoni
 
 It does not authorize creating another row, changing the schema, editing company or role identity, recording an unconfirmed attempt, or changing later lifecycle stages.
 
-Do not overwrite Company, Role, LinkedIn URL, Research File, or Notes during an ordinary post-submit update.
+Do not overwrite Company, Role, LinkedIn URL, Research File, Last Interviewed, or Notes during an ordinary post-submit update.
 
 Read tracker.csv with the Read tool, replace only that row's line with the Edit tool, then re-read and verify the exact row and that nothing else changed. If submission is ambiguous, do not update Last Applied or claim Applied. Never retry or mark the role applied without renewed approval.
 
 ## Later stages
 
-Use the same row for verified recruiter screen, interview, rejection, withdrawal, or offer changes. Preserve the fit label and change only the lifecycle. Each new external write must be authorized by the user's request or an exact approved manifest. Preserve Last Applied and never replace a newer stage with an older one.
+Use the same row for verified recruiter screen, interview, rejection, withdrawal, or offer changes. Preserve the fit label and change only the lifecycle. For an interview, also set Last Interviewed to the interview date in YYYY-MM-DD when the user gives it; replace it only with a later date. Each new external write must be authorized by the user's request or an exact approved manifest. Preserve Last Applied and never replace a newer stage with an older one.

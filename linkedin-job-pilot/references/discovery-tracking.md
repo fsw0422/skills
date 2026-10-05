@@ -34,7 +34,7 @@ The initial CSV row, bounded research-file write, Research File update, and fina
 
 ## Exact CSV schema
 
-Use exactly these seven columns and this order:
+Use exactly these eight columns and this order:
 
 | Column | Meaning |
 | --- | --- |
@@ -44,11 +44,12 @@ Use exactly these seven columns and this order:
 | Research File | POSIX path relative to <home-directory>/jobhunt, the directory containing tracker.csv, such as applications/acme.md |
 | Status | Fit label plus optional lifecycle |
 | Last Applied | Confirmed application date in YYYY-MM-DD; otherwise blank |
+| Last Interviewed | Date of the most recent interview for this row in YYYY-MM-DD; blank by default. Write it only when the user gives the date or approves a verified interview update. |
 | Notes | Free text owned by the user, such as recruiters or people contacted individually; blank by default. Preserve it on every change and write to it only when the user asks. |
 
 The header row is:
 
-Company,Role,LinkedIn URL,Research File,Status,Last Applied,Notes
+Company,Role,LinkedIn URL,Research File,Status,Last Applied,Last Interviewed,Notes
 
 Use UTF-8 and RFC-4180 quoting. Do not add hidden columns, formulas, or formatting metadata.
 
@@ -61,7 +62,7 @@ Before the first job:
 1. Resolve and verify tracker.csv.
 2. If it is missing, create it with the Write tool containing only the exact header line, then re-read it.
 3. Read the complete file with the Read tool.
-4. Confirm the exact seven-column header.
+4. Confirm the exact eight-column header.
 5. Confirm the `jobhunt` directory remains inside the active user's home directory.
 
 For each stable selected job:
@@ -70,11 +71,11 @@ For each stable selected job:
 2. Extract numeric job IDs from every existing nonblank LinkedIn URL and compare normalized IDs, not raw URL strings.
 3. If multiple existing rows normalize to the same job ID, stop and reconcile them before any new write.
 4. Reuse the one matching row regardless of legacy host, slug, query, fragment, or missing trailing slash. After confirming there is no collision, normalize that row's URL to the canonical form during the bounded update.
-5. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, blank Last Applied, and blank Notes.
-6. For an existing row, preserve Research File, Status, Last Applied, Notes, and user-authored values unless verified evidence supports a specific update.
+5. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, blank Last Applied, blank Last Interviewed, and blank Notes.
+6. For an existing row, preserve Research File, Status, Last Applied, Last Interviewed, Notes, and user-authored values unless verified evidence supports a specific update.
 7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
 8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line at its sorted position as described in "Row order" below. Never rewrite the whole file.
-9. Keep each row valid RFC-4180 UTF-8: seven fields, and quote a field that contains a comma, quote, or line break.
+9. Keep each row valid RFC-4180 UTF-8: eight fields, and quote a field that contains a comma, quote, or line break.
 10. Re-read with the Read tool and verify the exact row, that nothing else changed, and that the rows around it are still in order, before selecting the next job.
 
 Stop on a malformed row or duplicate canonical LinkedIn URLs.

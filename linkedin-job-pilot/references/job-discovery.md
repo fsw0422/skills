@@ -49,7 +49,7 @@ For each stable job:
 
 1. Extract the numeric job ID and canonicalize the URL to https://www.linkedin.com/jobs/view/<job-id>/.
 2. Parse tracker.csv, normalize every existing LinkedIn URL by numeric job ID, stop on normalized collisions, and reuse the unique matching row even when its legacy URL text differs.
-3. Upsert a new row with blank Research File, Status = Researching, and blank Last Applied.
+3. Upsert a new row with blank Research File, Status = Researching, and blank Last Applied, Last Interviewed, and Notes.
 4. Preserve existing status, path, and application history for an existing row.
 5. Write the row with the Edit tool and re-read it with the Read tool.
 6. Stop on a conflicting Applied badge or unverified application history.

@@ -25,7 +25,9 @@ Create `jobhunt` and `jobhunt/applications` when missing. Reject symlinks or res
 
 The exact tracker columns are:
 
-Company, Role, LinkedIn URL, Research File, Status, Last Applied, Notes
+Company, Role, LinkedIn URL, Research File, Status, Last Applied, Last Interviewed, Notes
+
+Last Interviewed is the date of the most recent interview for that row in YYYY-MM-DD, blank by default. Write it only when the user gives the date or approves a verified interview update.
 
 Notes is free text owned by the user, for example recruiters or people contacted individually. Preserve it on every change, and write to it only when the user asks.
 
@@ -88,7 +90,7 @@ Never run custom JavaScript in a page; browser-pilot lists the allowed browser t
 
 Explicitly invoking discovery or manual-role research authorizes these bounded home-local writes for that run:
 
-- Create or update <home-directory>/jobhunt/tracker.csv without changing its seven-column schema.
+- Create or update <home-directory>/jobhunt/tracker.csv without changing its eight-column schema.
 - Create or update <home-directory>/jobhunt/applications/<company-file>.md from the canonical Markdown template.
 - Replace Research File values with verified relative Markdown paths.
 - After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label, set the lifecycle to `Applied`, and record `Last Applied`. This standing authorization covers only those two fields for the confirmed application; all other tracker changes keep their normal authorization requirements.
@@ -104,7 +106,7 @@ For every CSV or Markdown change:
 1. Read the current file with the Read tool.
 2. Change only the target row or section with the Edit tool, replacing one exact, unique line or block; use the Write tool only to create a new file. Never rewrite the whole tracker.
 3. Preserve user-authored content and unrelated fields. Keep tracker rows sorted by Company, case-insensitively, by inserting each new or renamed row at its sorted position; see "Row order" in references/discovery-tracking.md.
-4. Keep CSV rows valid RFC-4180 UTF-8: seven fields, and quote a field that contains a comma, quote, or line break.
+4. Keep CSV rows valid RFC-4180 UTF-8: eight fields, and quote a field that contains a comma, quote, or line break.
 5. Re-read with the Read tool and verify the exact row or role section, and that nothing else changed.
 6. Stop on a malformed row, ambiguous company identity, multiple plausible research files, or path escape.
 
