@@ -68,18 +68,17 @@ End the packet with one request: reply `submit` to enter everything shown and su
 
 ## Inspect and draft
 
-After read-only form inspection, prepare all answers without entering or submitting them. Reuse verified user data only when its source and currentness are known. Show every exact submitted value in the application packet. Ask only for sensitive or uncertain facts that are not covered by the defaults below.
+After read-only form inspection, prepare all answers without entering or submitting them. Reuse verified user data only when its source and currentness are known. Show every exact submitted value in the application packet. Ask only for sensitive or uncertain facts that the applicant profile or the verified resume does not cover.
 
-### User application defaults
+### Applicant profile and resume values
 
-These are user-confirmed facts and preferences. Apply them only when a field has the same meaning and scope. They reduce repeated questions but never replace the submit approval for a named role.
+Answer personal questions from the user's private applicant profile, as described in [applicant-profile.md](applicant-profile.md). Apply an answer only when a field has the same meaning and scope. Profile answers reduce repeated questions but never replace the submit approval for a named role.
 
-- Derive the phone number, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the application packet.
-- The phone number is supplied by the user once per session when the resume has none. Ask the first time a form or cover letter needs it, reuse it for every application in that session, and show it in each packet.
-- Answer hybrid-policy questions `Yes`. This does not establish willingness to relocate, accept a fully onsite role, or meet a specific non-hybrid commute requirement.
+Other values that need no profile entry:
+
+- Derive the name, email, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the application packet.
+- The phone number is supplied by the user once per session when the resume has none. Ask the first time a form or cover letter needs it, reuse it for every application in that session, and show it in each packet. Never store it in the profile.
 - To answer whether the user previously worked for or applied to the employer, compare the verified resume's employer history with the target company and its officially verified parent, affiliate, and former names. Answer `Yes` or `No` when the evidence is unambiguous; ask when company identity or ownership leaves a real ambiguity.
-- The employer's default AI-assisted review is acceptable. Do not request a human-only opt-out unless the user asks.
-- Agree to a data-processing consent only when it is required to consider the current application. Keep every optional consent unchecked, including future-opportunity retention, talent pools, marketing, notifications, and similar unrelated processing.
 
 ### Resume-first autofill order
 
@@ -87,7 +86,7 @@ After the user says `submit` and the form exposes the matching controls:
 
 1. Upload the verified resume first and wait for the form's parser or autofill to finish.
 2. Upload the cover letter PDF shown in the packet next when the form accepts one.
-3. Inspect every populated field and reconcile it against the packet, the verified resume, and the user defaults above. Never trust parsed names, phone formatting, dates, locations, employers, or answers without checking them.
+3. Inspect every populated field and reconcile it against the packet, the verified resume, and the applicant profile. Never trust parsed names, phone formatting, dates, locations, employers, or answers without checking them.
 4. Enter every remaining packet value, then follow the submit steps below.
 
 ### Handle employer-site additional inputs
@@ -122,15 +121,15 @@ Keep every draft truthful and evidence-backed. Prefer concrete matching experien
 
 The `submit` reply may pick alternatives for individual fields; otherwise use the recommended choice for every field. It authorizes entering the listed content, uploading the listed files, and clicking submit for that named role only.
 
-Every required field needs an answer from the user, a matching default, or the verified resume before submission. Never submit while a required field lacks one.
+Every required field needs an answer from the user, a matching applicant-profile answer, or the verified resume before submission. Never submit while a required field lacks one.
 
-For sensitive or factual fields listed below, first use an exact matching user application default above. Otherwise do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact. If a later page or a conditional question reveals another field, fill it without pausing when its answer exactly matches a default above or a verified resume value, for example residence city or the no-sponsorship default; otherwise pause and repeat this process before continuing.
+For sensitive or factual fields listed below, first use an exact matching applicant-profile answer. Otherwise do not recommend an answer merely to improve application odds. Show the available choices, identify what each means, and ask the user to supply or confirm the fact, together with whether to save it to the profile. If a later page or a conditional question reveals another field, fill it without pausing when its answer exactly matches a profile answer or a verified resume value, for example residence city or sponsorship; otherwise pause and repeat this process before continuing.
 
-Outside those scoped defaults, do not infer:
+Outside matching profile answers, do not infer:
 
 - Work authorization or sponsorship needs.
 - Salary expectations or current compensation.
-- Willingness to relocate or commute, except the residence default above.
+- Willingness to relocate or commute.
 - Notice period or availability.
 - Demographic, disability, veteran, or criminal-history answers.
 - Consent to future opportunities, marketing, automated screening, or talent pools.
@@ -173,8 +172,8 @@ When the user says `submit`:
 1. Enter the data and upload the files in the resume-first order above.
 2. Re-read every populated field and attached file.
 3. If everything matches the packet, click the final submit control right away.
-4. If a later step or conditional question reveals a field whose answer exactly matches a scoped default or a verified resume value, fill it, re-read the form, and continue to submit; report it afterwards.
-5. If anything differs and cannot be corrected to the packet value, a required field is still empty, or a later step reveals new personal data, files, or substantive content that no default or resume value answers, stop before submitting. Show only those items and wait for `submit` again.
+4. If a later step or conditional question reveals a field whose answer exactly matches an applicant-profile answer or a verified resume value, fill it, re-read the form, and continue to submit; report it afterwards.
+5. If anything differs and cannot be corrected to the packet value, a required field is still empty, or a later step reveals new personal data, files, or substantive content that no profile or resume value answers, stop before submitting. Show only those items, ask whether to save each new answer to the profile, and wait for `submit` again.
 
 ```mermaid
 sequenceDiagram

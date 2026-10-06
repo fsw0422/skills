@@ -20,6 +20,7 @@ At the start of each run:
 3. Use <home-directory>/jobhunt/applications for company research Markdown.
 4. Use <home-directory>/jobhunt/tracker.csv for the tracker.
 5. Use references/company-research-template.md as the research template.
+6. Use <home-directory>/jobhunt/applicant-profile.md for the user's private application answers. Never commit, copy, or upload it; see references/applicant-profile.md.
 
 Create `jobhunt` and `jobhunt/applications` when missing. Reject symlinks or resolved paths that escape the active user's home directory. The tracker is a file, not a directory.
 
@@ -47,13 +48,17 @@ Verify the resume once per session, the first time the skill runs: open it with 
 
 Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after the user approves submission. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. When the resume has no phone number, ask the user for it once per session, the first time a form or cover letter needs it, and reuse that value for the rest of the session; never write it into the skill or research Markdown. Extraction is not authorization to transmit them: show the values in the application packet and transmit them only after the submit approval below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
 
+## Applicant profile questionnaire
+
+Before the first application work in a session, read references/applicant-profile.md and the user's profile file. If the catalog has questions the profile does not answer yet, ask all of them in one message, save the answers, and never ask them again. During an application, when a form asks a personal question that the profile does not cover, ask for the answer and whether to save it to the profile. Do not propose skill changes for new questions; the user maintains the catalog.
+
 ## Non-negotiable approvals
 
 Research, comparison, local Markdown authoring, cover letter drafting and PDF rendering, bounded tracker updates, and read-only application-form inspection may proceed without approval. For an ordinary named application, use exactly one approval gate:
 
 1. **Submit approval:** after inspecting the form, present one complete application packet with every drafted answer, the full cover letter text and its PDF, every personal-data value, and every named file upload. When the user replies `submit` for that named role, enter everything in the browser, upload the files, verify the populated form against the packet, and click the final submit control without asking again.
 
-Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. A newly revealed field whose answer exactly matches a scoped user default in references/application-gates.md or a value from the verified resume is not new: fill it, list it in the outcome report, and continue without asking. Present only the remaining items; the user's next `submit` covers them.
+Stop before submitting and ask again only when the populated form cannot be made to match the packet, a required field still lacks an answer, or a later form step reveals new personal data, files, or substantive content that the packet did not show. A newly revealed field whose answer exactly matches an applicant-profile answer or a value from the verified resume is not new: fill it, list it in the outcome report, and continue without asking. Present only the remaining items; the user's next `submit` covers them.
 
 Do not ask for approval merely to open, navigate to, or inspect an application form when that action is read-only and shares no applicant data. If opening or advancing the form would itself save an application, transmit applicant data, or trigger a recruiter-visible action, do it only after the user says `submit`.
 
@@ -69,7 +74,7 @@ Outside the ordinary submit approval, stop and obtain explicit approval immediat
 
 An approval must identify the company, role, action, materials, recipient, and exact message when relevant. Earlier approval for another role or action does not carry over.
 
-Use the scoped, user-confirmed application defaults in references/application-gates.md when a field matches them exactly. Otherwise never infer work authorization, sponsorship, relocation, compensation expectations, notice period, demographic answers, disability, veteran status, criminal history, or other sensitive application data.
+Use the user's applicant-profile answers when a field has the same meaning and scope. Otherwise never infer work authorization, sponsorship, relocation, compensation expectations, notice period, demographic answers, disability, veteran status, criminal history, or other sensitive application data.
 
 ## Tooling: no ad-hoc scripts
 
@@ -80,7 +85,7 @@ Do not write one-off code at any step of this skill: no shell pipelines, inline 
 | Open, read, check, fill, and submit any website, including careers pages, job boards, and application forms | The browser tools allowed by browser-pilot |
 | Read the resume or another PDF | The Read tool |
 | Record the resume's SHA-256 | `shasum -a 256 <resume.pdf>`, the only allowed hashing command |
-| Change tracker.csv, research Markdown, or `letter.txt` | The Read, Edit, and Write tools |
+| Change tracker.csv, research Markdown, the applicant profile, or `letter.txt` | The Read, Edit, and Write tools |
 | Render and verify a cover letter PDF | `scripts/render-cover-letter.py`, which prints pages, SHA-256, and text and header match |
 | Research the web | Web search and web fetch tools, or subagents that use them |
 
@@ -94,6 +99,8 @@ Explicitly invoking discovery or manual-role research authorizes these bounded h
 - Create or update <home-directory>/jobhunt/applications/<company-file>.md from the canonical Markdown template.
 - Replace Research File values with verified relative Markdown paths.
 - After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label, set the lifecycle to `Applied`, and record `Last Applied`. This standing authorization covers only those two fields for the confirmed application; all other tracker changes keep their normal authorization requirements.
+
+The run may also create or update <home-directory>/jobhunt/applicant-profile.md with answers the user gives in the questionnaire or agrees to save, as described in references/applicant-profile.md.
 
 The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
