@@ -10,6 +10,7 @@
     "./cleanup",
     "./guided-code-review",
     "./linkedin-job-pilot",
+    "./restore-session",
     "./spec-workflow",
     "./write-as-me"
   ]
