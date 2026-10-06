@@ -3,7 +3,7 @@
 
 Usage:
   restore-session.py find [WORDS ...] [--cwd PATH] [--limit N] [--include-listed]
-  restore-session.py restore SESSION_ID [--permission-mode MODE] [--allow-copy] [--dry-run]
+  restore-session.py restore SESSION_ID [--name NAME] [--permission-mode MODE] [--allow-copy] [--dry-run]
 
 find prints one JSON object whose `results` are conversations ranked by how well
 they match WORDS (title, prompts, summary, and conversation text), or newest
@@ -14,12 +14,16 @@ first when no words are given. Each result has a `status`:
   switched_away     row X started as this conversation, then /resume moved it
   open_in_terminal  open in a terminal session
   listed            already a row (only shown with --include-listed)
+A result whose title is already another row's name has `name_in_use_by`.
 
 restore checks the status again and, for `hidden`, runs
-  claude --bg --resume <id> --permission-mode <mode> --name <title>
+  claude --bg --resume <id> --permission-mode <mode> --name <name>
 from the conversation's original folder, then waits for the row to appear.
+<name> is --name, or else the conversation's title. Another row must not
+already use it, since /resume leaves old row names on conversations.
 It prints one JSON object. Exit codes: 0 restored (or dry run), 1 error,
-2 not found or ambiguous, 3 already listed, 4 blocked by another row or terminal.
+2 not found or ambiguous, 3 already listed, 4 blocked by another row or
+terminal, or the name is already used by another row.
 """
 
 import argparse
@@ -51,6 +55,7 @@ STOPWORDS = {
     "this", "unhide", "was", "where", "with",
 }
 ANSI = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
+TITLE_TAG = re.compile(r"\[[^\]]*\]")
 NEW_ROW = re.compile(r"backgrounded\s*\S\s*([0-9a-f]{8})")
 SESSION_ID = re.compile(r"^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$")
 
@@ -67,6 +72,7 @@ def main():
 
     restore = commands.add_parser("restore", help="bring one conversation back as a row")
     restore.add_argument("session_id", help="full session id, or a unique prefix of at least 8 characters")
+    restore.add_argument("--name", help="name for the restored row instead of the conversation's title")
     restore.add_argument("--permission-mode", choices=MODES, default="auto")
     restore.add_argument("--allow-copy", action="store_true", help="allow a copy with a new id for switched_away")
     restore.add_argument("--dry-run", action="store_true", help="show the checks and command without launching")
@@ -96,7 +102,11 @@ def run_find(args):
         score, matched = rank(info, words)
         if words and score == 0:
             continue
-        results.append(describe(info, status, row, score, matched))
+        result = describe(info, status, row, score, matched)
+        owner = name_owner(result["title"], rows) if status in ("hidden", "switched_away") else None
+        if owner:
+            result["name_in_use_by"] = owner["row"]
+        results.append(result)
     results.sort(key=lambda r: (r["score"], r["last_active"]), reverse=True)
     output = {
         "query": words,
@@ -128,6 +138,15 @@ def run_restore(args):
         code, fields = blocked
         return report(code, ok=False, session_id=info["id"], title=title_of(info), status=status, **fields)
 
+    name = args.name or (title_of(info) if info["titles"] else None)
+    owner = name_owner(name, rows) if name else None
+    if owner:
+        return report(4, ok=False, session_id=info["id"], title=title_of(info), status="name_in_use",
+                      name=name, row=owner["row"], row_name=owner.get("name"),
+                      fix='restore again with --name "<a different name>"',
+                      message=f'row {owner["row"]} is already named "{owner.get("name")}"; '
+                              f"pick a different name so the two rows can be told apart")
+
     cwd = info["cwd"]
     if not cwd or not Path(cwd).is_dir():
         return report(1, ok=False, session_id=info["id"], status="error",
@@ -139,12 +158,12 @@ def run_restore(args):
     command = [claude, "--bg", "--resume", info["id"], "--permission-mode", args.permission_mode]
     if info["agent"]:
         command += ["--agent", info["agent"]]
-    if info["titles"]:
-        command += ["--name", title_of(info)]
+    if name:
+        command += ["--name", name]
     shown = ["claude"] + command[1:]
     if args.dry_run:
         return report(0, ok=True, dry_run=True, session_id=info["id"], title=title_of(info),
-                      status=status, cwd=cwd, command=shown)
+                      name=name, status=status, cwd=cwd, command=shown)
 
     try:
         launched = subprocess.run(command, cwd=cwd, stdin=subprocess.DEVNULL,
@@ -157,9 +176,9 @@ def run_restore(args):
         return report(1, ok=False, status="error", command=shown, message=output or f"exit code {launched.returncode}")
 
     new_row = match.group(1)
-    copy = "copy of that conversation" in output
+    copy = "started a copy" in output
     visible = wait_for_row(new_row)
-    return report(0, ok=True, row=new_row, session_id=info["id"], title=title_of(info), cwd=cwd,
+    return report(0, ok=True, row=new_row, session_id=info["id"], title=title_of(info), name=name, cwd=cwd,
                   permission_mode=args.permission_mode, copy=copy, visible=visible,
                   command=shown, attach=f"claude attach {new_row}", output=output)
 
@@ -221,15 +240,23 @@ def load_rows():
     return list(rows.values()), None
 
 
+def name_owner(name, rows):
+    """The row whose name matches, ignoring case and extra spaces."""
+    wanted = " ".join(name.split()).casefold()
+    for row in rows:
+        if row.get("name") and " ".join(row["name"].split()).casefold() == wanted:
+            return row
+    return None
+
+
 def shown_session(row):
-    """The conversation a row is showing right now."""
-    live, saved, original = row["live"], row["saved"], row["original"]
-    # A running row may report its original id while it shows its saved conversation.
-    # A live id that matches neither means /resume switched the row and its saved
-    # state has not caught up yet.
-    if live and live not in (saved, original):
-        return live
-    return saved or live
+    """The conversation a row is showing right now.
+
+    A running row's live session is the truth. Its saved state does not change
+    when /resume switches the row, so it can point at a conversation the row no
+    longer shows, including the row's original one.
+    """
+    return row["live"] or row["saved"]
 
 
 def status_of(session_id, rows):
@@ -341,7 +368,11 @@ def count_hits(info, words, text):
 
 
 def rank(info, words):
-    title = title_of(info).lower()
+    # Bracketed title tags such as "[On-duty]" name a category shared by many
+    # conversations, so a match there counts for little.
+    title_text = title_of(info).lower()
+    tags = " ".join(TITLE_TAG.findall(title_text))
+    title = TITLE_TAG.sub(" ", title_text)
     first = (info["first_prompt"] or "").lower()
     recent = f"{info['last_prompt'] or ''} {info['summary'] or ''}".lower()
     score, matched = 0.0, {}
@@ -350,6 +381,9 @@ def rank(info, words):
         if word in title:
             score += 10
             places.append("title")
+        elif word in tags:
+            score += 2
+            places.append("title tag")
         if word in first:
             score += 5
             places.append("first prompt")

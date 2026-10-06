@@ -44,6 +44,13 @@ best 2-4 results:
 - description: `<folder> · <last_active_ago> · "<first prompt, shortened>"`,
   plus a short note when `status` is not `hidden` (see the table below)
 
+Several conversations can share a title, for example after `/resume` moved a
+row to another conversation. When titles match, label each option by its topic
+(from `first_prompt` or `summary`) instead of the shared title.
+
+A result with `name_in_use_by` has a title that row `name_in_use_by` already
+uses as its name. Restoring it needs a new name (see `name_in_use` below).
+
 With a single result, add "None of these" as the second option. When the user
 picks "None of these" or types something else, search again with their words.
 If AskUserQuestion is not available, show a numbered list and wait for the
@@ -52,16 +59,19 @@ choice.
 ## 3. Restore the chosen conversation
 
 ```sh
-python3 <base directory>/scripts/restore-session.py restore <id>
+python3 <base directory>/scripts/restore-session.py restore <id> [--name "<name>"]
 ```
 
 The script checks the status again. For a `hidden` conversation it runs
-`claude --bg --resume <id> --permission-mode auto --agent <agent> --name <title>`
+`claude --bg --resume <id> --permission-mode auto --agent <agent> --name <name>`
 from the conversation's original folder and waits for the row to appear.
+`<name>` is `--name`, or else the conversation's title. The script refuses a
+name that another row already uses.
 
 | Exit, `status` | Meaning | What to do |
 |---|---|---|
-| 0, `ok: true` | The row is back. | Report `row`, `title`, and `attach` (`claude attach <row>`). If `copy` is true, say it came back as a copy with a new id. |
+| 0, `ok: true` | The row is back. | Report `row`, `name`, and `attach` (`claude attach <row>`). If `copy` is true, say it came back as a copy with a new id. |
+| 4, `name_in_use` | Row `row` is already named `name`. The title is usually an old row name that `/resume` left on the conversation. | Suggest a short name for the conversation's topic (from `summary` or `first_prompt`) and ask the user to accept it or type their own. Then run `restore <id> --name "<name>"`, keeping any flag such as `--allow-copy`. |
 | 3, `listed` | It already has a row. | Tell the user the `row` and `row_name`. |
 | 4, `swapped` | It is open inside row `row` because `/resume` switched that row to it. | Ask before restarting that row. On yes, run `claude respawn <row>`, then run `restore` again. |
 | 4, `replaced` | Row `row` is saved as this conversation, but `/resume` switched it to another one. | Ask before restarting that row. On yes, run `claude respawn <row>`. That alone brings it back. |
@@ -72,6 +82,11 @@ from the conversation's original folder and waits for the row to appear.
 
 `claude respawn <row>` restarts that row from its saved state. Its conversation
 is kept; only the running process restarts.
+
+A row's name belongs to the row, not to its conversation. `/resume` swaps the
+conversation and keeps the old name, so a name can stop matching what the row
+shows. When that happens, tell the user to select the row in `claude agents`
+and press Ctrl+R to rename it. The new name sticks when the row restarts.
 
 Add `--permission-mode <mode>` to restore in a different mode, or `--dry-run`
 to see the checks and the command without launching anything.
