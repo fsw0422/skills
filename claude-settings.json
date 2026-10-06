@@ -4,7 +4,8 @@
   },
   "model": "opus[1m]",
   "enabledPlugins": {
-    "skills@fsw0422": true
+    "skills@fsw0422": true,
+    "playwright-chromium-browser@fsw0422": true
   },
   "extraKnownMarketplaces": {
     "fsw0422": {
