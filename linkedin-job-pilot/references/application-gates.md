@@ -77,7 +77,7 @@ Answer personal questions from the user's private applicant profile, as describe
 Other values that need no profile entry:
 
 - Derive the name, email, LinkedIn URL, and residence from the verified PDF resume when each value is unambiguous. Do not ask for them again, but repeat the exact values in the application packet.
-- The phone number is supplied by the user once per session when the resume has none. Ask the first time a form or cover letter needs it, reuse it for every application in that session, and show it in each packet. Never store it in the profile.
+- When the resume has no phone number, use the PHONE answer from the applicant profile, and show it in each packet.
 - To answer whether the user previously worked for or applied to the employer, compare the verified resume's employer history with the target company and its officially verified parent, affiliate, and former names. Answer `Yes` or `No` when the evidence is unambiguous; ask when company identity or ownership leaves a real ambiguity.
 
 ### Resume-first autofill order

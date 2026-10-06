@@ -86,6 +86,7 @@ flowchart TD
 | --- | --- |
 | LEGAL-NAME | Your legal first and last name as on official ID, in Latin characters |
 | PREFERRED-NAME | The first name you prefer to be called |
+| PHONE | Your phone number with country code, for forms and cover letters when the resume has none |
 | PRONOUNS | Your pronouns, or "prefer not to say" |
 | GENDER | Gender for diversity forms, or "prefer not to say" |
 | AGE-RANGE | Age range for diversity forms, or "prefer not to say" |
@@ -113,5 +114,5 @@ flowchart TD
 
 ## Not stored in the profile
 
-- Contact details: name, email, LinkedIn URL, and residence come from the verified resume. The phone number comes from the user once per session when the resume has none; see application-gates.md.
+- Contact details on the resume: name, email, LinkedIn URL, and residence come from the verified resume. The phone number comes from the resume when it has one, otherwise from PHONE above.
 - Per-company facts: whether you previously applied to, interviewed with, or worked for this employer or its auditor, referrer names, and cooldowns. Answer these from the resume, the tracker, and research, and ask when they are ambiguous.
