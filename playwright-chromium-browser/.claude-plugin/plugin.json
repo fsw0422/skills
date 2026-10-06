@@ -1,0 +1,8 @@
+{
+  "name": "playwright-chromium-browser",
+  "description": "A persistent Playwright Chromium browser for CLI sessions, the CLI counterpart of an app's built-in browser",
+  "author": {
+    "name": "fsw0422"
+  },
+  "repository": "https://github.com/fsw0422/skills"
+}

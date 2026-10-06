@@ -1,6 +1,6 @@
 # Agent skills
 
-Personal agent skills maintained as ordinary Git source, packaged as a single plugin (`skills`) in the `fsw0422` marketplace. Claude Code and Codex both install it from `.claude-plugin/`.
+Personal agent skills maintained as ordinary Git source, packaged as the `skills` plugin in the `fsw0422` marketplace. Claude Code and Codex both install it from `.claude-plugin/`. The marketplace also has a separate `playwright-chromium-browser` plugin for CLI browsing; see below.
 
 ## Install
 
@@ -22,13 +22,16 @@ If `codex` is not on your `PATH`, the ChatGPT desktop app bundles it at `/Applic
 
 Skills are namespaced by the plugin, e.g. `skills:linkedin-job-pilot`.
 
-The plugin also bundles a Playwright MCP server, `jobhunt-browser` (`.mcp.json`), for linkedin-job-pilot in Claude Code. It runs Playwright's Chromium, not your own Chrome, with a persistent sign-in profile at `~/jobhunt/.browser-profile` and browser output in `~/jobhunt/.playwright-mcp`, so installing the plugin on a new machine brings the same browser setup. Never commit the profile folder; it holds login cookies.
+### CLI browser (Claude Code)
 
-On a new machine, download the browser once (about 100 MB; repeat if Playwright later reports it missing after an update):
+The marketplace also has a separate plugin, `playwright-chromium-browser`. It gives CLI sessions a browser, the counterpart of the built-in browser in the Claude Code Desktop and Codex apps, and browser-pilot uses it for every skill that browses. It runs Playwright's Chromium (Chrome for Testing), never your own Chrome, with a persistent sign-in profile at `~/.playwright-chromium-browser/profile` and browser output in `~/.playwright-chromium-browser/output`. Never commit either folder; they hold login cookies and page contents.
 
 ```sh
+claude plugin install playwright-chromium-browser@fsw0422 --scope user
 npx -y @playwright/mcp@latest install-browser chrome-for-testing
 ```
+
+The second command downloads the browser once per machine (about 100 MB); repeat it if Playwright later reports the browser missing after an update.
 
 If you previously ran the old `install.sh`, remove its symlinks so the skill does not load twice:
 

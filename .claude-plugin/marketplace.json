@@ -9,6 +9,11 @@
       "name": "skills",
       "source": "./",
       "description": "Personal agent skills for Claude Code and Codex"
+    },
+    {
+      "name": "playwright-chromium-browser",
+      "source": "./playwright-chromium-browser",
+      "description": "A persistent Playwright Chromium browser for CLI sessions, the CLI counterpart of an app's built-in browser"
     }
   ]
 }

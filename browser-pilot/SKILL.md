@@ -1,6 +1,6 @@
 ---
 name: browser-pilot
-description: Shared rules for operating websites in a browser on the user's behalf - which browser to use (the app's built-in browser, Playwright only as the CLI fallback), tab hygiene, the allowed browser tools, page loading, sign-in handoff, and reliable form filling and read-back. Use when another skill directs browser work, or when the user asks the agent to open, read, or fill a website in the browser. Not for writing browser automation code or end-to-end tests.
+description: Shared rules for operating websites in a browser on the user's behalf - which browser to use (the app's built-in browser, or the playwright-chromium-browser plugin in a CLI), tab hygiene, the allowed browser tools, page loading, sign-in handoff, and reliable form filling and read-back. Use when another skill directs browser work, or when the user asks the agent to open, read, or fill a website in the browser. Not for writing browser automation code or end-to-end tests.
 ---
 
 # Browser Pilot
@@ -13,7 +13,7 @@ A calling skill decides what to do on a site and which actions need the user's a
 flowchart TD
     A[Browser task] --> B{App has a built-in browser?}
     B -- Yes --> C[Use the built-in browser]
-    B -- No, CLI --> D[Use Playwright as the fallback]
+    B -- No, CLI --> D[Use the playwright-chromium-browser plugin]
     C --> E{User asked about the focused tab?}
     D --> E
     E -- Yes --> F[Read the focused tab; do not navigate it away]
@@ -25,9 +25,14 @@ flowchart TD
 
 ## Choose the browser
 
-Use the app's built-in browser, such as the browser in Claude Code Desktop or the Codex app. Use Playwright only as a fallback in a CLI environment where no built-in browser exists, or when a site cannot complete the workflow in the built-in browser. Say which browser you use and why before the first action.
+Use the app's built-in browser, such as the browser in Claude Code Desktop or the Codex app. In a CLI environment where no built-in browser exists, or when a site cannot complete the workflow in the built-in browser, use the browser from the `playwright-chromium-browser` plugin, the CLI counterpart of a built-in browser. Say which browser you use and why before the first action.
 
-When the calling skill names a specific Playwright server, use only that server's tools for its work and never another Playwright server. For example, linkedin-job-pilot uses this plugin's `jobhunt-browser` server.
+The `playwright-chromium-browser` plugin:
+
+- Its tools are named `mcp__plugin_playwright-chromium-browser_browser__*`. Use only these for CLI browsing, never another Playwright server.
+- It runs Playwright's Chromium build, never the user's own Chrome, and keeps sign-ins in a persistent profile at `~/.playwright-chromium-browser/profile`, so they survive restarts. The profile holds login cookies: never read, copy, commit, or upload its files.
+- If its tools are missing, tell the user to install it with `claude plugin install playwright-chromium-browser@fsw0422` and reload plugins. Do not fall back to another Playwright server.
+- If a tool reports that the browser is not installed, which happens once on a new computer or after Playwright updates its Chromium build, run `npx -y @playwright/mcp@latest install-browser chrome-for-testing`, tell the user it is a one-time download of about 100 MB, and retry the action.
 
 ## Tabs
 
@@ -77,4 +82,4 @@ Inspect first, then fill, then verify:
 
 ## Browser output files
 
-Playwright saves snapshots, console logs, and screenshots automatically. Keep them only inside the folder the calling skill names for them, for example its data root. If no folder is named, or Playwright's output folder would resolve outside it, stop and ask before continuing. Built-in browsers do not need this rule.
+The `playwright-chromium-browser` plugin saves snapshots, console logs, and screenshots automatically in `~/.playwright-chromium-browser/output`. They are temporary browser artifacts that may contain page content, including filled-in forms; treat them as private, never commit or upload them, and never copy them into a calling skill's records. Built-in browsers do not need this rule.
