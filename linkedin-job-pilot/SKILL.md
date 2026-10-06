@@ -104,7 +104,9 @@ The run may also create or update <home-directory>/jobhunt/applicant-profile.md 
 
 The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
-For browser-pilot's Playwright output rule, this skill's folder is <home-directory>/jobhunt/.playwright-mcp/. Playwright may write its snapshots, console logs, and screenshots there without approval; they are temporary browser artifacts, not research or tracking records. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
+When Playwright is the browser, use only this plugin's `jobhunt-browser` server; its tools are named `mcp__plugin_skills_jobhunt-browser__*`. It runs Playwright's Chromium, never the user's own Chrome, and keeps sign-ins in the persistent profile <home-directory>/jobhunt/.browser-profile so they survive restarts. The profile holds login cookies: never read, copy, commit, or upload its files. If the server is missing, tell the user to update and reload the plugin instead of using another Playwright server.
+
+For browser-pilot's Playwright output rule, this skill's folder is <home-directory>/jobhunt/.playwright-mcp/, which the `jobhunt-browser` server already uses. Playwright may write its snapshots, console logs, and screenshots there without approval; they are temporary browser artifacts, not research or tracking records. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
 
 The primary agent is the sole writer. Subagents return structured research only.
 

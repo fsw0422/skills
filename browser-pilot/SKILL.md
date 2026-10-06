@@ -27,6 +27,8 @@ flowchart TD
 
 Use the app's built-in browser, such as the browser in Claude Code Desktop or the Codex app. Use Playwright only as a fallback in a CLI environment where no built-in browser exists, or when a site cannot complete the workflow in the built-in browser. Say which browser you use and why before the first action.
 
+When the calling skill names a specific Playwright server, use only that server's tools for its work and never another Playwright server. For example, linkedin-job-pilot uses this plugin's `jobhunt-browser` server.
+
 ## Tabs
 
 - Open a new tab for every browser task, and keep working in the tabs you opened.
