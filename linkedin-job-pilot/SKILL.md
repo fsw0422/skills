@@ -87,6 +87,7 @@ Do not write one-off code at any step of this skill: no shell pipelines, inline 
 | Record the resume's SHA-256 | `shasum -a 256 <resume.pdf>`, the only allowed hashing command |
 | Change tracker.csv, research Markdown, the applicant profile, or `letter.txt` | The Read, Edit, and Write tools |
 | Render and verify a cover letter PDF | `scripts/render-cover-letter.py`, which prints pages, SHA-256, and text and header match |
+| Install the `jobhunt-browser` Chromium build when it is missing | `npx -y @playwright/mcp@latest install-browser chrome-for-testing` |
 | Research the web | Web search and web fetch tools, or subagents that use them |
 
 Never run custom JavaScript in a page; browser-pilot lists the allowed browser tools. If a step cannot be done with these tools, stop and tell the user what is missing instead of improvising a script.
@@ -104,7 +105,7 @@ The run may also create or update <home-directory>/jobhunt/applicant-profile.md 
 
 The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
-When Playwright is the browser, use only this plugin's `jobhunt-browser` server; its tools are named `mcp__plugin_skills_jobhunt-browser__*`. It runs Playwright's Chromium, never the user's own Chrome, and keeps sign-ins in the persistent profile <home-directory>/jobhunt/.browser-profile so they survive restarts. The profile holds login cookies: never read, copy, commit, or upload its files. If the server is missing, tell the user to update and reload the plugin instead of using another Playwright server.
+When Playwright is the browser, use only this plugin's `jobhunt-browser` server; its tools are named `mcp__plugin_skills_jobhunt-browser__*`. It runs Playwright's Chromium, never the user's own Chrome, and keeps sign-ins in the persistent profile <home-directory>/jobhunt/.browser-profile so they survive restarts. The profile holds login cookies: never read, copy, commit, or upload its files. If the server is missing, tell the user to update and reload the plugin instead of using another Playwright server. If a browser tool reports that the browser is not installed, which happens once on a new computer or after Playwright updates its Chromium build, run `npx -y @playwright/mcp@latest install-browser chrome-for-testing`, tell the user it is a one-time download of about 100 MB, and retry the action.
 
 For browser-pilot's Playwright output rule, this skill's folder is <home-directory>/jobhunt/.playwright-mcp/, which the `jobhunt-browser` server already uses. Playwright may write its snapshots, console logs, and screenshots there without approval; they are temporary browser artifacts, not research or tracking records. If Playwright's output folder would resolve outside <home-directory>/jobhunt, for example because the session started in another directory, stop and ask before using it.
 

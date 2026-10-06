@@ -24,6 +24,12 @@ Skills are namespaced by the plugin, e.g. `skills:linkedin-job-pilot`.
 
 The plugin also bundles a Playwright MCP server, `jobhunt-browser` (`.mcp.json`), for linkedin-job-pilot in Claude Code. It runs Playwright's Chromium, not your own Chrome, with a persistent sign-in profile at `~/jobhunt/.browser-profile` and browser output in `~/jobhunt/.playwright-mcp`, so installing the plugin on a new machine brings the same browser setup. Never commit the profile folder; it holds login cookies.
 
+On a new machine, download the browser once (about 100 MB; repeat if Playwright later reports it missing after an update):
+
+```sh
+npx -y @playwright/mcp@latest install-browser chrome-for-testing
+```
+
 If you previously ran the old `install.sh`, remove its symlinks so the skill does not load twice:
 
 ```sh
