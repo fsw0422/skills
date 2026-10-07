@@ -47,8 +47,8 @@ The primary agent uses the authenticated UI and one result tab. Enumerate cards 
 
 For each stable job:
 
-1. Extract the numeric job ID and canonicalize the URL to https://www.linkedin.com/jobs/view/<job-id>/.
-2. Parse tracker.csv, normalize every existing LinkedIn URL by numeric job ID, stop on normalized collisions, and reuse the unique matching row even when its legacy URL text differs.
+1. Record the numeric job ID in the private ledger only, and read the company and exact title.
+2. Parse tracker.csv, match existing rows by Company and Role case-insensitively, stop when more than one row matches, and reuse the unique matching row; a repost or another job ID with the same company and title is the same row.
 3. Upsert a new row with blank research columns, Status = Researching, and blank Last Applied, Last Interviewed, and Notes.
 4. Preserve existing status, research columns, and application history for an existing row.
 5. Write the row with the Edit tool and re-read it with the Read tool.
@@ -59,7 +59,7 @@ After the page is recorded, follow subagent-orchestration.md. Complete the full 
 
 For every unique job record:
 
-- Job ID and canonical URL.
+- Job ID and posting URL, kept in the private ledger only.
 - Page and ordinal occurrence.
 - Company, title, location, work mode, employment type.
 - Posting age/date, promoted or reposted state.
@@ -90,7 +90,7 @@ Unknown information lowers confidence; it is not automatically negative. Never w
 
 ## Deduplication
 
-Use job ID as the temporary identity and canonical LinkedIn URL as the CSV identity.
+Use job ID as the temporary identity within a run and Company plus Role as the CSV identity.
 
 - Consolidate repeated cards with the same ID and retain every occurrence position.
 - Keep distinct URLs separate unless requisition, description, employer URL, and date evidence proves one vacancy.

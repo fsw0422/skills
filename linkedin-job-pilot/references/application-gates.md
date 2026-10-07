@@ -33,10 +33,10 @@ stateDiagram-v2
 
 Before preparing an application, read the live row and follow [discovery-tracking.md](discovery-tracking.md):
 
-- Resolve the canonical LinkedIn URL and any repost relationship recorded in the private ledger or the row's Summary.
+- Find the live official posting from the company's careers page by the row's exact role title, as the main skill's next-job preview describes, and note any repost relationship mentioned in the row's Summary.
 - Verify the official posting is still open and materially matches the researched role.
 - Exclude confirmed applications in the same repost cluster during the previous 30 calendar days.
-- Never auto-reapply to an exact LinkedIn URL that has a `Last Applied` date. An older exact application requires a specific reapply decision.
+- Never auto-reapply to a row that has a `Last Applied` date. An older exact application requires a specific reapply decision.
 - Reconcile any mismatch between LinkedIn's `Applied` badge and the tracker before continuing.
 
 If a redirect opens a different role, stop and research and track the new identity before using this workflow.
@@ -51,7 +51,7 @@ Use the tracker row's research columns and the live official posting as the sour
 
 In the application packet, show:
 
-- Company, role, location, job URL, job ID, posting date, and application channel.
+- Company, role, location, the live posting URL found for this application, posting date, and application channel. Do not write the posting URL into the tracker.
 - Company snapshot from the row: Company Website, the Summary's company and money clauses, Salary Range, and Glassdoor Review. If revenue is not public, say so instead of estimating it. Leave an empty Salary Range or Glassdoor Review as `not found`.
 - Role facts and risk flags from the live official posting, such as location, work mode, language, and hard requirements.
 - Fit assessment: `A — Great Fit`, `B — Normal Fit`, `Investigate`, or `Skip`, with evidence-backed rationale, strongest evidence, gaps, hard constraints, and a recommendation.
@@ -61,7 +61,7 @@ In the application packet, show:
 - The full cover letter text with its PDF path, filename, page count, and SHA-256 when the form asks for or accepts one, prepared as described in [cover-letter.md](cover-letter.md).
 - Proposed LinkedIn Premium actions, why they help, and any credit or quota they consume.
 - Active account, relevant visibility mode, and exact execution order.
-- Post-submit tracking preview: canonical LinkedIn URL, target CSV row, the exact fit-preserving `Status` such as `A — Great Fit · Applied`, and `Last Applied`. Use `${submitted_at}` only until the site confirms the real date.
+- Post-submit tracking preview: the target CSV row by Company and Role, the exact fit-preserving `Status` such as `A — Great Fit · Applied`, and `Last Applied`. Use `${submitted_at}` only until the site confirms the real date.
 - Known questions that require user input.
 
 End the packet with one request: reply `submit` to enter everything shown and submit it, or request edits. The user may answer open questions, pick alternative drafts, or make edits in the same reply as `submit`; apply them exactly and submit. If an edit would change something the packet did not show, present that change first.
@@ -164,7 +164,7 @@ Do not start or change a subscription, trial, plan, or paid feature unless the u
 The application packet is the only routine approval request. Before asking, make sure it shows:
 
 - Every field, file, answer, recipient, and message, including the cover letter text and its PDF filename, page count, and SHA-256.
-- The exact contingent tracker.csv update, including canonical LinkedIn URL, target row, `Status`, and `Last Applied`.
+- The exact contingent tracker.csv update, including the target row by Company and Role, `Status`, and `Last Applied`.
 - That the scoped `Applied` and `Last Applied` tracking writes happen automatically, under standing authorization, only after reliable submission confirmation.
 
 When the user says `submit`:
