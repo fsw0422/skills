@@ -39,18 +39,15 @@ sequenceDiagram
     participant P as Primary agent
     participant L as LinkedIn
     participant C as tracker.csv
-    participant M as Research Markdown
     participant R as Job agents
     P->>L: Inspect cards sequentially
     P->>C: Add Researching rows with the Edit tool
     P->>R: Dispatch company owners
     R-->>P: Company dossiers and sibling identities
-    P->>M: Create or update owner research files
-    P->>C: Verify relative Research File paths
+    P->>C: Write owner rows' research columns
     P->>R: Dispatch remaining one-job agents
     R-->>P: Structured role results
-    P->>M: Add or update role sections
-    P->>C: Finalize fit labels
+    P->>C: Write research columns and finalize fit labels
     P->>L: Advance only after page wave completes
 ~~~
 
@@ -68,6 +65,7 @@ Each agent returns:
 - Role requirements, duties, work mode, salary, and interview evidence, taken from the official posting first, with LinkedIn-only facts labeled.
 - Required company facts with dated source links and confidence.
 - Fit label, rationale, strongest evidence, largest gap, unknowns, lifecycle, and recommendation.
+- Ready-to-write research columns as defined in discovery-tracking.md: Company Website, Summary, Salary Range (employer-published only, else blank), and Glassdoor Review (seen on Glassdoor only, else blank).
 - Fitting sibling roles only when it is the expansion owner, found on the company's official careers page, each with its official posting URL.
 
 Agent boundaries:
@@ -76,7 +74,7 @@ Agent boundaries:
 - Targeted read-only Reddit, Blind, and Glassdoor checks when material.
 - No browser use at all, as browser-pilot requires: no built-in browser or Playwright tools and no tab changes. Use web search and web fetch only.
 - No LinkedIn control, application action, saving, dismissal, interest signal, profile visit, contact, or Reddit post.
-- No local durable writes. Only the primary agent may write tracker.csv or research Markdown.
+- No local durable writes. Only the primary agent may write tracker.csv.
 - No inference of authorization, language, relocation, compensation expectations, or other sensitive answers.
 - No child agents unless the primary agent explicitly assigns distinct one-job tasks and capacity allows it.
 
@@ -88,9 +86,9 @@ Maintain normalized company identities for the run. On each page:
 2. Wait and merge company dossiers and sibling identities.
 3. For each sibling found on the official careers page, look up its exact LinkedIn post to get the canonical URL, and deduplicate. A sibling with no LinkedIn post follows Manual intake in discovery-tracking.md.
 4. Parse tracker.csv and upsert only new or unclassified sibling rows.
-5. Verify each row and relative Research File path.
+5. Verify each row.
 6. Dispatch one agent for every remaining original and tracked sibling job.
-7. Reuse existing Markdown for companies researched earlier.
+7. Reuse existing rows' Company Website, Glassdoor Review, and company facts for companies researched earlier.
 8. Do not recursively expand from sibling roles.
 
 Wait for every dispatched job agent on the page to finish, fail, or request attention before advancing. Retry a transient research failure at most once. Never silently omit a job or invent missing evidence.

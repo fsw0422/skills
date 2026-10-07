@@ -2,7 +2,7 @@
 
 Read this file for every stable unique role during discovery and every manually supplied role. Research is part of discovery, not a later top-ten phase.
 
-Use company-research-template.md for every company Markdown file.
+Research ends in the tracker row's research columns, defined in discovery-tracking.md. Do not write research Markdown or other per-company files.
 
 ## Research order
 
@@ -14,7 +14,7 @@ flowchart TD
     C -- Yes --> E[Reconcile dates and contradictions]
     D --> E
     E --> F[Complete brief and final fit]
-    F --> G[Write and verify Markdown and CSV]
+    F --> G[Write and verify the row's research columns]
     G --> H{Final Status is Investigate and public question could resolve the gap?}
     H -- Yes --> I[Draft r/cscareerquestionsEU question]
     H -- No --> J[Finish without public post]
@@ -43,9 +43,9 @@ flowchart LR
 1. Find the exact posting for the role on the official careers page. A generic careers or search page is not enough. Confirm the board belongs to the same employer.
 2. Take requirements, duties, level, location, work mode, compensation, language, authorization, and posting dates from the official posting.
 3. Use LinkedIn text only for facts the official posting does not state, such as applicant counts, repost state, or Premium signals, or a detail the employer omitted. Label each such fact `(LinkedIn only)`.
-4. When the official posting and LinkedIn disagree, the official posting wins. Note the difference in the role section.
+4. When the official posting and LinkedIn disagree, the official posting wins. Mention the difference in the Summary only when it matters to the user, such as a different work mode or salary.
 5. If the posting is closed on the careers page but still listed on LinkedIn, treat the role as closed.
-6. If no official posting can be found, research from LinkedIn, write `Official posting: Not found on the careers page as of <date>` in the role section, and lower confidence.
+6. If no official posting can be found, research from LinkedIn, say `not on the careers page` in the Summary, and lower confidence.
 
 The diagram is a priority order, not a requirement to search every site. Stop adding sources when material questions are answered. Respect access controls and report unavailable evidence.
 
@@ -80,13 +80,13 @@ Use this reliability order:
 3. LinkedIn company and workforce signals, and LinkedIn job text as a labeled fallback for facts missing from the official posting.
 4. Levels.fyi and recent role- or location-relevant Glassdoor, Blind, and Reddit anecdotes.
 
-Give material facts a link and publication or access date. Label estimates. Separate base pay from total compensation. When sources disagree, show both and explain the likely reason.
+Check material facts against a dated source while researching, and prefer the most recent reliable one when sources disagree. Estimates may inform the fit, but never write an estimate into Salary Range or Glassdoor Review.
 
-For every role not already a verified Skip, run targeted read-only Reddit, Blind, and Glassdoor searches when accessible and material. Prefer recent reports for the same country, office, discipline, and level. Treat anonymous reports as anecdotal and never let one report override stronger official evidence. Record Not accessible or No useful recent reports found rather than silently omitting the check.
+For every role not already a verified Skip, run targeted read-only Reddit, Blind, and Glassdoor searches when accessible and material. Prefer recent reports for the same country, office, discipline, and level. Treat anonymous reports as anecdotal and never let one report override stronger official evidence. When Glassdoor shows a company rating, record it in Glassdoor Review; when it does not or is not accessible, leave the column blank. Put a decision-relevant culture red flag in the Summary.
 
 ## Reddit fallback
 
-Use the posting fallback only after ordinary research is complete, the Markdown file and CSV row are verified, final Status is Investigate, and the remaining gap is decision-critical. Never propose a public post for Great Fit, Normal Fit, or Skip.
+Use the posting fallback only after ordinary research is complete, the CSV row is verified, final Status is Investigate, and the remaining gap is decision-critical. Never propose a public post for Great Fit, Normal Fit, or Skip.
 
 Draft a concise r/cscareerquestionsEU post with:
 
@@ -98,16 +98,16 @@ Draft a concise r/cscareerquestionsEU post with:
 
 Before posting, show the active handle, subreddit, flair, exact title, exact body, and whether the employer or role is identifiable. State that the post will be public. Hard stop until the user approves that exact draft and identity. Any edit, reply, message, vote, cross-post, or deletion requires separate approval.
 
-## Research brief
+## Research result
 
-End with:
+End each role's research with exactly these values for its tracker row:
 
-- Two-sentence company summary.
-- Evidence table with confidence and dates.
-- Salary range with type, currency, location, source, and confidence.
-- Likely interview process and confidence.
-- AI relevance.
-- Candidate fit, gaps, risks, and an evidence-backed A — Great Fit, B — Normal Fit, Investigate, or Skip label.
-- Apply, Investigate further, or Skip as a recommendation, not a decision.
+| Column | Value |
+| --- | --- |
+| Company Website | The company's main website |
+| Summary | One line, at most 320 characters: what the company does; revenue or `revenue not public`, plus funding or ownership; location and work mode; the main fit reason; the biggest gap or red flag |
+| Salary Range | Only a numeric range the employer published for this role and location; otherwise blank |
+| Glassdoor Review | Only a rating seen on Glassdoor, such as `4.4/5 (17 reviews)`; otherwise blank |
+| Status | An evidence-backed A — Great Fit, B — Normal Fit, Investigate, or Skip label |
 
-After each brief, follow discovery-tracking.md: create or update the company Markdown, verify it, write its relative path into every matching tracker row, and finalize the fit label. Do not wait for all pages or a separate batch.
+After each result, follow discovery-tracking.md: write the research columns and Status into the row, verify it, and move on. Do not wait for all pages or a separate batch.

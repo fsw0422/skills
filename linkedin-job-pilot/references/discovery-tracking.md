@@ -7,12 +7,10 @@ Read this file before the first discovery-row upsert, after each job's research 
 Resolve the active user's home directory once without deriving it from the current workspace.
 
 - Tracker: <home-directory>/jobhunt/tracker.csv
-- Research directory: <home-directory>/jobhunt/applications
-- Template: references/company-research-template.md
 
-Create `jobhunt` and `jobhunt/applications` when missing. Reject symlinks or resolved paths that escape the active user's home directory. Do not search a workspace-local copy, another home directory, or a cloud fallback.
+Create `jobhunt` when missing. Reject symlinks or resolved paths that escape the active user's home directory. Do not search a workspace-local copy, another home directory, or a cloud fallback.
 
-Research Markdown holds detailed evidence and fit rationale. The CSV is the minimal index and application-status view.
+The tracker is the only research record. Each row holds a short research result in its research columns plus the application status. Do not write research Markdown or other per-company files.
 
 ## Lifecycle
 
@@ -23,25 +21,27 @@ flowchart LR
     C --> D[Upsert row as Researching]
     D --> E[Research company and role]
     E --> F[Assign final fit]
-    F --> G[Create or update company Markdown]
-    G --> H[Verify role section]
-    H --> I[Write relative Research File path]
-    I --> J[Finalize Status]
+    F --> G[Write research columns]
+    G --> H[Verify the row]
+    H --> J[Finalize Status]
     J --> K[Build application queue]
 ~~~
 
-The initial CSV row, bounded research-file write, Research File update, and final Status update are authorized discovery writes. Schema changes, template changes, file moves/renames/deletions, writes outside `jobhunt`, and post-submit updates require the applicable approval.
+The initial CSV row, the research-column update, and the final Status update are authorized discovery writes. Schema changes, file moves/renames/deletions, writes outside `jobhunt`, and post-submit updates require the applicable approval.
 
 ## Exact CSV schema
 
-Use exactly these eight columns and this order:
+Use exactly these eleven columns and this order:
 
 | Column | Meaning |
 | --- | --- |
 | Company | Employer name |
 | Role | Exact role title |
 | LinkedIn URL | Canonical LinkedIn job URL and normal row identity |
-| Research File | POSIX path relative to <home-directory>/jobhunt, the directory containing tracker.csv, such as applications/acme.md |
+| Company Website | The company's main website as a bare URL, such as https://acme.com/; blank if not found |
+| Summary | One plain line of at most 320 characters, without line breaks or Markdown: what the company does; its revenue, or `revenue not public`, plus funding or ownership; the role's location and work mode; the main fit reason; and the biggest gap or red flag for this role. Use only facts found in research. |
+| Salary Range | Optional. A numeric pay range that the employer itself published for this role and its location, such as `€90K–€160K base + equity`, or a figure the user gives. Leave it blank when the posting has no number, when the only figure is an estimate (Glassdoor, Levels.fyi, Kununu, XING, aggregators, recruiters, or anecdotes), or when it covers another country. Never estimate or guess. |
+| Glassdoor Review | Optional. The company's Glassdoor rating as seen on Glassdoor, with the review count when shown, such as `4.4/5 (17 reviews)`. Prefix a parent company's rating with its name, such as `Labelbox: 2.1/5 (91 reviews)`. Leave it blank when not found. Never estimate or guess. |
 | Status | Fit label plus optional lifecycle |
 | Last Applied | Confirmed application date in YYYY-MM-DD; otherwise blank |
 | Last Interviewed | Date of the most recent interview for this row in YYYY-MM-DD; blank by default. Write it only when the user gives the date or approves a verified interview update. |
@@ -49,11 +49,11 @@ Use exactly these eight columns and this order:
 
 The header row is:
 
-Company,Role,LinkedIn URL,Research File,Status,Last Applied,Last Interviewed,Notes
+Company,Role,LinkedIn URL,Company Website,Summary,Salary Range,Glassdoor Review,Status,Last Applied,Last Interviewed,Notes
 
 Use UTF-8 and RFC-4180 quoting. Do not add hidden columns, formulas, or formatting metadata.
 
-Keep detailed requirements, compensation, interviews, classification rationale, risks, sources, job IDs, repost analysis, and application notes in the research Markdown or private scratch ledger. The Notes column is only for the user's own short notes.
+Do not store detailed requirements, interview reports, source lists, or long rationale anywhere durable; the Summary is the lasting record, and the application packet re-checks details from the official posting. Keep job IDs, occurrence positions, and repost analysis in the private scratch ledger during a run. The Notes column is only for the user's own short notes.
 
 ## Safe CSV writes
 
@@ -62,7 +62,7 @@ Before the first job:
 1. Resolve and verify tracker.csv.
 2. If it is missing, create it with the Write tool containing only the exact header line, then re-read it.
 3. Read the complete file with the Read tool.
-4. Confirm the exact eight-column header.
+4. Confirm the exact eleven-column header.
 5. Confirm the `jobhunt` directory remains inside the active user's home directory.
 
 For each stable selected job:
@@ -71,11 +71,11 @@ For each stable selected job:
 2. Extract numeric job IDs from every existing nonblank LinkedIn URL and compare normalized IDs, not raw URL strings.
 3. If multiple existing rows normalize to the same job ID, stop and reconcile them before any new write.
 4. Reuse the one matching row regardless of legacy host, slug, query, fragment, or missing trailing slash. After confirming there is no collision, normalize that row's URL to the canonical form during the bounded update.
-5. For a new row, write Company, Role, LinkedIn URL, blank Research File, Status = Researching, blank Last Applied, blank Last Interviewed, and blank Notes.
-6. For an existing row, preserve Research File, Status, Last Applied, Last Interviewed, Notes, and user-authored values unless verified evidence supports a specific update.
+5. For a new row, write Company, Role, LinkedIn URL, blank research columns, Status = Researching, blank Last Applied, blank Last Interviewed, and blank Notes.
+6. For an existing row, preserve the research columns, Status, Last Applied, Last Interviewed, Notes, and user-authored values unless verified evidence supports a specific update.
 7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
 8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line at its sorted position as described in "Row order" below. Never rewrite the whole file.
-9. Keep each row valid RFC-4180 UTF-8: eight fields, and quote a field that contains a comma, quote, or line break.
+9. Keep each row valid RFC-4180 UTF-8: eleven fields, and quote a field that contains a comma, quote, or line break.
 10. Re-read with the Read tool and verify the exact row, that nothing else changed, and that the rows around it are still in order, before selecting the next job.
 
 Stop on a malformed row or duplicate canonical LinkedIn URLs.
@@ -107,7 +107,7 @@ After research, use A — Great Fit, B — Normal Fit, Investigate, or Skip. Do 
 
 ## Stable identity and duplicates
 
-The canonical LinkedIn URL is the CSV row identity. Keep the LinkedIn job ID, employer requisition ID, official URL, occurrence positions, and repost cluster in the research Markdown and private ledger.
+The canonical LinkedIn URL is the CSV row identity. Keep the LinkedIn job ID, employer requisition ID, official URL, occurrence positions, and repost cluster in the private ledger during the run. When a confirmed repost or duplicate matters later, mention it briefly in the Summary.
 
 - Consolidate repeated cards with the same job ID into one row.
 - Keep distinct LinkedIn URLs as separate rows unless reliable evidence proves one vacancy.
@@ -115,37 +115,17 @@ The canonical LinkedIn URL is the CSV row identity. Keep the LinkedIn job ID, em
 - Add an official sibling role to the tracker only after finding its exact LinkedIn URL.
 - Preserve duplicate/repost rows during import or export.
 
-## Company research file
+## Research columns
 
-Create or reuse one Markdown file per normalized company when identity is unambiguous. Use the canonical structure in company-research-template.md.
+After a role's research finishes, write its results into that row's research columns with one Edit:
 
-Use a safe lowercase filename derived from the normalized company name. Convert separators and punctuation to hyphens. Keep Research File relative, for example applications/acme.md.
+1. Company Website, Salary Range, and Glassdoor Review are company or posting facts. Reuse the same Company Website and Glassdoor Review on every row of one company unless newer research changes them.
+2. Write the Summary for the specific role. Rows of one company share the company and money clauses but differ in location, fit reason, and gap.
+3. Quote any field that contains a comma or quote, and replace line breaks with spaces.
+4. When research updates an existing row, replace only the research columns and Status; preserve Last Applied, Last Interviewed, and Notes.
+5. A Salary Range the user gives is the user's value: preserve it like Notes, and replace it only when the user asks.
 
-Before creating:
-
-1. Check existing tracker rows for the normalized company.
-2. Resolve their Research File paths inside <home-directory>/jobhunt/applications.
-3. Verify title, company website, and role identities.
-4. Before reuse, verify that the derived target path belongs to the same company using the Markdown title, company website, and existing tracker paths.
-5. If the path exists for another company or two distinct names normalize to the same path, stop for resolution; never overwrite.
-6. Reuse the verified file.
-
-If multiple plausible files exist, use the one already referenced by the exact row. If no row resolves the ambiguity, stop for user direction. Never silently merge files or create another.
-
-Company-level content includes business model, ownership, funding, financial health, workforce, AI relevance, culture, market risks, sources, and confidence.
-
-Each role section includes canonical LinkedIn URL, official posting, job IDs, work mode, dates, requirements, compensation, interviews, fit label, rationale, gaps, risks, recommendation, and repost evidence.
-
-For every Markdown change:
-
-1. Read the whole current file.
-2. Locate the company overview and the role by canonical LinkedIn URL.
-3. Preserve unrelated and user-authored content.
-4. Change only the target section with the Edit tool, or create a new file with the Write tool.
-5. Re-read with the Read tool and verify required headings, tables, links, dates, and the exact role section.
-6. Update matching tracker rows with the relative path and verify them.
-
-Do not store credentials, demographic answers, confidential work-system text, or unnecessary personal data.
+Do not store credentials, demographic answers, confidential work-system text, or unnecessary personal data in any column.
 
 ## Manual intake
 
@@ -156,23 +136,22 @@ flowchart TD
     A[User hand-picks companies or roles] --> B[Open each company's official careers page]
     B --> C[List open roles matching the user's criteria]
     C --> D[Verify each official posting and research from it]
-    D --> E[Write company Markdown with every researched role]
-    E --> F{Exact LinkedIn post exists?}
+    D --> F{Exact LinkedIn post exists?}
     F -- Yes --> G[Track with canonical LinkedIn URL]
     F -- No --> H[Preview rows with official posting URL]
     H --> I{User approves?}
     I -- Yes --> J[Track with official posting URL]
-    I -- No --> K[Keep role in Markdown only]
+    I -- No --> K[Report the role without tracking it]
 ~~~
 
 1. For each supplied company, open its official careers page and follow it to the job board it uses, such as Greenhouse, Ashby, Lever, Workday, SmartRecruiters, Personio, or a company-run site. Read the listings in the browser; do not call job-board APIs or feeds. Confirm the board belongs to the same company; similar slugs can belong to unrelated employers.
-2. List every open role that matches the user's stated criteria. For a supplied role, find that exact posting on the careers page. Record excluded roles briefly in the company Markdown.
+2. List every open role that matches the user's stated criteria. For a supplied role, find that exact posting on the careers page. Report excluded roles briefly to the user; do not track them.
 3. Research each role from its official posting first: requirements, location, work mode, compensation, and posting date. Then follow company-research.md for the rest.
 4. Use LinkedIn only for a targeted lookup of the exact posting to get its canonical URL. A lookup is not discovery: never add roles found only on LinkedIn.
-5. When the same official posting appears on LinkedIn several times, for example once per country, track one canonical URL and list the other copies in the role section.
-6. When no LinkedIn post exists, write `LinkedIn: Not found on LinkedIn as of <date> (official careers posting only)` in the role section.
+5. When the same official posting appears on LinkedIn several times, for example once per country, track one canonical URL and ignore the other copies.
+6. When no LinkedIn post exists, say so in the row preview below.
 
-A company-only watchlist row or any normal row without an exact LinkedIn URL requires an explicit preview and approval. After approval, put the official posting URL in the LinkedIn URL column. Such rows cannot be deduplicated by LinkedIn job ID; compare official URLs instead, and reconcile manually if the role later appears on LinkedIn.
+A company-only watchlist row or any normal row without an exact LinkedIn URL requires an explicit preview and approval. The preview shows every column of each proposed row, including the research columns. After approval, put the official posting URL in the LinkedIn URL column. Such rows cannot be deduplicated by LinkedIn job ID; compare official URLs instead, and reconcile manually if the role later appears on LinkedIn.
 
 ## Thirty-day eligibility
 

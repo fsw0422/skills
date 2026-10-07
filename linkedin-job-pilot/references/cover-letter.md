@@ -96,7 +96,7 @@ Before presenting the application packet:
 3. Look at the `--preview` PNG with the Read tool to catch layout problems.
 4. To re-check an existing PDF without rendering, run the same command with `--verify-only`.
 
-Keep cover letters out of the company research Markdown. It is a research record, not an application timeline.
+Keep cover letter text out of tracker.csv. The tracker is a research and status record, not an application archive.
 
 ## Upload
 

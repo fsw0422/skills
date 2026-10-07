@@ -33,7 +33,7 @@ stateDiagram-v2
 
 Before preparing an application, read the live row and follow [discovery-tracking.md](discovery-tracking.md):
 
-- Resolve the canonical LinkedIn URL and any repost relationship recorded in the private ledger or company Markdown.
+- Resolve the canonical LinkedIn URL and any repost relationship recorded in the private ledger or the row's Summary.
 - Verify the official posting is still open and materially matches the researched role.
 - Exclude confirmed applications in the same repost cluster during the previous 30 calendar days.
 - Never auto-reapply to an exact LinkedIn URL that has a `Last Applied` date. An older exact application requires a specific reapply decision.
@@ -47,13 +47,13 @@ Open and inspect the named application form without asking for a separate approv
 
 ## Prepare the application packet
 
-Use the current research Markdown already referenced by the tracker row as the default source for the application packet. When that file contains usable company and role research, do not repeat a full research pass. Refresh only a missing, stale, contradictory, or decision-critical fact needed for the current application, then update the research file through the normal bounded-write workflow.
+Use the tracker row's research columns and the live official posting as the sources for the application packet. Do not repeat a full research pass. Refresh only a missing, stale, contradictory, or decision-critical fact needed for the current application, and update the row's research columns through the normal bounded-write workflow when a refreshed fact changes them.
 
 In the application packet, show:
 
 - Company, role, location, job URL, job ID, posting date, and application channel.
-- Company snapshot from the tracker-linked research file: a concise summary of what the company does, its website, and reported revenue. If revenue is not public or no reliable figure exists, state that explicitly instead of estimating it. Include brief funding or financial-health context when available.
-- Concise role and company research with sources, salary evidence, interview expectations, and risk flags.
+- Company snapshot from the row: Company Website, the Summary's company and money clauses, Salary Range, and Glassdoor Review. If revenue is not public, say so instead of estimating it. Leave an empty Salary Range or Glassdoor Review as `not found`.
+- Role facts and risk flags from the live official posting, such as location, work mode, language, and hard requirements.
 - Fit assessment: `A — Great Fit`, `B — Normal Fit`, `Investigate`, or `Skip`, with evidence-backed rationale, strongest evidence, gaps, hard constraints, and a recommendation.
 - Exact provided PDF filename, absolute path, SHA-256 hash, and page count from the session's resume check.
 - Read-only role-alignment summary based only on the provided PDF: central qualifications evidenced, unsupported gaps, and any parsing problem that could affect this application. Do not propose or make resume changes.

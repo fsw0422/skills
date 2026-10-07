@@ -7,7 +7,7 @@ Application forms keep asking the same personal questions: work permit, notice p
 ## The profile file
 
 - Path: <home-directory>/jobhunt/applicant-profile.md, next to tracker.csv.
-- It holds the user's personal answers. Never commit it, copy it into this skill or any repository, upload it, paste it into a research file or cover letter, or send it to a subagent. Share only the single answer a form field needs, after the submit approval.
+- It holds the user's personal answers. Never commit it, copy it into this skill or any repository, upload it, paste it into the tracker or a cover letter, or send it to a subagent. Share only the single answer a form field needs, after the submit approval.
 - Read and change it only with the Read, Edit, and Write tools. Create it with the Write tool the first time the questionnaire runs.
 - The user owns it. Change an answer only when the user gives or confirms the new value.
 

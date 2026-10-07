@@ -2,11 +2,11 @@
 
 Read this file for discovery, browsing, scanning, or shortlisting when no exact role is already selected. Complete subagent-orchestration.md first.
 
-Discovery is non-engagement work. LinkedIn may record opened cards as viewed and use that activity for recommendations. Discovery authorizes only the bounded local Markdown and CSV writes defined in the main skill. It does not authorize saving, dismissing, applying, signaling interest, contacting anyone, changing alerts, or opening named people profiles.
+Discovery is non-engagement work. LinkedIn may record opened cards as viewed and use that activity for recommendations. Discovery authorizes only the bounded local CSV writes defined in the main skill. It does not authorize saving, dismissing, applying, signaling interest, contacting anyone, changing alerts, or opening named people profiles.
 
 Maintain a private structured ledger of job IDs, occurrence positions, facts, dispositions, and the resume cursor. For large runs, the main skill explicitly authorizes an owner-only scratch directory under /private/tmp containing job facts only. This is temporary, not durable storage. Keep it until local writes and readbacks are verified, then delete it. If a restart is required, report its exact path as the private resume handle and verify it before resuming.
 
-Discovery includes incremental CSV tracking, company Markdown, and final classification for every stable unique job. Do not cap research or tracking at a top-ten shortlist.
+Discovery includes incremental CSV tracking, research columns, and final classification for every stable unique job. Do not cap research or tracking at a top-ten shortlist.
 
 ## Search horizon
 
@@ -24,7 +24,7 @@ flowchart TD
     I --> J[Track resolved sibling URLs]
     J --> K[Dispatch remaining one-job agents]
     K --> L[Wait and reconcile page wave]
-    L --> M[Write and verify company Markdown]
+    L --> M[Write and verify research columns]
     M --> N[Finalize CSV statuses]
     N --> O{Page 10 or stop condition?}
     O -- No --> P[Advance once and verify IDs changed]
@@ -49,11 +49,11 @@ For each stable job:
 
 1. Extract the numeric job ID and canonicalize the URL to https://www.linkedin.com/jobs/view/<job-id>/.
 2. Parse tracker.csv, normalize every existing LinkedIn URL by numeric job ID, stop on normalized collisions, and reuse the unique matching row even when its legacy URL text differs.
-3. Upsert a new row with blank Research File, Status = Researching, and blank Last Applied, Last Interviewed, and Notes.
-4. Preserve existing status, path, and application history for an existing row.
+3. Upsert a new row with blank research columns, Status = Researching, and blank Last Applied, Last Interviewed, and Notes.
+4. Preserve existing status, research columns, and application history for an existing row.
 5. Write the row with the Edit tool and re-read it with the Read tool.
 6. Stop on a conflicting Applied badge or unverified application history.
-7. Finalize fit only after the assigned research completes and its Markdown role section is verified.
+7. Finalize fit only after the assigned research completes and its research columns are written and verified.
 
 After the page is recorded, follow subagent-orchestration.md. Complete the full page wave before navigating to the next page. Queue agents when runtime capacity is lower; never combine or drop jobs.
 
@@ -94,7 +94,7 @@ Use job ID as the temporary identity and canonical LinkedIn URL as the CSV ident
 
 - Consolidate repeated cards with the same ID and retain every occurrence position.
 - Keep distinct URLs separate unless requisition, description, employer URL, and date evidence proves one vacancy.
-- Record confirmed repost clusters in research Markdown and treat them as one application opportunity.
+- Record confirmed repost clusters in the private ledger, mention them in the Summary, and treat them as one application opportunity.
 - Track clear mismatches as Skip instead of silently dropping them.
 - Keep a short exclusion reason.
 - Never dismiss or hide a LinkedIn job.
@@ -108,7 +108,7 @@ Do not:
 - Use Top Choice or interest signals.
 - Send messages or requests.
 - Open named profiles.
-- Change tracker schema, template, or files outside the bounded <home-directory>/jobhunt paths.
+- Change the tracker schema or files outside the bounded <home-directory>/jobhunt paths.
 
 ## Stopping conditions
 
@@ -135,7 +135,7 @@ Return:
 3. Counts for cards, unique jobs, duplicates, unknown gates, and fit labels.
 4. Fit-grouped results with material evidence and links.
 5. Skip reasons and Investigate gap themes.
-6. Verified Markdown paths and CSV rows.
+6. Verified CSV rows.
 7. Eligible queue ordered by Great Fit then Normal Fit.
 8. Compact resume cursor and private ledger handle only when needed.
 
