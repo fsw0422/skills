@@ -53,7 +53,7 @@ sequenceDiagram
 
 Give each job agent:
 
-- Exact job ID, canonical URL, company, title, location, visible requirements, posting facts, and Premium signals.
+- Exact job ID and posting URL from the private ledger, company, title, location, visible requirements, posting facts, and Premium signals.
 - Candidate evidence verified for the current run.
 - Fit-label definitions and tracker duplicate state.
 - Existing company dossier text when relevant.
@@ -84,7 +84,7 @@ Maintain normalized company identities for the run. On each page:
 
 1. Dispatch the first job for each new company as expansion owner.
 2. Wait and merge company dossiers and sibling identities.
-3. For each sibling found on the official careers page, look up its exact LinkedIn post to get the canonical URL, and deduplicate. A sibling with no LinkedIn post follows Manual intake in discovery-tracking.md.
+3. For each sibling found on the official careers page, take its exact title and deduplicate it against existing rows by Company and Role.
 4. Parse tracker.csv and upsert only new or unclassified sibling rows.
 5. Verify each row.
 6. Dispatch one agent for every remaining original and tracked sibling job.

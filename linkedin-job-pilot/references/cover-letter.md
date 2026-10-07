@@ -58,7 +58,7 @@ If a hard character or file limit cannot accept the full version, produce the lo
 
 ## Save and render
 
-Save the drafted letter without asking for approval in `<home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/`:
+Save the drafted letter without asking for approval in `<home-directory>/jobhunt/cover-letters/<company-file>-<role-file>/`, where both parts are lowercase with hyphens, such as `acme-senior-backend-engineer`:
 
 - `letter.txt` holds the exact drafted text. Write it with the Write tool and re-read it with the Read tool.
 - The PDF is named `<First>-<Last>-Cover-Letter-<Company>.pdf`, because recruiters see this name. Take the name from the resume and replace spaces and unsafe characters with hyphens. Create it only when the form wants a file.

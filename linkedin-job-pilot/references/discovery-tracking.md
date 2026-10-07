@@ -16,7 +16,7 @@ The tracker is the only research record. Each row holds a short research result 
 
 ~~~mermaid
 flowchart LR
-    A[Select LinkedIn job] --> B[Canonicalize URL]
+    A[Select LinkedIn job] --> B[Read company and exact title]
     B --> C[Parse tracker.csv]
     C --> D[Upsert row as Researching]
     D --> E[Research company and role]
@@ -31,13 +31,12 @@ The initial CSV row, the research-column update, and the final Status update are
 
 ## Exact CSV schema
 
-Use exactly these eleven columns and this order:
+Use exactly these ten columns and this order:
 
 | Column | Meaning |
 | --- | --- |
-| Company | Employer name |
-| Role | Exact role title |
-| LinkedIn URL | Canonical LinkedIn job URL and normal row identity |
+| Company | Employer name; with Role, the row identity |
+| Role | Exact role title as the employer posts it; with Company, the row identity |
 | Company Website | The company's main website as a bare URL, such as https://acme.com/; blank if not found |
 | Summary | One plain line of at most 320 characters, without line breaks or Markdown: what the company does; its revenue, or `revenue not public`, plus funding or ownership; the role's location and work mode; the main fit reason; and the biggest gap or red flag for this role. Use only facts found in research. |
 | Salary Range | Optional. A numeric pay range that the employer itself published for this role and its location, such as `€90K–€160K base + equity`, or a figure the user gives. Leave it blank when the posting has no number, when the only figure is an estimate (Glassdoor, Levels.fyi, Kununu, XING, aggregators, recruiters, or anecdotes), or when it covers another country. Never estimate or guess. |
@@ -49,11 +48,11 @@ Use exactly these eleven columns and this order:
 
 The header row is:
 
-Company,Role,LinkedIn URL,Company Website,Summary,Salary Range,Glassdoor Review,Status,Last Applied,Last Interviewed,Notes
+Company,Role,Company Website,Summary,Salary Range,Glassdoor Review,Status,Last Applied,Last Interviewed,Notes
 
 Use UTF-8 and RFC-4180 quoting. Do not add hidden columns, formulas, or formatting metadata.
 
-Do not store detailed requirements, interview reports, source lists, or long rationale anywhere durable; the Summary is the lasting record, and the application packet re-checks details from the official posting. Keep job IDs, occurrence positions, and repost analysis in the private scratch ledger during a run. The Notes column is only for the user's own short notes.
+Do not store detailed requirements, interview reports, source lists, or long rationale anywhere durable; the Summary is the lasting record, and the application packet re-checks details from the official posting. Never store job-board or posting URLs; they change with reposts. Keep job IDs, posting URLs, occurrence positions, and repost analysis only in the private scratch ledger during a run. The Notes column is only for the user's own short notes.
 
 ## Safe CSV writes
 
@@ -62,23 +61,23 @@ Before the first job:
 1. Resolve and verify tracker.csv.
 2. If it is missing, create it with the Write tool containing only the exact header line, then re-read it.
 3. Read the complete file with the Read tool.
-4. Confirm the exact eleven-column header.
+4. Confirm the exact ten-column header.
 5. Confirm the `jobhunt` directory remains inside the active user's home directory.
 
 For each stable selected job:
 
-1. Extract the numeric job ID and canonicalize the URL to https://www.linkedin.com/jobs/view/<job-id>/, regardless of localized host, slug, query, or fragment.
-2. Extract numeric job IDs from every existing nonblank LinkedIn URL and compare normalized IDs, not raw URL strings.
-3. If multiple existing rows normalize to the same job ID, stop and reconcile them before any new write.
-4. Reuse the one matching row regardless of legacy host, slug, query, fragment, or missing trailing slash. After confirming there is no collision, normalize that row's URL to the canonical form during the bounded update.
-5. For a new row, write Company, Role, LinkedIn URL, blank research columns, Status = Researching, blank Last Applied, blank Last Interviewed, and blank Notes.
+1. Read the employer name and the exact role title. Use the official posting's title when it differs from the job card.
+2. Compare Company and Role with every existing row, case-insensitively after trimming spaces.
+3. If more than one existing row matches, stop and reconcile them before any new write.
+4. Reuse the one matching row; a repost, another city, or another job ID for the same company and title is the same row.
+5. For a new row, write Company, Role, blank research columns, Status = Researching, blank Last Applied, blank Last Interviewed, and blank Notes.
 6. For an existing row, preserve the research columns, Status, Last Applied, Last Interviewed, Notes, and user-authored values unless verified evidence supports a specific update.
 7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
 8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line at its sorted position as described in "Row order" below. Never rewrite the whole file.
-9. Keep each row valid RFC-4180 UTF-8: eleven fields, and quote a field that contains a comma, quote, or line break.
+9. Keep each row valid RFC-4180 UTF-8: ten fields, and quote a field that contains a comma, quote, or line break.
 10. Re-read with the Read tool and verify the exact row, that nothing else changed, and that the rows around it are still in order, before selecting the next job.
 
-Stop on a malformed row or duplicate canonical LinkedIn URLs.
+Stop on a malformed row or two rows with the same Company and Role.
 
 ### Row order
 
@@ -107,13 +106,12 @@ After research, use A — Great Fit, B — Normal Fit, Investigate, or Skip. Do 
 
 ## Stable identity and duplicates
 
-The canonical LinkedIn URL is the CSV row identity. Keep the LinkedIn job ID, employer requisition ID, official URL, occurrence positions, and repost cluster in the private ledger during the run. When a confirmed repost or duplicate matters later, mention it briefly in the Summary.
+Company plus Role is the CSV row identity. Keep LinkedIn job IDs, employer requisition IDs, posting URLs, occurrence positions, and repost clusters in the private ledger during the run only. When a repost or duplicate matters later, mention it briefly in the Summary.
 
-- Consolidate repeated cards with the same job ID into one row.
-- Keep distinct LinkedIn URLs as separate rows unless reliable evidence proves one vacancy.
+- Consolidate every card or posting with the same company and title into one row, including reposts and copies for other cities.
+- When one company posts two genuinely different roles under the same title, make the Role distinct by adding the team or city from the official posting, such as `Software Engineer (Payments)`.
 - Block application preparation for unresolved duplicates.
-- Add an official sibling role to the tracker only after finding its exact LinkedIn URL.
-- Preserve duplicate/repost rows during import or export.
+- Add an official sibling role after confirming its exact title on the company's careers page.
 
 ## Research columns
 
@@ -136,22 +134,18 @@ flowchart TD
     A[User hand-picks companies or roles] --> B[Open each company's official careers page]
     B --> C[List open roles matching the user's criteria]
     C --> D[Verify each official posting and research from it]
-    D --> F{Exact LinkedIn post exists?}
-    F -- Yes --> G[Track with canonical LinkedIn URL]
-    F -- No --> H[Preview rows with official posting URL]
+    D --> H[Preview the proposed rows]
     H --> I{User approves?}
-    I -- Yes --> J[Track with official posting URL]
+    I -- Yes --> J[Track by Company and Role]
     I -- No --> K[Report the role without tracking it]
 ~~~
 
 1. For each supplied company, open its official careers page and follow it to the job board it uses, such as Greenhouse, Ashby, Lever, Workday, SmartRecruiters, Personio, or a company-run site. Read the listings in the browser; do not call job-board APIs or feeds. Confirm the board belongs to the same company; similar slugs can belong to unrelated employers.
 2. List every open role that matches the user's stated criteria. For a supplied role, find that exact posting on the careers page. Report excluded roles briefly to the user; do not track them.
 3. Research each role from its official posting first: requirements, location, work mode, compensation, and posting date. Then follow company-research.md for the rest.
-4. Use LinkedIn only for a targeted lookup of the exact posting to get its canonical URL. A lookup is not discovery: never add roles found only on LinkedIn.
-5. When the same official posting appears on LinkedIn several times, for example once per country, track one canonical URL and ignore the other copies.
-6. When no LinkedIn post exists, say so in the row preview below.
+4. Do not use LinkedIn for manual intake; never add roles found only on LinkedIn.
 
-A company-only watchlist row or any normal row without an exact LinkedIn URL requires an explicit preview and approval. The preview shows every column of each proposed row, including the research columns. After approval, put the official posting URL in the LinkedIn URL column. Such rows cannot be deduplicated by LinkedIn job ID; compare official URLs instead, and reconcile manually if the role later appears on LinkedIn.
+Every manually added row requires an explicit preview and approval. The preview shows every column of each proposed row, including the research columns.
 
 ## Thirty-day eligibility
 

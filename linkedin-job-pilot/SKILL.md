@@ -24,7 +24,9 @@ Create `jobhunt` when missing. Reject symlinks or resolved paths that escape the
 
 The exact tracker columns are:
 
-Company, Role, LinkedIn URL, Company Website, Summary, Salary Range, Glassdoor Review, Status, Last Applied, Last Interviewed, Notes
+Company, Role, Company Website, Summary, Salary Range, Glassdoor Review, Status, Last Applied, Last Interviewed, Notes
+
+A row's identity is its Company and Role together. Job-board and posting URLs change with every repost, so the tracker never stores them; find the live posting from the company's careers page when needed.
 
 Company Website, Summary, Salary Range, and Glassdoor Review hold the research result for the row; references/discovery-tracking.md defines them. Salary Range and Glassdoor Review are optional: fill them only with a value actually found, and leave them blank otherwise. Never estimate or guess either one.
 
@@ -93,12 +95,12 @@ Never run custom JavaScript in a page; browser-pilot lists the allowed browser t
 
 Explicitly invoking discovery or manual-role research authorizes these bounded home-local writes for that run:
 
-- Create or update <home-directory>/jobhunt/tracker.csv without changing its eleven-column schema, including the research columns: Company Website, Summary, Salary Range, and Glassdoor Review.
+- Create or update <home-directory>/jobhunt/tracker.csv without changing its ten-column schema, including the research columns: Company Website, Summary, Salary Range, and Glassdoor Review.
 - After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label, set the lifecycle to `Applied`, and record `Last Applied`. This standing authorization covers only those two fields for the confirmed application; all other tracker changes keep their normal authorization requirements.
 
 The run may also create or update <home-directory>/jobhunt/applicant-profile.md with answers the user gives in the questionnaire or agrees to save, as described in references/applicant-profile.md.
 
-The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<job-id>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
+The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<role-file>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
 In a CLI, browse with the `playwright-chromium-browser` plugin as browser-pilot describes. Its snapshots, console logs, and screenshots go to its own output folder; they are temporary browser artifacts, not research or tracking records, and never belong in <home-directory>/jobhunt.
 
@@ -109,11 +111,11 @@ For every CSV change:
 1. Read the current file with the Read tool.
 2. Change only the target row or section with the Edit tool, replacing one exact, unique line or block; use the Write tool only to create a new file. Never rewrite the whole tracker.
 3. Preserve user-authored content and unrelated fields. Keep tracker rows sorted by Company, case-insensitively, by inserting each new or renamed row at its sorted position; see "Row order" in references/discovery-tracking.md.
-4. Keep CSV rows valid RFC-4180 UTF-8: eleven fields, and quote a field that contains a comma, quote, or line break.
+4. Keep CSV rows valid RFC-4180 UTF-8: ten fields, and quote a field that contains a comma, quote, or line break.
 5. Re-read with the Read tool and verify the exact row, and that nothing else changed.
 6. Stop on a malformed row, ambiguous company identity, or path escape.
 
-Use https://www.linkedin.com/jobs/view/<job-id>/ as the canonical row identity. Normalize localized hosts, slugged paths, query parameters, and fragments to this numeric-ID form. Use YYYY-MM-DD for newly recorded dates.
+Use Company plus Role as the row identity, compared case-insensitively after trimming spaces. A job seen again under the same company and title, such as a LinkedIn repost or the same role in another city, reuses the existing row. Use YYYY-MM-DD for newly recorded dates.
 
 ## Workflow
 
@@ -159,7 +161,7 @@ flowchart TD
 
 Before discovery, read references/subagent-orchestration.md, references/job-discovery.md, references/company-research.md, and references/discovery-tracking.md.
 
-Inspect every unique visible job through page 10, or stop earlier when LinkedIn genuinely ends. Select cards sequentially in the primary agent. Immediately upsert each stable canonical URL in tracker.csv as Researching. Complete and verify the current page’s research columns and final statuses before advancing.
+Inspect every unique visible job through page 10, or stop earlier when LinkedIn genuinely ends. Select cards sequentially in the primary agent. Immediately upsert each stable job in tracker.csv as Researching, matching existing rows by Company and Role. Complete and verify the current page’s research columns and final statuses before advancing.
 
 Do not cap tracking at a top-ten shortlist. A manually supplied role or company uses the same identity, research, persistence, and approval rules. For hand-picked companies or roles, discover and research openings on each company's official careers page, not through LinkedIn search; see Manual intake in references/discovery-tracking.md.
 
@@ -200,7 +202,7 @@ sequenceDiagram
 Build the preview only from the row's columns. Do not research, open the posting, or inspect the form for it, so it costs no browsing. Use this shape:
 
 ~~~text
-Next: <Company>, <Role> · <LinkedIn URL> · <Status>
+Next: <Company>, <Role> · <Status>
 - Company: <Company Website>
 - Summary: <Summary>
 - Salary: <Salary Range, or "not found">
@@ -212,7 +214,7 @@ Reply go for the full packet, or skip.
 
 When the row's Summary is blank, say so in the preview instead of researching; the packet step will fill it.
 
-On `go`, open the posting. If it is closed or expired, set the row to Skip, say so in one line, and show the next preview. Otherwise follow references/application-gates.md. On `skip`, keep the fit label, set the lifecycle to `Skipped`, for example `B — Normal Fit · Skipped`, and show the next preview. A `skip` reply is the user's authorization for that one Status change.
+On `go`, find the live posting: open the company's careers page from Company Website and look for the exact role title, and search LinkedIn for the company and title only when the careers page does not list it. If it is closed, expired, or not found, set the row to Skip, say so in one line, and show the next preview. Otherwise follow references/application-gates.md. On `skip`, keep the fit label, set the lifecycle to `Skipped`, for example `B — Normal Fit · Skipped`, and show the next preview. A `skip` reply is the user's authorization for that one Status change.
 
 ### Applications and Premium
 
