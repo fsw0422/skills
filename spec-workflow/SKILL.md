@@ -187,15 +187,26 @@ The old replay boundary is the saved parent commit that separates inherited work
 
 ## Choose agents and reasoning effort
 
-Keep coordination, user decisions, and the work record in the main conversation. Use project-defined agents and model choices. If the project gives model classes rather than names, choose by job:
+Keep coordination, interactive review, user decisions, and the work record in the main conversation. The user controls its model and thinking level in the picker. The table below supplies defaults for delegated jobs:
 
-| Job | Model class |
-| --- | --- |
-| Spec or domain decision | Strong judgment |
-| Implementation or debugging | Strong coding |
-| Simple lookup or extraction | Fast and low cost |
+| Job | Default model | Thinking |
+| --- | --- | --- |
+| Write specs from accepted decisions | `gpt-6.1-sol` | Medium |
+| Resolve domain or requirement decisions | `gpt-6-astra` | High |
+| Implement code | `gpt-6.1-sol` | High |
+| Analyze a diff for guided review | `gpt-6.1-sol` | High |
+| Perform a clean, approved integration | `gpt-6.1-sol` | Medium |
+| Investigate conflicts or recover interrupted operations | `gpt-6.1-sol` | High |
+| Process substantial batches of simple lookups | `gpt-6-luna` | High |
 
-Give each agent a clear job, relevant repositories, accepted spec commit, worktree scope, decisions, and limits on what it may do. Verify what it returns. Delegate when project instructions call for it or a separate context materially helps; each agent adds token cost.
+Apply this routing automatically within the authorized task:
+
+1. **Respect explicit choices.** User and project model/effort choices override the defaults. A custom agent can pin these settings; use a role whose settings agree with the selected choice.
+2. **Reuse useful context.** Handle small jobs in the current agent when it already has the needed context. Delegate substantial, separate jobs when a worker helps, or when project instructions require it. Keep one analysis worker through a review when possible; each extra agent adds context and token cost.
+3. **Select settings when starting the worker.** Pass the model ID and reasoning effort explicitly, using `low`, `medium`, `high`, or `xhigh` for the corresponding levels. Give it the relevant repositories, accepted spec commit, worktree scope, decisions, and limits on what it may do. Use a focused handoff rather than a full-history fork so the selected settings can apply. Review-analysis workers inspect and report; the main conversation handles the walkthrough and approval.
+4. **Reclassify when the job changes.** Unexpected conflicts, dirty state, changed commits, or stale approval turn a clean integration into an investigation. Increase effort or use Astra when difficult reasoning remains unresolved. This changes the worker choice, not permission to merge, change requirements, or remove work. Verify the result before continuing.
+
+Use the effort guide to adjust these defaults to the actual difficulty:
 
 | Reasoning effort | Use when |
 | --- | --- |
@@ -204,7 +215,7 @@ Give each agent a clear job, relevant repositories, accepted spec commit, worktr
 | High | The work crosses components or needs careful checks of assumptions and edge cases |
 | Extra High | A difficult decision, migration, recovery, or conflict has several plausible solutions and could affect much of the system |
 
-Increase model capability or effort if the task grows or checks reveal unresolved uncertainty. Do not silently downgrade a required model. If a required agent or model is unavailable, preserve the work and report the limitation.
+Extra High is for difficult cases where the added reasoning is useful; it is not the permanent default. If a table default is unavailable or the tool cannot apply its settings, explain the limitation and use the current main agent when suitable. If the user or project requires an unavailable agent, model, or effort, preserve the work and report it instead of silently substituting another choice.
 
 Settle the spec before dependent implementation. Run only independent jobs in parallel.
 
