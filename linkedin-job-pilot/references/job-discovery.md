@@ -49,7 +49,7 @@ For each stable job:
 
 1. Record the numeric job ID in the private ledger only, and read the company and exact title.
 2. Parse tracker.csv, match existing rows by Company and Role case-insensitively, stop when more than one row matches, and reuse the unique matching row; a repost or another job ID with the same company and title is the same row.
-3. Upsert a new row with blank research columns, Status = Researching, and blank Last Applied, Last Interviewed, and Notes.
+3. Upsert a new row with blank research columns, Status = Researching, and blank Notes.
 4. Preserve existing status, research columns, and application history for an existing row.
 5. Write the row with the Edit tool and re-read it with the Read tool.
 6. Stop on a conflicting Applied badge or unverified application history.
