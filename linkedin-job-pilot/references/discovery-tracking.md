@@ -31,7 +31,7 @@ The initial CSV row, the research-column update, and the final Status update are
 
 ## Exact CSV schema
 
-Use exactly these ten columns and this order:
+Use exactly these eight columns and this order:
 
 | Column | Meaning |
 | --- | --- |
@@ -41,14 +41,12 @@ Use exactly these ten columns and this order:
 | Summary | One plain line of at most 320 characters, without line breaks or Markdown: what the company does; its revenue, or `revenue not public`, plus funding or ownership; the role's location and work mode; the main fit reason; and the biggest gap or red flag for this role. Use only facts found in research. |
 | Salary Range | Optional. A numeric pay range that the employer itself published for this role and its location, such as `€90K–€160K base + equity`, or a figure the user gives. Leave it blank when the posting has no number, when the only figure is an estimate (Glassdoor, Levels.fyi, Kununu, XING, aggregators, recruiters, or anecdotes), or when it covers another country. Never estimate or guess. |
 | Glassdoor Review | Optional. The company's Glassdoor rating as seen on Glassdoor, with the review count when shown, such as `4.4/5 (17 reviews)`. Prefix a parent company's rating with its name, such as `Labelbox: 2.1/5 (91 reviews)`. Leave it blank when not found. Never estimate or guess. |
-| Status | Fit label plus optional lifecycle |
-| Last Applied | Confirmed application date in YYYY-MM-DD; otherwise blank |
-| Last Interviewed | Date of the most recent interview for this row in YYYY-MM-DD; blank by default. Write it only when the user gives the date or approves a verified interview update. |
-| Notes | Free text owned by the user, such as recruiters or people contacted individually; blank by default. Preserve it on every change and write to it only when the user asks. |
+| Status | Fit label plus optional lifecycle after a middle dot, such as `B — Normal Fit · Applied`, `A — Great Fit · Technical Round`, or `B — Normal Fit · Skipped`. The lifecycle is the only application record. |
+| Notes | Free text owned by the user, such as recruiters, people contacted individually, or dates like `Rejected 23/03/2026`; blank by default. Preserve it on every change and write to it only when the user asks. |
 
 The header row is:
 
-Company,Role,Company Website,Summary,Salary Range,Glassdoor Review,Status,Last Applied,Last Interviewed,Notes
+Company,Role,Company Website,Summary,Salary Range,Glassdoor Review,Status,Notes
 
 Use UTF-8 and RFC-4180 quoting. Do not add hidden columns, formulas, or formatting metadata.
 
@@ -61,7 +59,7 @@ Before the first job:
 1. Resolve and verify tracker.csv.
 2. If it is missing, create it with the Write tool containing only the exact header line, then re-read it.
 3. Read the complete file with the Read tool.
-4. Confirm the exact ten-column header.
+4. Confirm the exact eight-column header.
 5. Confirm the `jobhunt` directory remains inside the active user's home directory.
 
 For each stable selected job:
@@ -70,11 +68,11 @@ For each stable selected job:
 2. Compare Company and Role with every existing row, case-insensitively after trimming spaces.
 3. If more than one existing row matches, stop and reconcile them before any new write.
 4. Reuse the one matching row; a repost, another city, or another job ID for the same company and title is the same row.
-5. For a new row, write Company, Role, blank research columns, Status = Researching, blank Last Applied, blank Last Interviewed, and blank Notes.
-6. For an existing row, preserve the research columns, Status, Last Applied, Last Interviewed, Notes, and user-authored values unless verified evidence supports a specific update.
-7. If LinkedIn shows Applied but tracker history is blank or inconsistent, stop and reconcile.
+5. For a new row, write Company, Role, blank research columns, Status = Researching, and blank Notes.
+6. For an existing row, preserve the research columns, Status, Notes, and user-authored values unless verified evidence supports a specific update.
+7. If LinkedIn shows Applied but the row's Status has no `Applied` or later lifecycle, stop and reconcile.
 8. Make the change with the Edit tool: replace one exact, unique row line, or insert a new row line at its sorted position as described in "Row order" below. Never rewrite the whole file.
-9. Keep each row valid RFC-4180 UTF-8: ten fields, and quote a field that contains a comma, quote, or line break.
+9. Keep each row valid RFC-4180 UTF-8: eight fields, and quote a field that contains a comma, quote, or line break.
 10. Re-read with the Read tool and verify the exact row, that nothing else changed, and that the rows around it are still in order, before selecting the next job.
 
 Stop on a malformed row or two rows with the same Company and Role.
@@ -120,7 +118,7 @@ After a role's research finishes, write its results into that row's research col
 1. Company Website, Salary Range, and Glassdoor Review are company or posting facts. Reuse the same Company Website and Glassdoor Review on every row of one company unless newer research changes them.
 2. Write the Summary for the specific role. Rows of one company share the company and money clauses but differ in location, fit reason, and gap.
 3. Quote any field that contains a comma or quote, and replace line breaks with spaces.
-4. When research updates an existing row, replace only the research columns and Status; preserve Last Applied, Last Interviewed, and Notes.
+4. When research updates an existing row, replace only the research columns and the fit label in Status; preserve the Status lifecycle and Notes.
 5. A Salary Range the user gives is the user's value: preserve it like Notes, and replace it only when the user asks.
 
 Do not store credentials, demographic answers, confidential work-system text, or unnecessary personal data in any column.
@@ -147,17 +145,14 @@ flowchart TD
 
 Every manually added row requires an explicit preview and approval. The preview shows every column of each proposed row, including the research columns.
 
-## Thirty-day eligibility
-
-Use the user's current local date. A confirmed Last Applied within the previous 30 calendar days, inclusive, is in cooldown.
+## Eligibility
 
 A role is eligible only when:
 
-- Status is A — Great Fit or B — Normal Fit.
-- Investigate has been explicitly advanced by the user.
+- Status is A — Great Fit or B — Normal Fit, or Investigate that the user explicitly advanced.
+- The Status lifecycle is blank: no `Applied`, `Skipped`, or later stage such as `Technical Round`, `Rejected`, or `Offer`.
 - The posting is open and materially unchanged.
-- Last Applied is blank.
-- No linked repost was applied to in the previous 30 days.
+- No linked repost was applied to.
 - The role is not closed, expired, deferred, or unresolved as a duplicate.
 
-Never auto-reapply. An exact role older than 30 days requires an explicit reapply decision. Build the full queue after discovery, ordered by Great Fit then Normal Fit.
+Never auto-reapply. A row with `Applied` or a later lifecycle needs the user's explicit reapply decision. Notes may record rejections, cooldowns, or referrers; mention them in the next-job preview, but do not turn them into rules. Build the full queue after discovery, ordered by Great Fit then Normal Fit.

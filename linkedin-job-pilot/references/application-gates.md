@@ -11,8 +11,7 @@ stateDiagram-v2
     Researched --> Classified
     Classified --> Tracked
     Tracked --> EligibilityCheck
-    EligibilityCheck --> Cooldown: Exact job or repost cluster applied within 30 days
-    EligibilityCheck --> ReapplyReview: Exact job applied more than 30 days ago
+    EligibilityCheck --> ReapplyReview: Status shows Applied or a later lifecycle
     EligibilityCheck --> FormInspection: Never applied and otherwise eligible
     FormInspection --> AdditionalInputReview: Employer site requests extra input
     FormInspection --> PacketReady: No extra input
@@ -35,8 +34,8 @@ Before preparing an application, read the live row and follow [discovery-trackin
 
 - Find the live official posting from the company's careers page by the row's exact role title, as the main skill's next-job preview describes, and note any repost relationship mentioned in the row's Summary.
 - Verify the official posting is still open and materially matches the researched role.
-- Exclude confirmed applications in the same repost cluster during the previous 30 calendar days.
-- Never auto-reapply to a row that has a `Last Applied` date. An older exact application requires a specific reapply decision.
+- Exclude roles whose repost was already applied to.
+- Never auto-reapply to a row whose Status shows `Applied` or a later lifecycle; that requires a specific reapply decision from the user. Mention any rejection or cooldown recorded in Notes.
 - Reconcile any mismatch between LinkedIn's `Applied` badge and the tracker before continuing.
 
 If a redirect opens a different role, stop and research and track the new identity before using this workflow.
@@ -61,7 +60,7 @@ In the application packet, show:
 - The full cover letter text with its PDF path, filename, page count, and SHA-256 when the form asks for or accepts one, prepared as described in [cover-letter.md](cover-letter.md).
 - Proposed LinkedIn Premium actions, why they help, and any credit or quota they consume.
 - Active account, relevant visibility mode, and exact execution order.
-- Post-submit tracking preview: the target CSV row by Company and Role, the exact fit-preserving `Status` such as `A — Great Fit · Applied`, and `Last Applied`. Use `${submitted_at}` only until the site confirms the real date.
+- Post-submit tracking preview: the target CSV row by Company and Role, and the exact fit-preserving `Status` such as `A — Great Fit · Applied`.
 - Known questions that require user input.
 
 End the packet with one request: reply `submit` to enter everything shown and submit it, or request edits. The user may answer open questions, pick alternative drafts, or make edits in the same reply as `submit`; apply them exactly and submit. If an edit would change something the packet did not show, present that change first.
@@ -164,8 +163,8 @@ Do not start or change a subscription, trial, plan, or paid feature unless the u
 The application packet is the only routine approval request. Before asking, make sure it shows:
 
 - Every field, file, answer, recipient, and message, including the cover letter text and its PDF filename, page count, and SHA-256.
-- The exact contingent tracker.csv update, including the target row by Company and Role, `Status`, and `Last Applied`.
-- That the scoped `Applied` and `Last Applied` tracking writes happen automatically, under standing authorization, only after reliable submission confirmation.
+- The exact contingent tracker.csv update: the target row by Company and Role and its new `Status`.
+- That the scoped `Applied` Status write happens automatically, under standing authorization, only after reliable submission confirmation.
 
 When the user says `submit`:
 

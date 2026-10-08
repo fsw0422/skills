@@ -10,8 +10,8 @@ sequenceDiagram
     participant A as Agent
     participant C as tracker.csv
     A->>C: Parse and find the Company and Role row
-    A->>A: Derive scoped Applied status and confirmed date
-    A->>C: Edit the row's Status and Last Applied
+    A->>A: Derive scoped Applied status
+    A->>C: Edit the row's Status
     C-->>A: Re-read exact row
     A->>A: Verify against submission evidence
 ~~~
@@ -21,21 +21,17 @@ sequenceDiagram
 Use only a confirmation page, receipt, or application ID:
 
 - Status: preserve the fit label and append or replace the middle-dot lifecycle with Applied.
-- Last Applied: confirmed date in YYYY-MM-DD.
 
 ## Standing authorization
 
-After reliable submission confirmation, automatically update the existing row without asking again. The standing authorization is limited to:
-
-- preserving the existing fit label and setting its lifecycle to `Applied`;
-- setting `Last Applied` to the confirmed submission date.
+After reliable submission confirmation, automatically update the existing row without asking again. The standing authorization is limited to preserving the existing fit label and setting its lifecycle to `Applied`.
 
 It does not authorize creating another row, changing the schema, editing company or role identity, recording an unconfirmed attempt, or changing later lifecycle stages.
 
-Do not overwrite Company, Role, the research columns (Company Website, Summary, Salary Range, Glassdoor Review), Last Interviewed, or Notes during an ordinary post-submit update.
+Do not overwrite Company, Role, the research columns (Company Website, Summary, Salary Range, Glassdoor Review), or Notes during an ordinary post-submit update.
 
-Read tracker.csv with the Read tool, replace only that row's line with the Edit tool, then re-read and verify the exact row and that nothing else changed. If submission is ambiguous, do not update Last Applied or claim Applied. Never retry or mark the role applied without renewed approval.
+Read tracker.csv with the Read tool, replace only that row's line with the Edit tool, then re-read and verify the exact row and that nothing else changed. If submission is ambiguous, do not claim Applied. Never retry or mark the role applied without renewed approval.
 
 ## Later stages
 
-Use the same row for verified recruiter screen, interview, rejection, withdrawal, or offer changes. Preserve the fit label and change only the lifecycle. For an interview, also set Last Interviewed to the interview date in YYYY-MM-DD when the user gives it; replace it only with a later date. Each new external write must be authorized by the user's request or an exact approved manifest. Preserve Last Applied and never replace a newer stage with an older one.
+Use the same row for verified recruiter screen, technical round, interview, rejection, withdrawal, or offer changes, such as `B — Normal Fit · Technical Round`. Preserve the fit label and change only the lifecycle. Write dates only into Notes, and only when the user gives them. Each new external write must be authorized by the user's request or an exact approved manifest. Never replace a newer stage with an older one.

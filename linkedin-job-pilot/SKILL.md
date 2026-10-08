@@ -24,15 +24,15 @@ Create `jobhunt` when missing. Reject symlinks or resolved paths that escape the
 
 The exact tracker columns are:
 
-Company, Role, Company Website, Summary, Salary Range, Glassdoor Review, Status, Last Applied, Last Interviewed, Notes
+Company, Role, Company Website, Summary, Salary Range, Glassdoor Review, Status, Notes
 
 A row's identity is its Company and Role together. Job-board and posting URLs change with every repost, so the tracker never stores them; find the live posting from the company's careers page when needed.
 
 Company Website, Summary, Salary Range, and Glassdoor Review hold the research result for the row; references/discovery-tracking.md defines them. Salary Range and Glassdoor Review are optional: fill them only with a value actually found, and leave them blank otherwise. Never estimate or guess either one.
 
-Last Interviewed is the date of the most recent interview for that row in YYYY-MM-DD, blank by default. Write it only when the user gives the date or approves a verified interview update.
+Status holds the fit label plus an optional lifecycle after a middle dot, such as `B — Normal Fit · Applied` or `A — Great Fit · Technical Round`. The lifecycle is the only application record; the tracker stores no application or interview dates.
 
-Notes is free text owned by the user, for example recruiters or people contacted individually. Preserve it on every change, and write to it only when the user asks.
+Notes is free text owned by the user, for example recruiters, people contacted individually, or dates such as `Rejected 23/03/2026`. Preserve it on every change, and write to it only when the user asks.
 
 ## Default explicit invocation
 
@@ -95,8 +95,8 @@ Never run custom JavaScript in a page; browser-pilot lists the allowed browser t
 
 Explicitly invoking discovery or manual-role research authorizes these bounded home-local writes for that run:
 
-- Create or update <home-directory>/jobhunt/tracker.csv without changing its ten-column schema, including the research columns: Company Website, Summary, Salary Range, and Glassdoor Review.
-- After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label, set the lifecycle to `Applied`, and record `Last Applied`. This standing authorization covers only those two fields for the confirmed application; all other tracker changes keep their normal authorization requirements.
+- Create or update <home-directory>/jobhunt/tracker.csv without changing its eight-column schema, including the research columns: Company Website, Summary, Salary Range, and Glassdoor Review.
+- After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label and set the lifecycle to `Applied`. This standing authorization covers only that Status change for the confirmed application; all other tracker changes keep their normal authorization requirements.
 
 The run may also create or update <home-directory>/jobhunt/applicant-profile.md with answers the user gives in the questionnaire or agrees to save, as described in references/applicant-profile.md.
 
@@ -111,11 +111,11 @@ For every CSV change:
 1. Read the current file with the Read tool.
 2. Change only the target row or section with the Edit tool, replacing one exact, unique line or block; use the Write tool only to create a new file. Never rewrite the whole tracker.
 3. Preserve user-authored content and unrelated fields. Keep tracker rows sorted by Company, case-insensitively, by inserting each new or renamed row at its sorted position; see "Row order" in references/discovery-tracking.md.
-4. Keep CSV rows valid RFC-4180 UTF-8: ten fields, and quote a field that contains a comma, quote, or line break.
+4. Keep CSV rows valid RFC-4180 UTF-8: eight fields, and quote a field that contains a comma, quote, or line break.
 5. Re-read with the Read tool and verify the exact row, and that nothing else changed.
 6. Stop on a malformed row, ambiguous company identity, or path escape.
 
-Use Company plus Role as the row identity, compared case-insensitively after trimming spaces. A job seen again under the same company and title, such as a LinkedIn repost or the same role in another city, reuses the existing row. Use YYYY-MM-DD for newly recorded dates.
+Use Company plus Role as the row identity, compared case-insensitively after trimming spaces. A job seen again under the same company and title, such as a LinkedIn repost or the same role in another city, reuses the existing row.
 
 ## Workflow
 
@@ -177,7 +177,7 @@ A public Reddit fallback is allowed only after ordinary research, CSV verificati
 
 Build the queue from the local CSV after research. Process A — Great Fit first, then B — Normal Fit. Include Investigate only when the user explicitly advances it. Exclude Skip.
 
-A role must remain open and must not have Last Applied within the previous 30 calendar days. Treat confirmed reposts as one application opportunity. Never auto-reapply.
+A role must remain open, and its Status must not show `Applied` or a later lifecycle such as `Technical Round`, `Rejected`, or `Offer`. Treat confirmed reposts as one application opportunity. Never auto-reapply; reapplying to such a row needs the user's explicit decision. When Notes mention a rejection, cooldown, or referrer, point it out in the preview.
 
 ### Next-job preview
 
@@ -208,7 +208,6 @@ Next: <Company>, <Role> · <Status>
 - Salary: <Salary Range, or "not found">
 - Glassdoor: <Glassdoor Review, or "not found">
 - Notes: <Notes>            (only when not blank)
-- Last applied: <date>      (only when not blank)
 Reply go for the full packet, or skip.
 ~~~
 
@@ -224,7 +223,7 @@ Use visible Premium information as research and prioritization evidence only. Do
 
 ### Post-application tracking
 
-After reliable submission confirmation, read references/tracking.md and apply the user's standing authorization without asking again. Update the existing CSV row, preserve the fit label, set the lifecycle to `Applied`, and set Last Applied to the confirmed date. Never mark Applied from a click or assumption, and never extend this standing authorization to another lifecycle, field, row, or schema change.
+After reliable submission confirmation, read references/tracking.md and apply the user's standing authorization without asking again. Update the existing CSV row, preserve the fit label, and set the lifecycle to `Applied`. Never mark Applied from a click or assumption, and never extend this standing authorization to another lifecycle, field, row, or schema change.
 
 ## Completion standard
 
