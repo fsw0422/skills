@@ -43,7 +43,7 @@ rm ~/.agents/skills/linkedin-job-pilot
 
 ## Global instructions and settings
 
-The user-level instructions (`AGENTS.md`), Claude Code settings, and Codex config live in the [.ksp](https://github.com/fsw0422/.ksp) dotfiles repo, not here, and [ksp-setup](https://github.com/fsw0422/ksp-setup) links them into `~/.claude` and `~/.codex`.
+The user-level instructions (`AGENTS.md`), Claude Code settings, and Codex config live in the [.ksp](https://github.com/fsw0422/.ksp) dotfiles repo, not here, and [ksp-setup](https://github.com/fsw0422/ksp-setup) links them into place: `~/.claude/settings.json`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, and `/etc/codex/config.toml`, the Codex system layer.
 
 ## Update
 
