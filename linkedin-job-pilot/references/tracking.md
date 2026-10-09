@@ -35,3 +35,24 @@ Read tracker.csv with the Read tool, replace only that row's line with the Edit 
 ## Later stages
 
 Use the same row for verified recruiter screen, technical round, interview, rejection, withdrawal, or offer changes, such as `Technical Round`. Change only Status. Write dates only into Notes, and only when the user gives them. Each new external write must be authorized by the user's request or an exact approved manifest. Never replace a newer stage with an older one.
+
+## Sibling roles when a pipeline starts
+
+When the user asks to move a row from `Applied` to an interview-pipeline stage, such as `Interview`, `Technical Round`, a recruiter screen, or `Offer`, make that change first. Then list the company's other rows and ask once whether to mark them:
+
+~~~mermaid
+flowchart TD
+    A[User moves a row from Applied to an interview stage] --> B[Update that row's Status]
+    B --> C{Company has other rows?}
+    C -- No --> Z[Done]
+    C -- Yes --> D[List them and ask once]
+    D -- No --> Z
+    D -- Yes --> E{Sibling's Status}
+    E -- Blank --> F[Set Status Skipped and add the note]
+    E -- Skipped or Closed --> G[Add the note, keep Status]
+    E -- Applied or later --> H[Leave unchanged]
+~~~
+
+- The note is exactly `Pipeline kicked-off from other role`. Add it after any existing Notes, separated by `; `, and never remove existing Notes.
+- A blank sibling becomes `Skipped` with the note. A `Skipped` or `Closed` sibling keeps its Status and gets the note. A sibling with `Applied` or a later stage stays unchanged; mention it to the user.
+- Write nothing to the siblings until the user agrees; the user's reply authorizes only the rows listed in the question.

@@ -227,6 +227,8 @@ Use visible Premium information as research and prioritization evidence only. Do
 
 After reliable submission confirmation, read references/tracking.md and apply the user's standing authorization without asking again. Update the existing CSV row and set its Status to `Applied`. Never mark Applied from a click or assumption, and never extend this standing authorization to another lifecycle, field, row, or schema change.
 
+When the user later moves a row from `Applied` to an interview stage such as `Technical Round`, update it, then ask once whether to mark the company's other rows with the note `Pipeline kicked-off from other role`, as "Sibling roles when a pipeline starts" in references/tracking.md describes.
+
 ## Completion standard
 
 Report:
