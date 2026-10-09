@@ -30,7 +30,7 @@ A row's identity is its Company and Role together. Job-board and posting URLs ch
 
 Company Website, Summary, Salary Range, and Glassdoor Review hold the research result for the row; references/discovery-tracking.md defines them. Salary Range and Glassdoor Review are optional: fill them only with a value actually found, and leave them blank otherwise. Never estimate or guess either one.
 
-Status holds only the application lifecycle: blank when not started, or a stage such as `Researching`, `Skipped`, `Closed`, `Applied`, an interview stage (`Recruiter`, `Technical`, or `Behavioral`), or a final `Offer` or `No Offer`. It is the only application record; the tracker stores no application or interview dates and no fit label.
+Status holds only the application lifecycle: blank when not started, or a stage such as `Researching`, `Skipped`, `Closed`, `Applied`, an interview stage (`Recruiter`, `Technical`, or `Behavioral`), or a final `Rejected`, `Offer`, or `No Offer`. It is the only application record; the tracker stores no application or interview dates and no fit label.
 
 Fit has one source of truth: LinkedIn's own match assessment for the role, such as its match details or applicant signals, read on LinkedIn when the role is opened. The skill never computes, labels, or stores a fit grade. The Summary may still name the main match and the biggest gap as research context.
 
@@ -179,7 +179,7 @@ A public Reddit fallback is allowed only after ordinary research and CSV verific
 
 Build the queue from the local CSV after research: every row with a blank Status, in tracker order, unless the user names a role. Exclude rows with any Status.
 
-A role must remain open, and its Status must not show `Applied` or a later stage such as `Recruiter`, `Technical`, `Behavioral`, `Offer`, or `No Offer`. Treat confirmed reposts as one application opportunity. Never auto-reapply; reapplying to such a row needs the user's explicit decision. When Notes mention a rejection, cooldown, or referrer, point it out in the preview.
+A role must remain open, and its Status must not show `Applied` or a later stage such as `Rejected`, `Recruiter`, `Technical`, `Behavioral`, `Offer`, or `No Offer`. Treat confirmed reposts as one application opportunity. Never auto-reapply; reapplying to such a row needs the user's explicit decision. When Notes mention a rejection, cooldown, or referrer, point it out in the preview.
 
 ### Next-job preview
 

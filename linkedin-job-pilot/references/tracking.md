@@ -34,7 +34,7 @@ Read tracker.csv with the Read tool, replace only that row's line with the Edit 
 
 ## Later stages
 
-Use the same row for every later stage, following the Status lifecycle in discovery-tracking.md: `Recruiter`, `Technical`, or `Behavioral` in the interview pipeline, then the final `Offer` or `No Offer`. A rejection or withdrawal is `No Offer`. Change only Status. Write dates only into Notes, and only when the user gives them. Each new external write must be authorized by the user's request or an exact approved manifest. Never replace a newer stage with an older one.
+Use the same row for every later stage, following the Status lifecycle in discovery-tracking.md: `Rejected` when the employer declines before any interview, otherwise `Recruiter`, `Technical`, or `Behavioral` in the interview pipeline, then the final `Offer` or `No Offer`. A rejection or withdrawal after an interview stage is `No Offer`. Change only Status. Write dates only into Notes, and only when the user gives them. Each new external write must be authorized by the user's request or an exact approved manifest. Never replace a newer stage with an older one.
 
 ## Sibling roles when a pipeline starts
 
