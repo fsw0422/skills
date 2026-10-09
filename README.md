@@ -24,7 +24,7 @@ Skills are namespaced by the plugin, e.g. `skills:linkedin-job-pilot`.
 
 ### Browsers
 
-browser-pilot governs every browser task, and `AGENTS.md` tells both tools to load it before any browser tool. The Claude Code Desktop and Codex apps use only their built-in browser. Sessions without one, such as a CLI, use the separate `playwright-chromium-browser` plugin. Your own Chrome is never used: `claude-settings.json` denies Claude in Chrome (`mcp__claude-in-chrome`), and in Codex turn off the bundled Chrome plugin with `enabled = false` under `[plugins."chrome@openai-bundled"]` in `~/.codex/config.toml`.
+browser-pilot governs every browser task, and the global instructions tell both tools to load it before any browser tool. The Claude Code Desktop and Codex apps use only their built-in browser. Sessions without one, such as a CLI, use the separate `playwright-chromium-browser` plugin. Your own Chrome is never used: the Claude Code user settings deny Claude in Chrome (`mcp__claude-in-chrome`), and the Codex config turns off the bundled Chrome plugin with `enabled = false` under `[plugins."chrome@openai-bundled"]`.
 
 The plugin runs Playwright's Chromium (Chrome for Testing), isolated from your own Chrome, with a persistent sign-in profile at `~/.playwright-chromium-browser/profile` and browser output in `~/.playwright-chromium-browser/output`. Never commit either folder; they hold login cookies and page contents.
 
@@ -43,15 +43,7 @@ rm ~/.agents/skills/linkedin-job-pilot
 
 ## Global instructions and settings
 
-`AGENTS.md` holds the user-level instructions both tools load in every session. `claude-settings.json` holds the Claude Code user settings. Neither is used by the plugin. Link them once, from the main checkout:
-
-```sh
-~/projects/skills/link-instructions.sh
-```
-
-This symlinks `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md` to `AGENTS.md`, and `~/.claude/settings.json` to `claude-settings.json`, moving any existing file to `<name>.bak` first. `CODEX_HOME` and `CLAUDE_CONFIG_DIR` override the target directories. Edits apply to the next session in both tools once they reach the main checkout; there is nothing to reinstall.
-
-The settings file is not named `settings.json` because Claude Code reads that name at a plugin root as the plugin's own settings. Claude Code writes user-scope changes straight into the linked file, so keep work-specific marketplaces and plugins in a project's `.claude/settings.json` instead, and check `git diff` before committing.
+The user-level instructions (`AGENTS.md`), Claude Code settings, and Codex config live in the [.ksp](https://github.com/fsw0422/.ksp) dotfiles repo, not here, and [ksp-setup](https://github.com/fsw0422/ksp-setup) links them into place: `~/.claude/settings.json`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, and `/etc/codex/config.toml`, the Codex system layer.
 
 ## Update
 
