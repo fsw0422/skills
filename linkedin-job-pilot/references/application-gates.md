@@ -8,8 +8,7 @@ Read this file before inspecting an application flow or sending an application-r
 stateDiagram-v2
     [*] --> Discovered
     Discovered --> Researched
-    Researched --> Classified
-    Classified --> Tracked
+    Researched --> Tracked
     Tracked --> EligibilityCheck
     EligibilityCheck --> ReapplyReview: Status shows Applied or a later lifecycle
     EligibilityCheck --> FormInspection: Never applied and otherwise eligible
@@ -53,14 +52,14 @@ In the application packet, show:
 - Company, role, location, the live posting URL found for this application, posting date, and application channel. Do not write the posting URL into the tracker.
 - Company snapshot from the row: Company Website, the Summary's company and money clauses, Salary Range, and Glassdoor Review. If revenue is not public, say so instead of estimating it. Leave an empty Salary Range or Glassdoor Review as `not found`.
 - Role facts and risk flags from the live official posting, such as location, work mode, language, and hard requirements.
-- Fit assessment: `A — Great Fit`, `B — Normal Fit`, `Investigate`, or `Skip`, with evidence-backed rationale, strongest evidence, gaps, hard constraints, and a recommendation.
+- Fit as LinkedIn shows it for this role, such as its match details or applicant signals, quoted from LinkedIn and labeled as LinkedIn's assessment; say `not on LinkedIn` when the role has no LinkedIn posting. Do not add a fit grade of your own.
 - Exact provided PDF filename, absolute path, SHA-256 hash, and page count from the session's resume check.
 - Read-only role-alignment summary based only on the provided PDF: central qualifications evidenced, unsupported gaps, and any parsing problem that could affect this application. Do not propose or make resume changes.
 - Every form field with the exact value to enter, and every file to upload.
 - The full cover letter text with its PDF path, filename, page count, and SHA-256 when the form asks for or accepts one, prepared as described in [cover-letter.md](cover-letter.md).
 - Proposed LinkedIn Premium actions, why they help, and any credit or quota they consume.
 - Active account, relevant visibility mode, and exact execution order.
-- Post-submit tracking preview: the target CSV row by Company and Role, and the exact fit-preserving `Status` such as `A — Great Fit · Applied`.
+- Post-submit tracking preview: the target CSV row by Company and Role, and its new `Status`, `Applied`.
 - Known questions that require user input.
 
 End the packet with one request: reply `submit` to enter everything shown and submit it, or request edits. The user may answer open questions, pick alternative drafts, or make edits in the same reply as `submit`; apply them exactly and submit. If an edit would change something the packet did not show, present that change first.

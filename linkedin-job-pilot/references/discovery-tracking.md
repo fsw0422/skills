@@ -41,7 +41,7 @@ Use exactly these eight columns and this order:
 | Summary | One plain line of at most 320 characters, without line breaks or Markdown: what the company does; its revenue, or `revenue not public`, plus funding or ownership; the role's location and work mode; the main fit reason; and the biggest gap or red flag for this role. Use only facts found in research. |
 | Salary Range | Optional. A numeric pay range that the employer itself published for this role and its location, such as `€90K–€160K base + equity`, or a figure the user gives. Leave it blank when the posting has no number, when the only figure is an estimate (Glassdoor, Levels.fyi, Kununu, XING, aggregators, recruiters, or anecdotes), or when it covers another country. Never estimate or guess. |
 | Glassdoor Review | Optional. The company's Glassdoor rating as seen on Glassdoor, with the review count when shown, such as `4.4/5 (17 reviews)`. Prefix a parent company's rating with its name, such as `Labelbox: 2.1/5 (91 reviews)`. Leave it blank when not found. Never estimate or guess. |
-| Status | Fit label plus optional lifecycle after a middle dot, such as `B — Normal Fit · Applied`, `A — Great Fit · Technical Round`, or `B — Normal Fit · Skipped`. The lifecycle is the only application record. |
+| Status | Application lifecycle only: blank when not started, or `Researching`, `Skipped`, `Closed`, `Applied`, `Interview`, `Technical Round`, `Cooltime`, `Rejected`, or `Offer`. No fit grade; fit comes from LinkedIn when a role is opened. |
 | Notes | Free text owned by the user, such as recruiters, people contacted individually, or dates like `Rejected 23/03/2026`; blank by default. Preserve it on every change and write to it only when the user asks. |
 
 The header row is:
@@ -100,7 +100,7 @@ flowchart TD
 3. **Company name change:** remove the old line with one Edit, then insert the updated line at its new sorted position with another.
 4. **Out-of-order file:** if the rows are not sorted, for example after the user edits the file in a spreadsheet, report it and offer a one-time re-sort that keeps every row and field unchanged. Do not re-sort silently.
 
-After research, use A — Great Fit, B — Normal Fit, Investigate, or Skip. Do not expose C or D. For a previously classified row, update the fit while preserving a verified lifecycle after a middle dot. Use Research blocked only for a new or unclassified row when evidence cannot support a final label.
+After research, set Status back to blank, or to `Closed` or `Skipped` only for a verified blocker. Never write a fit grade. Do not change an existing lifecycle such as `Applied` during research.
 
 ## Stable identity and duplicates
 
@@ -118,7 +118,7 @@ After a role's research finishes, write its results into that row's research col
 1. Company Website, Salary Range, and Glassdoor Review are company or posting facts. Reuse the same Company Website and Glassdoor Review on every row of one company unless newer research changes them.
 2. Write the Summary for the specific role. Rows of one company share the company and money clauses but differ in location, fit reason, and gap.
 3. Quote any field that contains a comma or quote, and replace line breaks with spaces.
-4. When research updates an existing row, replace only the research columns and the fit label in Status; preserve the Status lifecycle and Notes.
+4. When research updates an existing row, replace only the research columns; preserve Status and Notes.
 5. A Salary Range the user gives is the user's value: preserve it like Notes, and replace it only when the user asks.
 
 Do not store credentials, demographic answers, confidential work-system text, or unnecessary personal data in any column.
@@ -149,10 +149,9 @@ Every manually added row requires an explicit preview and approval. The preview 
 
 A role is eligible only when:
 
-- Status is A — Great Fit or B — Normal Fit, or Investigate that the user explicitly advanced.
-- The Status lifecycle is blank: no `Applied`, `Skipped`, or later stage such as `Technical Round`, `Rejected`, or `Offer`.
+- Status is blank: no `Researching`, `Skipped`, `Closed`, `Applied`, or later stage such as `Technical Round`, `Cooltime`, `Rejected`, or `Offer`.
 - The posting is open and materially unchanged.
 - No linked repost was applied to.
 - The role is not closed, expired, deferred, or unresolved as a duplicate.
 
-Never auto-reapply. A row with `Applied` or a later lifecycle needs the user's explicit reapply decision. Notes may record rejections, cooldowns, or referrers; mention them in the next-job preview, but do not turn them into rules. Build the full queue after discovery, ordered by Great Fit then Normal Fit.
+Never auto-reapply. A row with `Applied` or a later lifecycle needs the user's explicit reapply decision. Notes may record rejections, cooldowns, or referrers; mention them in the next-job preview, but do not turn them into rules. Build the full queue after discovery in tracker order.

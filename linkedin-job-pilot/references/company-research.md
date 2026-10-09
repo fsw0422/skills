@@ -15,7 +15,7 @@ flowchart TD
     D --> E
     E --> F[Complete brief and final fit]
     F --> G[Write and verify the row's research columns]
-    G --> H{Final Status is Investigate and public question could resolve the gap?}
+    G --> H{Decision-critical gap remains and a public question could resolve it?}
     H -- Yes --> I[Draft r/cscareerquestionsEU question]
     H -- No --> J[Finish without public post]
     I --> K{User approves exact post?}
@@ -53,7 +53,7 @@ For each company establish its business model, ownership or funding, approximate
 
 Reuse current company facts across roles, but verify role facts separately.
 
-Complete the full material checklist for likely Great Fit and Normal Fit roles. Investigate unresolved gates far enough to determine whether the label should move. For Skip, a verified hard blocker may end research early after recording the blocker, source, posting state, and minimum company facts.
+Complete the full material checklist for each role. A verified hard blocker, such as a closed posting or a required language the resume lacks, may end research early after recording the blocker in the Summary and setting Status to `Closed` or `Skipped`.
 
 ## Research checklist
 
@@ -82,11 +82,11 @@ Use this reliability order:
 
 Check material facts against a dated source while researching, and prefer the most recent reliable one when sources disagree. Estimates may inform the fit, but never write an estimate into Salary Range or Glassdoor Review.
 
-For every role not already a verified Skip, run targeted read-only Reddit, Blind, and Glassdoor searches when accessible and material. Prefer recent reports for the same country, office, discipline, and level. Treat anonymous reports as anecdotal and never let one report override stronger official evidence. When Glassdoor shows a company rating, record it in Glassdoor Review; when it does not or is not accessible, leave the column blank. Put a decision-relevant culture red flag in the Summary.
+For every role without a verified blocker, run targeted read-only Reddit, Blind, and Glassdoor searches when accessible and material. Prefer recent reports for the same country, office, discipline, and level. Treat anonymous reports as anecdotal and never let one report override stronger official evidence. When Glassdoor shows a company rating, record it in Glassdoor Review; when it does not or is not accessible, leave the column blank. Put a decision-relevant culture red flag in the Summary.
 
 ## Reddit fallback
 
-Use the posting fallback only after ordinary research is complete, the CSV row is verified, final Status is Investigate, and the remaining gap is decision-critical. Never propose a public post for Great Fit, Normal Fit, or Skip.
+Use the posting fallback only after ordinary research is complete, the CSV row is verified, and the remaining gap is decision-critical. Never propose a public post for a role with a Status.
 
 Draft a concise r/cscareerquestionsEU post with:
 
@@ -108,6 +108,6 @@ End each role's research with exactly these values for its tracker row:
 | Summary | One line, at most 320 characters: what the company does; revenue or `revenue not public`, plus funding or ownership; location and work mode; the main fit reason; the biggest gap or red flag |
 | Salary Range | Only a numeric range the employer published for this role and location; otherwise blank |
 | Glassdoor Review | Only a rating seen on Glassdoor, such as `4.4/5 (17 reviews)`; otherwise blank |
-| Status | An evidence-backed A — Great Fit, B — Normal Fit, Investigate, or Skip label |
+| Status | Blank, or `Closed` or `Skipped` only for a verified blocker. Never a fit grade. |
 
 After each result, follow discovery-tracking.md: write the research columns and Status into the row, verify it, and move on. Do not wait for all pages or a separate batch.

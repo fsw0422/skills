@@ -6,7 +6,7 @@ Discovery is non-engagement work. LinkedIn may record opened cards as viewed and
 
 Maintain a private structured ledger of job IDs, occurrence positions, facts, dispositions, and the resume cursor. For large runs, the main skill explicitly authorizes an owner-only scratch directory under /private/tmp containing job facts only. This is temporary, not durable storage. Keep it until local writes and readbacks are verified, then delete it. If a restart is required, report its exact path as the private resume handle and verify it before resuming.
 
-Discovery includes incremental CSV tracking, research columns, and final classification for every stable unique job. Do not cap research or tracking at a top-ten shortlist.
+Discovery includes incremental CSV tracking, and research columns for every stable unique job. Do not cap research or tracking at a top-ten shortlist.
 
 ## Search horizon
 
@@ -71,22 +71,15 @@ For every unique job record:
 - Company business, ownership, workforce, AI relevance, and financial or market signals.
 - Salary and interview evidence with estimates and anecdotes labeled.
 - Visible Premium signals.
-- Fit rationale, strongest evidence, largest gap, confidence, and final label.
+- Strongest evidence, largest gap, and any verified blocker.
 
 Card and detail-panel facts are listing data. The research agent replaces them with facts from the exact official posting on the careers page, keeps LinkedIn values only where the official posting is silent, and labels them; see company-research.md.
 
 Use only the PDF accepted by the mandatory gate for personal fit. Do not substitute the LinkedIn profile or another resume. Premium is a tie-breaker, never proof of qualification.
 
-## Fit labels
+## Fit
 
-| Label | Meaning |
-| --- | --- |
-| A — Great Fit | All known hard constraints are met, duties and level align strongly, and no material blocker is known |
-| B — Normal Fit | Decision-critical constraints are met with one or two manageable gaps |
-| Investigate | Material gaps or an unresolved hard gate remain, but no confirmed disqualifier exists |
-| Skip | Verified hard blocker, level mismatch, stale/closed role, or explicit user exclusion |
-
-Unknown information lowers confidence; it is not automatically negative. Never write a provisional fit label.
+Fit has one source of truth: LinkedIn's own match assessment for the role, such as its match details or applicant signals, read on LinkedIn when the role is opened. The skill never computes, labels, or stores a fit grade. The Summary may still name the main match and the biggest gap as research context. Unknown information is not negative; never invent a grade.
 
 ## Deduplication
 
@@ -95,7 +88,7 @@ Use job ID as the temporary identity within a run and Company plus Role as the C
 - Consolidate repeated cards with the same ID and retain every occurrence position.
 - Keep distinct URLs separate unless requisition, description, employer URL, and date evidence proves one vacancy.
 - Record confirmed repost clusters in the private ledger, mention them in the Summary, and treat them as one application opportunity.
-- Track clear mismatches as Skip instead of silently dropping them.
+- Track roles with a verified blocker with Status `Skipped` or `Closed` instead of silently dropping them.
 - Keep a short exclusion reason.
 - Never dismiss or hide a LinkedIn job.
 
@@ -132,11 +125,11 @@ Return:
 
 1. Search criteria and actual filters.
 2. Pages inspected and stop reason.
-3. Counts for cards, unique jobs, duplicates, unknown gates, and fit labels.
+3. Counts for cards, unique jobs, duplicates, unknown gates, and rows by Status.
 4. Fit-grouped results with material evidence and links.
-5. Skip reasons and Investigate gap themes.
+5. Skipped and Closed reasons, and common gap themes.
 6. Verified CSV rows.
-7. Eligible queue ordered by Great Fit then Normal Fit.
+7. Eligible queue: rows with blank Status, in tracker order.
 8. Compact resume cursor and private ledger handle only when needed.
 
 Describe coverage as observed at scan time. LinkedIn can reorder or remove cards.

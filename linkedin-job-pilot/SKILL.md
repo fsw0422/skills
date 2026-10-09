@@ -30,7 +30,9 @@ A row's identity is its Company and Role together. Job-board and posting URLs ch
 
 Company Website, Summary, Salary Range, and Glassdoor Review hold the research result for the row; references/discovery-tracking.md defines them. Salary Range and Glassdoor Review are optional: fill them only with a value actually found, and leave them blank otherwise. Never estimate or guess either one.
 
-Status holds the fit label plus an optional lifecycle after a middle dot, such as `B — Normal Fit · Applied` or `A — Great Fit · Technical Round`. The lifecycle is the only application record; the tracker stores no application or interview dates.
+Status holds only the application lifecycle: blank when not started, or a stage such as `Researching`, `Skipped`, `Closed`, `Applied`, `Interview`, `Technical Round`, `Cooltime`, `Rejected`, or `Offer`. It is the only application record; the tracker stores no application or interview dates and no fit label.
+
+Fit has one source of truth: LinkedIn's own match assessment for the role, such as its match details or applicant signals, read on LinkedIn when the role is opened. The skill never computes, labels, or stores a fit grade. The Summary may still name the main match and the biggest gap as research context.
 
 Notes is free text owned by the user, for example recruiters, people contacted individually, or dates such as `Rejected 23/03/2026`. Preserve it on every change, and write to it only when the user asks.
 
@@ -38,7 +40,7 @@ Notes is free text owned by the user, for example recruiters, people contacted i
 
 When the user explicitly invokes this skill, first apply the mandatory PDF gate. Once a PDF is verified, an invocation with no additional scope, or only Start discovery, begins from the already-open LinkedIn Jobs tab in the built-in browser using its current search, collection, location, and filters. If no such tab exists, open LinkedIn Jobs in the built-in browser and use a secure browser handoff for sign-in when needed.
 
-Run the complete workflow: capacity preflight, ten-page discovery horizon, immediate CSV tracking, one research agent per stable job, company-role expansion, automatic research-column population, final four-label fit classification, and application queue preparation. Ask only for a genuinely missing material search criterion or an ambiguous choice between multiple open LinkedIn collections.
+Run the complete workflow: capacity preflight, ten-page discovery horizon, immediate CSV tracking, one research agent per stable job, company-role expansion, automatic research-column population, and application queue preparation. Ask only for a genuinely missing material search criterion or an ambiguous choice between multiple open LinkedIn collections.
 
 ## Mandatory PDF resume gate
 
@@ -46,7 +48,7 @@ Before opening LinkedIn, reading the tracker, researching a company, evaluating 
 
 Verify the resume once per session, the first time the skill runs: open it with the Read tool to confirm it is a PDF with usable extractable text, and record its absolute path, visible filename, page count, and SHA-256 from `shasum -a 256`. Later invocations in the same session reuse that record without re-reading the file or reporting the check again. Immediately before each upload, run `shasum -a 256` again and compare it with the recorded hash; if it differs, stop and ask the user to confirm the new file, then verify it again. If the file is unreadable, image-only, or ambiguous, stop and ask for a valid PDF.
 
-Treat the PDF as immutable input. This skill may read it for fit assessment, draft answers from verified contents, and attach that exact file after the user approves submission. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. When the resume has no phone number, use the PHONE answer from the applicant profile; never write it into the skill or the tracker. Extraction is not authorization to transmit them: show the values in the application packet and transmit them only after the submit approval below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
+Treat the PDF as immutable input. This skill may read it to write the Summary and the packet's role-alignment notes, draft answers from verified contents, and attach that exact file after the user approves submission. Extract the exact phone number, LinkedIn URL, and residence from it when those values are unambiguous so application forms can reuse them without asking again. When the resume has no phone number, use the PHONE answer from the applicant profile; never write it into the skill or the tracker. Extraction is not authorization to transmit them: show the values in the application packet and transmit them only after the submit approval below. The skill must not critique, edit, optimize, rebuild, rename, copy, commit, push, or upload the resume to LinkedIn preferences. Resume work belongs to resume-pilot.
 
 ## Applicant profile questionnaire
 
@@ -96,7 +98,7 @@ Never run custom JavaScript in a page; browser-pilot lists the allowed browser t
 Explicitly invoking discovery or manual-role research authorizes these bounded home-local writes for that run:
 
 - Create or update <home-directory>/jobhunt/tracker.csv without changing its eight-column schema, including the research columns: Company Website, Summary, Salary Range, and Glassdoor Review.
-- After reliable submission confirmation, automatically update the existing tracker row to preserve the fit label and set the lifecycle to `Applied`. This standing authorization covers only that Status change for the confirmed application; all other tracker changes keep their normal authorization requirements.
+- After reliable submission confirmation, automatically set the existing tracker row's Status to `Applied`. This standing authorization covers only that Status change for the confirmed application; all other tracker changes keep their normal authorization requirements.
 
 The run may also create or update <home-directory>/jobhunt/applicant-profile.md with answers the user gives in the questionnaire or agrees to save, as described in references/applicant-profile.md.
 
@@ -127,11 +129,11 @@ flowchart TD
     D --> E[Run one research agent per job]
     E --> F[Write research columns in the row]
     F --> G[Verify the row]
-    G --> H[Finalize CSV fit label]
+    G --> H[Set Status Skipped or Closed only for a verified blocker]
     H --> I{More result pages?}
     I -- Yes --> C
-    I -- No --> J[Build Great Fit then Normal Fit queue]
-    J --> K{Final status Investigate and public question needed?}
+    I -- No --> J[Build queue of rows with blank Status]
+    J --> K{Decision-critical gap and public question needed?}
     K -- Yes --> L[Draft exact Reddit post]
     L --> M{User approves exact post?}
     M -- Yes --> N[Post only to r/cscareerquestionsEU]
@@ -167,15 +169,15 @@ Do not cap tracking at a top-ten shortlist. A manually supplied role or company 
 
 ### Research
 
-Use references/company-research.md. Write each role's result into its own tracker row: Company Website, Summary, Salary Range, Glassdoor Review, and the fit label in Status. Reuse current company facts across that company's rows, but verify role facts separately. Do not create research Markdown or other per-company files.
+Use references/company-research.md. Write each role's result into its own tracker row: Company Website, Summary, Salary Range, Glassdoor Review. Set Status only when research verifies a blocker: `Closed` for a closed posting, `Skipped` for a hard blocker such as a required language, with the reason in the Summary. Reuse current company facts across that company's rows, but verify role facts separately. Do not create research Markdown or other per-company files.
 
 Use official sources first, then reputable reporting. Check recent role- and location-relevant Reddit, Blind, and Glassdoor reports when accessible and material. Treat anonymous reports as anecdotal.
 
-A public Reddit fallback is allowed only after ordinary research, CSV verification, a final Status of Investigate, and a remaining decision-critical gap. Never propose a public post for Great Fit, Normal Fit, or Skip.
+A public Reddit fallback is allowed only after ordinary research and CSV verification leave a decision-critical gap. Never propose a public post for a role with a Status.
 
 ### Application queue
 
-Build the queue from the local CSV after research. Process A — Great Fit first, then B — Normal Fit. Include Investigate only when the user explicitly advances it. Exclude Skip.
+Build the queue from the local CSV after research: every row with a blank Status, in tracker order, unless the user names a role. Exclude rows with any Status.
 
 A role must remain open, and its Status must not show `Applied` or a later lifecycle such as `Technical Round`, `Rejected`, or `Offer`. Treat confirmed reposts as one application opportunity. Never auto-reapply; reapplying to such a row needs the user's explicit decision. When Notes mention a rejection, cooldown, or referrer, point it out in the preview.
 
@@ -202,7 +204,7 @@ sequenceDiagram
 Build the preview only from the row's columns. Do not research, open the posting, or inspect the form for it, so it costs no browsing. Use this shape:
 
 ~~~text
-Next: <Company>, <Role> · <Status>
+Next: <Company>, <Role> · <Status, or "not started">
 - Company: <Company Website>
 - Summary: <Summary>
 - Salary: <Salary Range, or "not found">
@@ -213,7 +215,7 @@ Reply go for the full packet, or skip.
 
 When the row's Summary is blank, say so in the preview instead of researching; the packet step will fill it.
 
-On `go`, find the live posting: open the company's careers page from Company Website and look for the exact role title, and search LinkedIn for the company and title only when the careers page does not list it. If it is closed, expired, or not found, set the row to Skip, say so in one line, and show the next preview. Otherwise follow references/application-gates.md. On `skip`, keep the fit label, set the lifecycle to `Skipped`, for example `B — Normal Fit · Skipped`, and show the next preview. A `skip` reply is the user's authorization for that one Status change.
+On `go`, find the live posting: open the company's careers page from Company Website and look for the exact role title, and search LinkedIn for the company and title only when the careers page does not list it. If it is closed, expired, or not found, set the row's Status to `Closed`, say so in one line, and show the next preview. Otherwise also open the role on LinkedIn by company and title to read LinkedIn's match assessment for the packet, then follow references/application-gates.md. On `skip`, set the row's Status to `Skipped` and show the next preview. A `skip` reply is the user's authorization for that one Status change.
 
 ### Applications and Premium
 
@@ -223,7 +225,7 @@ Use visible Premium information as research and prioritization evidence only. Do
 
 ### Post-application tracking
 
-After reliable submission confirmation, read references/tracking.md and apply the user's standing authorization without asking again. Update the existing CSV row, preserve the fit label, and set the lifecycle to `Applied`. Never mark Applied from a click or assumption, and never extend this standing authorization to another lifecycle, field, row, or schema change.
+After reliable submission confirmation, read references/tracking.md and apply the user's standing authorization without asking again. Update the existing CSV row and set its Status to `Applied`. Never mark Applied from a click or assumption, and never extend this standing authorization to another lifecycle, field, row, or schema change.
 
 ## Completion standard
 
@@ -232,7 +234,7 @@ Report:
 - PDF filename and hash used for fit.
 - Resolved home directory and exact jobhunt paths.
 - Search criteria, pages inspected, counts, duplicates, and stop reason.
-- Final totals for A — Great Fit, B — Normal Fit, Investigate, and Skip.
+- Totals of rows by Status, including blank.
 - Exact tracker rows.
 - Partial write or verification failures.
 - Eligible application queue.
