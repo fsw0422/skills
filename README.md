@@ -22,9 +22,11 @@ If `codex` is not on your `PATH`, the ChatGPT desktop app bundles it at `/Applic
 
 Skills are namespaced by the plugin, e.g. `skills:linkedin-job-pilot`.
 
-### CLI browser (Claude Code)
+### Browsers
 
-The marketplace also has a separate plugin, `playwright-chromium-browser`. It gives CLI sessions a browser, the counterpart of the built-in browser in the Claude Code Desktop and Codex apps, and browser-pilot uses it for every skill that browses. It runs Playwright's Chromium (Chrome for Testing), never your own Chrome, with a persistent sign-in profile at `~/.playwright-chromium-browser/profile` and browser output in `~/.playwright-chromium-browser/output`. Never commit either folder; they hold login cookies and page contents.
+browser-pilot governs every browser task, and `AGENTS.md` tells both tools to load it before any browser tool. The Claude Code Desktop and Codex apps use only their built-in browser. Sessions without one, such as a CLI, use the separate `playwright-chromium-browser` plugin. Your own Chrome is never used: `claude-settings.json` denies Claude in Chrome (`mcp__claude-in-chrome`), and in Codex turn off the bundled Chrome plugin with `enabled = false` under `[plugins."chrome@openai-bundled"]` in `~/.codex/config.toml`.
+
+The plugin runs Playwright's Chromium (Chrome for Testing), isolated from your own Chrome, with a persistent sign-in profile at `~/.playwright-chromium-browser/profile` and browser output in `~/.playwright-chromium-browser/output`. Never commit either folder; they hold login cookies and page contents.
 
 ```sh
 claude plugin install playwright-chromium-browser@fsw0422 --scope user

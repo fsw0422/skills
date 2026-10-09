@@ -1,6 +1,9 @@
 {
   "permissions": {
-    "defaultMode": "default"
+    "defaultMode": "default",
+    "deny": [
+      "mcp__claude-in-chrome"
+    ]
   },
   "model": "opus[1m]",
   "enabledPlugins": {
