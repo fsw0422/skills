@@ -30,11 +30,11 @@ A row's identity is its Company and Role together. Job-board and posting URLs ch
 
 Company Website, Summary, Salary Range, and Glassdoor Review hold the research result for the row; references/discovery-tracking.md defines them. Salary Range and Glassdoor Review are optional: fill them only with a value actually found, and leave them blank otherwise. Never estimate or guess either one.
 
-Status holds only the application lifecycle: blank when not started, or a stage such as `Researching`, `Skipped`, `Closed`, `Applied`, `Interview`, `Technical Round`, `Cooltime`, `Rejected`, or `Offer`. It is the only application record; the tracker stores no application or interview dates and no fit label.
+Status holds only the application lifecycle: blank when not started, or a stage such as `Researching`, `Skipped`, `Closed`, `Applied`, `Interview`, `Technical Round`, `No Offer`, `Rejected`, or `Offer`. It is the only application record; the tracker stores no application or interview dates and no fit label.
 
 Fit has one source of truth: LinkedIn's own match assessment for the role, such as its match details or applicant signals, read on LinkedIn when the role is opened. The skill never computes, labels, or stores a fit grade. The Summary may still name the main match and the biggest gap as research context.
 
-Notes is free text owned by the user, for example recruiters, people contacted individually, or dates such as `Rejected 23/03/2026`. Preserve it on every change, and write to it only when the user asks.
+Notes is free text owned by the user, for example recruiters, people contacted individually, or dates such as `Waiting cooltime: 23/03/2026`. Preserve it on every change, and write to it only when the user asks.
 
 ## Default explicit invocation
 
