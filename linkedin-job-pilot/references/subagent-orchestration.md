@@ -47,7 +47,7 @@ sequenceDiagram
     P->>C: Write owner rows' research columns
     P->>R: Dispatch remaining one-job agents
     R-->>P: Structured role results
-    P->>C: Write research columns and finalize fit labels
+    P->>C: Write research columns
     P->>L: Advance only after page wave completes
 ~~~
 
@@ -64,7 +64,7 @@ Each agent returns:
 - Stable identity, the exact official posting URL, and its open or closed state.
 - Role requirements, duties, work mode, salary, and interview evidence, taken from the official posting first, with LinkedIn-only facts labeled.
 - Required company facts with dated source links and confidence.
-- Fit label, rationale, strongest evidence, largest gap, unknowns, lifecycle, and recommendation.
+- Strongest evidence, largest gap, unknowns, and any verified blocker. Never a fit grade.
 - Ready-to-write research columns as defined in discovery-tracking.md: Company Website, Summary, Salary Range (employer-published only, else blank), and Glassdoor Review (seen on Glassdoor only, else blank).
 - Fitting sibling roles only when it is the expansion owner, found on the company's official careers page, each with its official posting URL.
 
@@ -85,7 +85,7 @@ Maintain normalized company identities for the run. On each page:
 1. Dispatch the first job for each new company as expansion owner.
 2. Wait and merge company dossiers and sibling identities.
 3. For each sibling found on the official careers page, take its exact title and deduplicate it against existing rows by Company and Role.
-4. Parse tracker.csv and upsert only new or unclassified sibling rows.
+4. Parse tracker.csv and upsert only new sibling rows.
 5. Verify each row.
 6. Dispatch one agent for every remaining original and tracked sibling job.
 7. Reuse existing rows' Company Website, Glassdoor Review, and company facts for companies researched earlier.

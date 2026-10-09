@@ -20,11 +20,11 @@ sequenceDiagram
 
 Use only a confirmation page, receipt, or application ID:
 
-- Status: preserve the fit label and append or replace the middle-dot lifecycle with Applied.
+- Status: `Applied`.
 
 ## Standing authorization
 
-After reliable submission confirmation, automatically update the existing row without asking again. The standing authorization is limited to preserving the existing fit label and setting its lifecycle to `Applied`.
+After reliable submission confirmation, automatically update the existing row without asking again. The standing authorization is limited to setting Status to `Applied`.
 
 It does not authorize creating another row, changing the schema, editing company or role identity, recording an unconfirmed attempt, or changing later lifecycle stages.
 
@@ -34,4 +34,4 @@ Read tracker.csv with the Read tool, replace only that row's line with the Edit 
 
 ## Later stages
 
-Use the same row for verified recruiter screen, technical round, interview, rejection, withdrawal, or offer changes, such as `B — Normal Fit · Technical Round`. Preserve the fit label and change only the lifecycle. Write dates only into Notes, and only when the user gives them. Each new external write must be authorized by the user's request or an exact approved manifest. Never replace a newer stage with an older one.
+Use the same row for verified recruiter screen, technical round, interview, rejection, withdrawal, or offer changes, such as `Technical Round`. Change only Status. Write dates only into Notes, and only when the user gives them. Each new external write must be authorized by the user's request or an exact approved manifest. Never replace a newer stage with an older one.
