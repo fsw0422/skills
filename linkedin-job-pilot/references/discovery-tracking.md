@@ -41,8 +41,30 @@ Use exactly these eight columns and this order:
 | Summary | One plain line of at most 320 characters, without line breaks or Markdown: what the company does; its revenue, or `revenue not public`, plus funding or ownership; the role's location and work mode; the main fit reason; and the biggest gap or red flag for this role. Use only facts found in research. |
 | Salary Range | Optional. A numeric pay range that the employer itself published for this role and its location, such as `€90K–€160K base + equity`, or a figure the user gives. Leave it blank when the posting has no number, when the only figure is an estimate (Glassdoor, Levels.fyi, Kununu, XING, aggregators, recruiters, or anecdotes), or when it covers another country. Never estimate or guess. |
 | Glassdoor Review | Optional. The company's Glassdoor rating as seen on Glassdoor, with the review count when shown, such as `4.4/5 (17 reviews)`. Prefix a parent company's rating with its name, such as `Labelbox: 2.1/5 (91 reviews)`. Leave it blank when not found. Never estimate or guess. |
-| Status | Application lifecycle only: blank when not started, or `Researching`, `Skipped`, `Closed`, `Applied`, `Interview`, `Technical Round`, `Cooltime`, `Rejected`, or `Offer`. No fit grade; fit comes from LinkedIn when a role is opened. |
-| Notes | Free text owned by the user, such as recruiters, people contacted individually, or dates like `Rejected 23/03/2026`; blank by default. Preserve it on every change and write to it only when the user asks. |
+| Status | Application lifecycle only: blank when not started, or `Researching`, `Skipped`, `Closed`, `Applied`, an interview stage (`Recruiter`, `Technical`, or `Behavioral`), or a final `Offer` or `No Offer`; see Status lifecycle below. No fit grade; fit comes from LinkedIn when a role is opened. |
+| Notes | Free text owned by the user, such as recruiters, people contacted individually, or dates like `Waiting cooltime: 23/03/2026`; blank by default. Preserve it on every change and write to it only when the user asks. |
+
+### Status lifecycle
+
+~~~mermaid
+flowchart LR
+    S[blank, Researching, Skipped, or Closed] --> A[Applied]
+    A --> P{Interview pipeline}
+    P --> R[Recruiter]
+    P --> T[Technical]
+    P --> B[Behavioral]
+    R --> F{Final}
+    T --> F
+    B --> F
+    F --> O[Offer]
+    F --> N[No Offer]
+~~~
+
+- Before applying: blank (not started), `Researching`, `Skipped`, or `Closed`.
+- `Applied`: the application is confirmed.
+- Interview pipeline: `Recruiter`, `Technical`, or `Behavioral`, in whatever order the employer runs them. Set the stage the user names.
+- Final: `Offer` or `No Offer`. A rejection or withdrawal at any point after applying is `No Offer`.
+- Use only these values. When the user names a stage differently, map it to the closest one and say so.
 
 The header row is:
 
@@ -149,7 +171,7 @@ Every manually added row requires an explicit preview and approval. The preview 
 
 A role is eligible only when:
 
-- Status is blank: no `Researching`, `Skipped`, `Closed`, `Applied`, or later stage such as `Technical Round`, `Cooltime`, `Rejected`, or `Offer`.
+- Status is blank: no `Researching`, `Skipped`, `Closed`, `Applied`, or later stage such as `Recruiter`, `Technical`, `Behavioral`, `Offer`, or `No Offer`.
 - The posting is open and materially unchanged.
 - No linked repost was applied to.
 - The role is not closed, expired, deferred, or unresolved as a duplicate.
