@@ -38,7 +38,7 @@ Notes is free text owned by the user, for example recruiters, people contacted i
 
 ## Default explicit invocation
 
-When the user explicitly invokes this skill, first apply the mandatory PDF gate. Once a PDF is verified, an invocation with no additional scope, or only Start discovery, begins from the already-open LinkedIn Jobs tab in the built-in browser using its current search, collection, location, and filters. If no such tab exists, open LinkedIn Jobs in the built-in browser and use a secure browser handoff for sign-in when needed.
+When the user explicitly invokes this skill, first apply the mandatory PDF gate. Once a PDF is verified, an invocation with no additional scope, or only Start discovery, begins from the already-open LinkedIn Jobs tab in the browser browser-pilot selects, using its current search, collection, location, and filters. If no such tab exists, open LinkedIn Jobs in that browser and use a secure browser handoff for sign-in when needed.
 
 Run the complete workflow: capacity preflight, ten-page discovery horizon, immediate CSV tracking, one research agent per stable job, company-role expansion, automatic research-column population, and application queue preparation. Ask only for a genuinely missing material search criterion or an ambiguous choice between multiple open LinkedIn collections.
 
@@ -104,7 +104,7 @@ The run may also create or update <home-directory>/jobhunt/applicant-profile.md 
 
 The run may also create or update <home-directory>/jobhunt/cover-letters/<company-file>-<role-file>/ with a drafted letter.txt and its PDF without approval, as described in references/cover-letter.md.
 
-In a CLI, browse with the `playwright-chromium-browser` plugin as browser-pilot describes. Its snapshots, console logs, and screenshots go to its own output folder; they are temporary browser artifacts, not research or tracking records, and never belong in <home-directory>/jobhunt.
+Browser output files, such as the `playwright-chromium-browser` plugin's snapshots, console logs, and screenshots, are temporary browser artifacts, not research or tracking records, and never belong in <home-directory>/jobhunt.
 
 The primary agent is the sole writer. Subagents return structured research only.
 
