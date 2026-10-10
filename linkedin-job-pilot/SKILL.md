@@ -34,7 +34,7 @@ Status holds only the application lifecycle: blank when not started, or a stage 
 
 Fit has one source of truth: LinkedIn's own match assessment for the role, such as its match details or applicant signals, read on LinkedIn when the role is opened. The skill never computes, labels, or stores a fit grade. The Summary may still name the main match and the biggest gap as research context.
 
-Notes is free text owned by the user, for example recruiters, people contacted individually, or dates such as `Waiting cooltime: 23/03/2026`. Preserve it on every change, and write to it only when the user asks.
+Notes is free text owned by the user, for example recruiters, people contacted individually, or dates such as `Waiting cooltime: 23/03/2026`. Preserve it on every change, and write to it only when the user asks. Separate entries with `; `. Status-supporting entries, such as `Waiting cooltime: <date>` or `Pipeline kicked-off from other role`, come first; `PoC: <name>` entries always come last.
 
 ## Default explicit invocation
 

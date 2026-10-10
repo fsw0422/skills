@@ -42,7 +42,7 @@ Use exactly these eight columns and this order:
 | Salary Range | Optional. A numeric pay range that the employer itself published for this role and its location, such as `€90K–€160K base + equity`, or a figure the user gives. Leave it blank when the posting has no number, when the only figure is an estimate (Glassdoor, Levels.fyi, Kununu, XING, aggregators, recruiters, or anecdotes), or when it covers another country. Never estimate or guess. |
 | Glassdoor Review | Optional. The company's Glassdoor rating as seen on Glassdoor, with the review count when shown, such as `4.4/5 (17 reviews)`. Prefix a parent company's rating with its name, such as `Labelbox: 2.1/5 (91 reviews)`. Leave it blank when not found. Never estimate or guess. |
 | Status | Application lifecycle only: blank when not started, or `Researching`, `Skipped`, `Closed`, `Applied`, an interview stage (`Recruiter`, `Technical`, or `Behavioral`), or a final `Rejected`, `Offer`, or `No Offer`; see Status lifecycle below. No fit grade; fit comes from LinkedIn when a role is opened. |
-| Notes | Free text owned by the user, such as recruiters, people contacted individually, or dates like `Waiting cooltime: 23/03/2026`; blank by default. Preserve it on every change and write to it only when the user asks. |
+| Notes | Free text owned by the user, such as recruiters, people contacted individually, or dates like `Waiting cooltime: 23/03/2026`; blank by default. Preserve it on every change and write to it only when the user asks. Separate entries with `; `: status-supporting entries such as `Waiting cooltime: <date>` or `Pipeline kicked-off from other role` first, `PoC: <name>` entries last. |
 
 ### Status lifecycle
 

@@ -53,6 +53,6 @@ flowchart TD
     E -- Applied or later --> H[Leave unchanged]
 ~~~
 
-- The note is exactly `Pipeline kicked-off from other role`. Add it after any existing Notes, separated by `; `, and never remove existing Notes.
+- The note is exactly `Pipeline kicked-off from other role`. Add it after any existing status-supporting Notes but before any `PoC:` entries, separated by `; `, and never remove existing Notes.
 - A blank sibling becomes `Skipped` with the note. A `Skipped` or `Closed` sibling keeps its Status and gets the note. A sibling with `Applied` or a later stage stays unchanged; mention it to the user.
 - Write nothing to the siblings until the user agrees; the user's reply authorizes only the rows listed in the question.
